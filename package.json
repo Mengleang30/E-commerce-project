@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "e-commerce-project": "file:",
     "pinia": "^2.2.6",
     "vue": "^3.5.12"
   },

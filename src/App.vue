@@ -1,10 +1,27 @@
-<script setup>
+<script setup >
+
+import Header from './components/Header/Header.vue';
+
+
 
 </script>
 
 <template>
+   <div>
+    <Header />
+   
+    <h2>Hello E-commerce Project</h2>
+    <h2>Hello E-commerce Project</h2>
+    <h2>Hello E-commerce Project</h2>
+    <h2>Hello E-commerce Project</h2>
+    <h2>Hello E-commerce Project</h2>
+    <h2>Hello E-commerce Project</h2>
+    <h2>Hello E-commerce Project</h2>
+    <h2>Hello E-commerce Project</h2>
+    <h2>Hello E-commerce Project</h2>
+    <h2>Hello E-commerce Project</h2>
+   </div>
 
-<h2>Hello E-commerce Project</h2>
  
 </template>
 
