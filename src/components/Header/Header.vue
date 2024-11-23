@@ -1,5 +1,28 @@
 <script>
+import Navbar from './Navbar.vue';
+import { ref } from 'vue';
+
+
+
 export default {
+    name: "Header",
+    components: {
+        Navbar
+    },
+
+    setup() {
+        const isNavbarVisible = ref(false)
+        const toggleNavbar = () => {
+           
+            isNavbarVisible.value = !isNavbarVisible.value;
+        };
+
+        return {
+            isNavbarVisible,
+            toggleNavbar
+            
+        };
+    },
 
 
 
@@ -9,15 +32,14 @@ export default {
 <template>
 
     <header>
-
-        <div class="option">
+        <div class="option" @click="toggleNavbar">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
             <h3 class="title">Book Store</h3>
         </div>
-
+        <Navbar v-if="isNavbarVisible" />
 
         <div class="search_form">
             <input type="text" placeholder="Search Book here...">
@@ -85,14 +107,16 @@ header svg {
     display: flex;
     align-items: center;
     position: relative;
-    
+
 }
 
-.title ,::placeholder{
+.title,
+::placeholder {
     text-shadow: 0px 4px 2px rgb(0, 0, 0, 20%);
 
 }
-::placeholder{
+
+::placeholder {
     font-size: .9rem;
     font-family: 'Times New Roman', Times, serif;
 }
@@ -113,7 +137,7 @@ button {
     border-radius: 0 0.6rem .6rem 0;
     background-color: rgba(237, 237, 237, 1);
     cursor: pointer;
-    
+
 }
 
 .search_form button svg {
@@ -159,17 +183,21 @@ header .number_cart {
     border-radius: .4rem;
     box-shadow: 3px 3px 3px rgb(0, 0, 0, 20%);
 }
-.sign_in svg{
+
+.sign_in svg {
     width: 1.6rem;
     cursor: pointer;
 }
 
-.cart_sign_in{
+.cart_sign_in {
     display: flex;
     align-items: center;
     column-gap: 1.2rem;
 }
-.option ,.header_cart,.sign_in{
+
+.option,
+.header_cart,
+.sign_in {
     cursor: pointer;
 }
 </style>

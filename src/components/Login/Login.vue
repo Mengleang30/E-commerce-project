@@ -1,9 +1,11 @@
 <script>
+
 export default{
-    name : "Landing"
+    name : "Login"
 }
+
 </script>
 
 <template>
-    <h2>Landing page</h2>
+    <h2>Login page</h2>
 </template>

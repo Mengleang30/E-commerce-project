@@ -1,9 +1,9 @@
 <script>
 export default{
-    name : "Landing"
+    name : "Detail_book"
 }
 </script>
 
 <template>
-    <h2>Landing page</h2>
+    <h2>Detail page</h2>
 </template>

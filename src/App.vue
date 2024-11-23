@@ -1,30 +1,20 @@
-<script setup >
+<script setup>
 
 import Header from './components/Header/Header.vue';
+import {RouterView } from 'vue-router';
 
 
 
 </script>
 
 <template>
-   <div>
-    <Header />
-   
-    <h2>Hello E-commerce Project</h2>
-    <h2>Hello E-commerce Project</h2>
-    <h2>Hello E-commerce Project</h2>
-    <h2>Hello E-commerce Project</h2>
-    <h2>Hello E-commerce Project</h2>
-    <h2>Hello E-commerce Project</h2>
-    <h2>Hello E-commerce Project</h2>
-    <h2>Hello E-commerce Project</h2>
-    <h2>Hello E-commerce Project</h2>
-    <h2>Hello E-commerce Project</h2>
-   </div>
+    <div>
+        <Header />
+        <RouterView />
 
- 
+    </div>
+
+
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
