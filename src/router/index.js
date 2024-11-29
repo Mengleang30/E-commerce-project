@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Cart from '@/components/Cart/Cart.vue'
-import DetailBook from '@/components/Detail_book/Detail_book.vue'
-import Favorite from '@/components/Favorite/Favorite.vue'
-import Landing from '@/components/Landing/Landing.vue'
-import ListBook from '@/components/List_book/List_book.vue'
-import Login from '@/components/Login/Login.vue'
-import Feedback from '@/components/Feedback/Feedback.vue'
+import Cart from '@/views/CartPage.vue'
+import DetailBook from '@/components/Books/Detail_book.vue'
+import Favorite from '@/views/Favorite_page.vue'
+import Landing from '@/views/Landing.vue'
+import ListBook from '@/views/List_book.vue'
+import Login from '@/components/Users/Login.vue'
+import Feedback from '@/views/Feedback_page.vue'
 
 const routes = [
   {

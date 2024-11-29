@@ -1,6 +1,4 @@
 <script>
-import { RouterLink } from 'vue-router';
-
 export default {
     name: "Navbar",
     props : {
@@ -11,7 +9,6 @@ export default {
     }
 }
 </script>
-
 <template>
     <nav>
         <ul>
