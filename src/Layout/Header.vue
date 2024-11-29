@@ -1,6 +1,7 @@
 <script>
 import Navbar from './Navbar.vue';
 import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
 
 import cart from '@/assets/icons_nav/cart.png'
 import bookmark from '@/assets/icons_nav/bookmark.png'
@@ -110,8 +111,8 @@ export default {
         </div>
 
         <div class="cart_sign_in">
-            <div class="header_cart">
-                <div class="number_cart">1</div>
+            <RouterLink to="/cart" class="header_cart">
+                <!-- <div class="number_cart">1</div> -->
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                     <path
                         d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 
@@ -119,8 +120,8 @@ export default {
                      60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 
                      2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" />
                 </svg>
-            </div>
-            <div class="sign_in">
+            </RouterLink>
+            <RouterLink to="/login" class="sign_in">
                 Sign In
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-6">
@@ -129,8 +130,7 @@ export default {
                 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                 </svg>
 
-
-            </div>
+            </RouterLink>
         </div>
     </header>
 
@@ -145,6 +145,7 @@ header {
     position: sticky;
     top: 0;
     padding: 1rem;
+    width: 100%;
     column-gap: 1rem;
     justify-content: space-between;
 }
@@ -237,6 +238,8 @@ header .number_cart {
     background-color: white;
     padding: .25rem;
     border-radius: .4rem;
+    text-decoration: none;
+    color: black;
     box-shadow: 3px 3px 3px rgb(0, 0, 0, 20%);
 }
 

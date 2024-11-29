@@ -1,5 +1,6 @@
 <script setup>
 
+import Card_book from './Layout/Card_book.vue';
 import Footer from './Layout/Footer.vue';
 import Header from './Layout/Header.vue';
 import { RouterView } from 'vue-router';
@@ -12,6 +13,9 @@ import { RouterView } from 'vue-router';
 
     <Header />
     <main class="Main_page">
+        <div class="wrap_card">
+            <Card_book />
+        </div>
         <RouterView />
     </main>
 
@@ -22,5 +26,13 @@ import { RouterView } from 'vue-router';
 <style scoped>
 .Main_page {
     min-height: 90vh;
+    padding: 2px;
+}
+.wrap_card{
+    display: flex;
+    width: 100%;
+    overflow: auto;
+    justify-content: center;
+    height: auto;
 }
 </style>
