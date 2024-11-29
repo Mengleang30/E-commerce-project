@@ -5,5 +5,12 @@ export default{
 </script>
 
 <template>
-    <h2>Landing page</h2>
+    <div class="Landing">
+        <h2>Landing page</h2>
+    </div>
+    
 </template>
+
+<style>
+
+</style>

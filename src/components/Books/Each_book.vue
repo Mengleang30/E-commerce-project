@@ -1,6 +1,6 @@
 <script>
 export default{
-    name : "Favorite_book"
+    name : "Each_book"
 }
 </script>
 
