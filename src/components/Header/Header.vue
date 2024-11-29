@@ -2,12 +2,62 @@
 import Navbar from './Navbar.vue';
 import { ref } from 'vue';
 
+import cart from '@/assets/icons_nav/cart.png'
+import bookmark from '@/assets/icons_nav/bookmark.png'
+import feedback from '@/assets/icons_nav/feedback.png'
+import login from '@/assets/icons_nav/login.png'
+import product from '@/assets/icons_nav/product.png'
+import books from '@/assets/icons_nav/books.png'
 
 
 export default {
     name: "Header",
     components: {
         Navbar
+    },
+
+    data (){
+        return {
+           
+            NavBar_data : [
+                {
+                    nav_name : "Home",
+                    link : "/",
+                    icon : books
+                },
+                {
+                    nav_name : "Product",
+                    link : "/list-book",
+                    icon : product
+                },
+                {
+                    nav_name : "Cart",
+                    link : "/cart",
+                    icon : cart
+                },
+                {
+                    nav_name : "Favorite",
+                    link : "/favorite",
+                    icon : bookmark
+                },
+                {
+                    nav_name : "Feedback",
+                    link : "/feedback",
+                    icon : feedback
+                },
+                {
+                    nav_name : "Login",
+                    link : "/login",
+                    icon : login
+                },
+            ]
+        }
+    },
+
+    methods : {
+        isSelectRoute(route){
+            return this.$route.path === route;
+        }
     },
 
     setup() {
@@ -24,8 +74,6 @@ export default {
         };
     },
 
-
-
 }
 </script>
 
@@ -39,8 +87,17 @@ export default {
             </svg>
             <h3 class="title">Book Store</h3>
         </div>
-        <Navbar v-if="isNavbarVisible" />
 
+        <div v-if="isNavbarVisible" class="wrap_nav">
+            <Navbar  v-for="NavbarItem in NavBar_data" 
+            :Nav_name="NavbarItem.nav_name" 
+            :Link="NavbarItem.link" 
+            :key="NavbarItem.nav_name"
+            :Image="NavbarItem.icon"
+            :isSelectRoute="isSelectRoute(NavbarItem.link)"
+            />
+        </div>
+       
         <div class="search_form">
             <input type="text" placeholder="Search Book here...">
             <button>
@@ -67,15 +124,14 @@ export default {
                 Sign In
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75
+                     0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 
                 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                 </svg>
 
 
             </div>
         </div>
-
-
     </header>
 
 </template>
@@ -93,6 +149,7 @@ header {
     justify-content: space-between;
 }
 
+
 header svg {
     width: 2rem;
     background-color: transparent;
@@ -107,7 +164,6 @@ header svg {
     display: flex;
     align-items: center;
     position: relative;
-
 }
 
 .title,
@@ -199,5 +255,50 @@ header .number_cart {
 .header_cart,
 .sign_in {
     cursor: pointer;
+}
+nav {
+    padding: .4rem;
+    background-color: rgb(199, 199, 199);
+    box-shadow: 0px 0px 3px rgb(0, 0, 0, 20%);
+    width: 10rem;
+    height: auto;
+}
+
+nav ul {
+    list-style: none;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+}
+nav ul img{
+    width: 1.5rem;
+}
+nav ul li .link {
+    text-decoration: none;
+    color: black;
+    background-color: rgba(248, 243, 243, 1);
+    display: flex;
+    height: 2.4rem;
+    align-items: center;
+    padding-left: 10px;
+    gap: .8rem;
+    border-radius: 0.3rem;
+    box-shadow: 3px 3px 3px rgb(0, 0, 0, 20%);
+}
+
+
+.wrap_nav{
+    position: absolute;
+    left: 1rem;
+    height: auto;
+    top: 3.4rem;
+}
+
+nav ul li .link.active {
+  background-color: #62affc; 
+  color: white;
+  font-weight: bold;
 }
 </style>
