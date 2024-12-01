@@ -30,6 +30,7 @@ import { RouterView } from 'vue-router';
 }
 .wrap_card{
     display: flex;
+    margin-top: 0.5rem;
     width: 100%;
     overflow: auto;
     justify-content: center;

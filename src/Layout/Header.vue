@@ -1,6 +1,6 @@
 <script>
 import Navbar from './Navbar.vue';
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import cart from '@/assets/icons_nav/cart.png'
@@ -17,88 +17,104 @@ export default {
         Navbar
     },
 
-    data (){
+    data() {
         return {
-           
-            NavBar_data : [
+
+            NavBar_data: [
                 {
-                    nav_name : "Home",
-                    link : "/",
-                    icon : books
+                    nav_name: "Home",
+                    link: "/",
+                    icon: books
                 },
                 {
-                    nav_name : "Product",
-                    link : "/list-book",
-                    icon : product
+                    nav_name: "Product",
+                    link: "/list-book",
+                    icon: product
                 },
                 {
-                    nav_name : "Cart",
-                    link : "/cart",
-                    icon : cart
+                    nav_name: "Cart",
+                    link: "/cart",
+                    icon: cart
                 },
                 {
-                    nav_name : "Favorite",
-                    link : "/favorite",
-                    icon : bookmark
+                    nav_name: "Favorite",
+                    link: "/favorite",
+                    icon: bookmark
                 },
                 {
-                    nav_name : "Feedback",
-                    link : "/feedback",
-                    icon : feedback
+                    nav_name: "Feedback",
+                    link: "/feedback",
+                    icon: feedback
                 },
                 {
-                    nav_name : "Login",
-                    link : "/login",
-                    icon : login
+                    nav_name: "Login",
+                    link: "/login",
+                    icon: login
                 },
             ]
         }
     },
 
-    methods : {
-        isSelectRoute(route){
+    methods: {
+        isSelectRoute(route) {
             return this.$route.path === route;
         }
     },
 
     setup() {
         const isNavbarVisible = ref(false)
+        const isRotated = ref(false);
+        const navbarRef = ref(null);
+
         const toggleNavbar = () => {
-           
+
             isNavbarVisible.value = !isNavbarVisible.value;
+            isRotated.value = !isRotated.value;
         };
+
+        const handleClickOutside = (e) => {
+            if (navbarRef.value && !navbarRef.value.contains(e.target)) {
+                isNavbarVisible.value = false;
+                isRotated.value = false;
+            }
+
+        }
+        onMounted(() => {
+            document.addEventListener('click', handleClickOutside);
+        })
+        onUnmounted(() => {
+            document.addEventListener('click', handleClickOutside);
+
+        })
 
         return {
             isNavbarVisible,
-            toggleNavbar
-            
+            toggleNavbar,
+            isRotated,
+            navbarRef,
+
         };
     },
 
 }
 </script>
-
 <template>
 
     <header>
-        <div class="option" @click="toggleNavbar">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-6">
+
+        <div ref="navbarRef" class="option" @click="toggleNavbar">
+            <svg :class="isRotated ? 'rotated' : 'non-rotated'" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
             <h3 class="title">Book Store</h3>
         </div>
 
         <div v-if="isNavbarVisible" class="wrap_nav">
-            <Navbar  v-for="NavbarItem in NavBar_data" 
-            :Nav_name="NavbarItem.nav_name" 
-            :Link="NavbarItem.link" 
-            :key="NavbarItem.nav_name"
-            :Image="NavbarItem.icon"
-            :isSelectRoute="isSelectRoute(NavbarItem.link)"
-            />
+            <Navbar v-for="NavbarItem in NavBar_data" :Nav_name="NavbarItem.nav_name" :Link="NavbarItem.link"
+                :key="NavbarItem.nav_name" :Image="NavbarItem.icon" :isSelectRoute="isSelectRoute(NavbarItem.link)" />
         </div>
-       
+
         <div class="search_form">
             <input type="text" placeholder="Search Book here...">
             <button>
@@ -148,6 +164,8 @@ header {
     width: 100%;
     column-gap: 1rem;
     justify-content: space-between;
+
+
 }
 
 
@@ -176,6 +194,7 @@ header svg {
 ::placeholder {
     font-size: .9rem;
     font-family: 'Times New Roman', Times, serif;
+
 }
 
 .search_form input,
@@ -259,6 +278,7 @@ header .number_cart {
 .sign_in {
     cursor: pointer;
 }
+
 nav {
     padding: .4rem;
     background-color: rgb(199, 199, 199);
@@ -275,9 +295,11 @@ nav ul {
     gap: 1rem;
     height: 100%;
 }
-nav ul img{
+
+nav ul img {
     width: 1.5rem;
 }
+
 nav ul li .link {
     text-decoration: none;
     color: black;
@@ -292,16 +314,27 @@ nav ul li .link {
 }
 
 
-.wrap_nav{
+.wrap_nav {
     position: absolute;
+    z-index: 100;
     left: 1rem;
     height: auto;
     top: 3.4rem;
 }
 
 nav ul li .link.active {
-  background-color: #62affc; 
-  color: white;
-  font-weight: bold;
+    background-color: #62affc;
+    color: white;
+    font-weight: bold;
+}
+
+.rotated {
+    transform: rotate(90deg);
+    transition: transform 0.3s;
+}
+
+.non-rotated {
+    transform: rotate(0deg);
+    transition: transform 0.3s;
 }
 </style>
