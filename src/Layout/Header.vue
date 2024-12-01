@@ -100,9 +100,9 @@ export default {
 </script>
 <template>
 
-    <header>
+    <header ref="navbarRef" >
 
-        <div ref="navbarRef" class="option" @click="toggleNavbar">
+        <div class="option" @click="toggleNavbar">
             <svg :class="isRotated ? 'rotated' : 'non-rotated'" xmlns="http://www.w3.org/2000/svg" fill="none"
                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -110,7 +110,7 @@ export default {
             <h3 class="title">Book Store</h3>
         </div>
 
-        <div v-if="isNavbarVisible" class="wrap_nav">
+        <div  v-if="isNavbarVisible" class="wrap_nav">
             <Navbar v-for="NavbarItem in NavBar_data" :Nav_name="NavbarItem.nav_name" :Link="NavbarItem.link"
                 :key="NavbarItem.nav_name" :Image="NavbarItem.icon" :isSelectRoute="isSelectRoute(NavbarItem.link)" />
         </div>
@@ -164,8 +164,7 @@ header {
     width: 100%;
     column-gap: 1rem;
     justify-content: space-between;
-
-
+    z-index: 300;
 }
 
 
