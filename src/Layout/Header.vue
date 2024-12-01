@@ -102,8 +102,8 @@ export default {
 
     <header ref="navbarRef" >
 
-        <div class="option" @click="toggleNavbar">
-            <svg :class="isRotated ? 'rotated' : 'non-rotated'" xmlns="http://www.w3.org/2000/svg" fill="none"
+        <div class="option">
+            <svg  @click="toggleNavbar" :class="isRotated ? 'rotated' : 'non-rotated'" xmlns="http://www.w3.org/2000/svg" fill="none"
                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
@@ -182,6 +182,10 @@ header svg {
     display: flex;
     align-items: center;
     position: relative;
+}
+.option {
+    width: 30%;
+
 }
 
 .title,
@@ -272,7 +276,7 @@ header .number_cart {
     column-gap: 1.2rem;
 }
 
-.option,
+.option svg,
 .header_cart,
 .sign_in {
     cursor: pointer;
@@ -281,7 +285,7 @@ header .number_cart {
 nav {
     padding: .4rem;
     background-color: rgb(199, 199, 199);
-    box-shadow: 0px 0px 3px rgb(0, 0, 0, 20%);
+    
     width: 10rem;
     height: auto;
 }
@@ -329,6 +333,8 @@ nav ul li .link.active {
 
 .rotated {
     transform: rotate(90deg);
+    background-color: rgb(222, 222, 222);
+    border-radius: 50%;
     transition: transform 0.3s;
 }
 

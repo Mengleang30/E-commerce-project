@@ -108,7 +108,7 @@ export default {
     border-radius: 50%;
     color: rgb(13, 13, 13);
     font-weight: bold;
-    box-shadow: 2px 4px 2px rgb(0, 0, 0, 20%);
+    box-shadow: 2px 2px 2px rgb(0, 0, 0, 20%);
     cursor: pointer;
 }
 
@@ -148,7 +148,11 @@ export default {
     width: 100%;
     height: 1.6rem;
 }
-
+.card .article button:hover, .left:hover ,.right:hover{
+    background-color: rgb(60, 162, 245);
+    outline: none;
+    color: aliceblue; 
+}
 .card .article button {
     border: none;
     width: 5rem;
@@ -156,7 +160,7 @@ export default {
     height: 2rem;
     background-color: aliceblue;
     margin-top: 10px;
-    margin-left: 2rem;
+    margin-left: 1rem;
     outline: 1px solid rgb(255, 255, 255);
     cursor: pointer;
 }
