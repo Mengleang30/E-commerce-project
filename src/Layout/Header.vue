@@ -100,20 +100,24 @@ export default {
 </script>
 <template>
 
-    <header ref="navbarRef" >
+    <header ref="navbarRef">
 
         <div class="option">
-            <svg  @click="toggleNavbar" :class="isRotated ? 'rotated' : 'non-rotated'" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <svg @click="toggleNavbar" :class="isRotated ? 'rotated' : 'non-rotated'" xmlns="http://www.w3.org/2000/svg"
+                fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
             <h3 class="title">Book Store</h3>
         </div>
 
-        <div  v-if="isNavbarVisible" class="wrap_nav">
-            <Navbar v-for="NavbarItem in NavBar_data" :Nav_name="NavbarItem.nav_name" :Link="NavbarItem.link"
-                :key="NavbarItem.nav_name" :Image="NavbarItem.icon" :isSelectRoute="isSelectRoute(NavbarItem.link)" />
-        </div>
+        <transition name="nav-transition">
+            <div v-if="isNavbarVisible" class="wrap_nav">
+                <Navbar v-for="NavbarItem in NavBar_data" :Nav_name="NavbarItem.nav_name" :Link="NavbarItem.link"
+                    :key="NavbarItem.nav_name" :Image="NavbarItem.icon"
+                    :isSelectRoute="isSelectRoute(NavbarItem.link)" />
+            </div>
+        </transition>
+
 
         <div class="search_form">
             <input type="text" placeholder="Search Book here...">
@@ -165,7 +169,9 @@ header {
     column-gap: 1rem;
     justify-content: space-between;
     z-index: 300;
+  
 }
+
 
 
 header svg {
@@ -183,8 +189,10 @@ header svg {
     align-items: center;
     position: relative;
 }
+
 .option {
-    width: 30%;
+    width: 26%;
+    gap: 6px;
 
 }
 
@@ -285,7 +293,7 @@ header .number_cart {
 nav {
     padding: .4rem;
     background-color: rgb(199, 199, 199);
-    
+
     width: 10rem;
     height: auto;
 }
@@ -322,8 +330,23 @@ nav ul li .link {
     z-index: 100;
     left: 1rem;
     height: auto;
-    top: 3.4rem;
+    top: 3.6rem;
+    transition: transform 0.8s ease; 
 }
+
+.nav-transition-enter-active,
+.nav-transition-leave-active {
+  transition: transform 0.7s ease;
+}
+
+.nav-transition-enter, 
+.nav-transition-leave-to {
+  transform: translateX(-100%);  /* Position for both entering and leaving */
+}
+.nav-transition-enter-to {
+  transform: translateX(0); /* Position when the nav is fully visible */
+}
+
 
 nav ul li .link.active {
     background-color: #62affc;
