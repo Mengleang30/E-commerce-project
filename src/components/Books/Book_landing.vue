@@ -5,15 +5,15 @@ export default {
     components: {
         Favorite_icons,
     },
-    data (){
+    data() {
         return {
-            Click_fav : false
+            Click_fav: false
         }
     },
 
-    methods : {
+    methods: {
 
-        HandleClickFav(){
+        HandleClickFav() {
             this.Click_fav = !this.Click_fav
         }
 
@@ -23,16 +23,13 @@ export default {
 
 <template>
     <article class="Each_book">
-        <Favorite_icons  :Cliekd_favorite="Click_fav" @click="HandleClickFav"/>
+        <Favorite_icons :Cliekd_favorite="Click_fav" @click="HandleClickFav" />
         <div class="each_book">
             <div class="wraping">
                 <img src="https://th.bing.com/th/id/OIP.5IePslOy6hKU_yG6GhFVGAHaLf?w=119&h=185&c=7&r=0&o=5&dpr=2.3&pid=1.7"
                     alt="book">
-                <h4>The 7 Habits of Highly Effective People®  display: -webkit-box;
-    -webkit-line-clamp: 2;
-    /* Limit to 2 lines */
-    -webkit-box-orient: vertical;
-    overflow: hidden;</h4>
+                <h4>The 7 Habits of Highly Effective People®
+                </h4>
                 <span>Author | 2020</span>
                 <span class="Category">
                     Category/Category/Category/Category/Category/dfai/dgajaj/daa
@@ -82,7 +79,7 @@ export default {
     width: 100%;
 }
 
-.wraping h4{
+.wraping h4 {
     text-align: center;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -131,7 +128,8 @@ export default {
     height: 2rem;
     font-size: 12px;
 }
-.price_btn .btn:hover{
+
+.price_btn .btn:hover {
     background-color: red;
 }
 </style>

@@ -14,7 +14,7 @@ export default {
 <template>
     <div class="category_landing">
         <div class="wraping">
-            <h4>Best Philosophy</h4>
+            <h4>Best Motivational</h4>
             <div class="wraping_arrow">
                 <div class="left">&lt;</div>
                 <div class="right">&gt;</div>
