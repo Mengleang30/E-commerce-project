@@ -65,7 +65,7 @@ export default {
     </div>
 </template>
 
-<style>
+<style scoped>
 .card {
     display: flex;
     padding: 16px 30px;
@@ -80,6 +80,7 @@ export default {
     border-radius: .4rem;
     position: relative;
     z-index: 120;
+    transition: 1.8s all; 
 }
 
 .wrap_arrow {
