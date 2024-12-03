@@ -8,5 +8,10 @@ export const useBookStore = defineStore('BookData', {
 
     getters : {
         
-    }
+    },
+    actions: {
+        getBookData() {
+          console.log('BookData:', this.BookData); // Check if BookData is initialized
+        },
+      },
 })

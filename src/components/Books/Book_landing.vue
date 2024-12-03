@@ -1,9 +1,19 @@
 <script>
 import Favorite_icons from './Fovite_icons.vue'
 export default {
+
     name: "Book_landing",
     components: {
         Favorite_icons,
+    },
+
+    props : {
+        Title : String,
+        Url_img : String,
+        Price : Number,
+        Author : String,
+        Year : Number,
+        Book_category : Array,
     },
     data() {
         return {
@@ -23,20 +33,20 @@ export default {
 
 <template>
     <article class="Each_book">
-        <Favorite_icons :Cliekd_favorite="Click_fav" @click="HandleClickFav" />
+        <Favorite_icons :Clicked_favorite="Click_fav" @click="HandleClickFav" />
         <div class="each_book">
             <div class="wraping">
-                <img src="https://th.bing.com/th/id/OIP.5IePslOy6hKU_yG6GhFVGAHaLf?w=119&h=185&c=7&r=0&o=5&dpr=2.3&pid=1.7"
+                <img :src="Url_img"
                     alt="book">
-                <h4>The 7 Habits of Highly Effective People®
+                <h4>{{ Title }}
                 </h4>
-                <span>Author | 2020</span>
-                <span class="Category">
-                    Category/Category/Category/Category/Category/dfai/dgajaj/daa
+                <span>{{ Author }} | {{ Year }}</span>
+                <span class="Category" >
+                    {{ Book_category.join('/') }}
                 </span>
             </div>
             <div class="price_btn">
-                <h4 class="price">$9.000</h4>
+                <h4 class="price">$ {{ Price.toFixed(2) }}</h4>
                 <button class="btn">Add To Cart</button>
             </div>
         </div>
@@ -52,7 +62,8 @@ export default {
 }
 
 .each_book img {
-    width: 6rem;
+    width: 7rem;
+    height: 10rem;
 }
 
 .each_book {
@@ -101,6 +112,7 @@ export default {
     -webkit-box-orient: vertical;
     overflow: hidden;
     /* Hide overflowing text */
+    text-align: center;
 }
 
 
