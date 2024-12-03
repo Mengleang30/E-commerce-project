@@ -884,6 +884,363 @@ export const BookData = [
         ],
     },
 
+    {
+        id: 21,
+        title: "To Kill a Mockingbird",
+        author: "Harper Lee",
+        price: 9.99,
+        description: `
+            A timeless novel of a young girl, Scout Finch, in the racially charged South of the 1930s. 
+            Through the eyes of Scout, the story explores profound themes of justice, morality, and human kindness.
+        `,
+        url_image : "https://m.media-amazon.com/images/I/71FxgtFKcQL._AC_UF1000,1000_QL80_.jpg",
+        published: 1960,
+        Language: ["English", "Spanish"],
+        category: ["Novel", "Classic"],
+        code: 1411,
+        discount: 0, // Discount in percentage
+        rated: 4.9,
+        user_comment: [
+            {
+                user_id: 1301,
+                name: "Aiden Clarke",
+                comment: `
+                    A powerful story with unforgettable characters. This book touched my soul.
+                `,
+                date: "10:20 am -04.10.2024",
+            },
+            {
+                user_id: 1315,
+                name: "Mia Bennett",
+                comment: `
+                    Harper Lee’s storytelling is extraordinary. A masterpiece of modern literature.
+                `,
+                date: "03:15 pm -18.11.2023",
+            },
+            {
+                user_id: 1328,
+                name: "Nathan Brown",
+                comment: `
+                    Brilliantly written with themes that resonate even today. An absolute classic!
+                `,
+                date: "07:40 pm -09.08.2024",
+            },
+        ],
+    },
+    {
+        id: 22,
+        title: "Pride and Prejudice",
+        author: "Jane Austen",
+        price: 7.49,
+        description: `
+            A beloved novel of manners and romance, Pride and Prejudice centers on Elizabeth Bennet 
+            as she navigates society, love, and family expectations in 19th-century England.
+        `,
+        url_image : "https://m.media-amazon.com/images/M/MV5BYzNkMjRmZGMtODg1Ni00MjIxLWI4MTYtOGEwM2YyMmZiMjUzXkEyXkFqcGc@._V1_.jpg",
+        published: 1813,
+        Language: ["English", "French"],
+        category: ["Novel", "Romance"],
+        code: 2234,
+        discount: 0, // Discount in percentage
+        rated: 4.8,
+        user_comment: [
+            {
+                user_id: 1402,
+                name: "Charlotte Rivera",
+                comment: `
+                    A delightful classic filled with wit and charm. Jane Austen’s characters are timeless.
+                `,
+                date: "11:30 am -12.09.2024",
+            },
+            {
+                user_id: 1418,
+                name: "Lucas King",
+                comment: `
+                    Beautifully written with a blend of humor and romance. A joy to read!
+                `,
+                date: "08:00 pm -22.07.2023",
+            },
+            {
+                user_id: 1426,
+                name: "Emily Morgan",
+                comment: `
+                    Austen’s portrayal of human nature is exceptional. A must-read for any literary enthusiast.
+                `,
+                date: "06:10 pm -03.11.2024",
+            },
+        ],
+    },
+
+    {
+        id: 23,
+        title: "The Great Gatsby",
+        author: "F. Scott Fitzgerald",
+        price: 10.99,
+        description: `
+            A dazzling and tragic portrait of the Jazz Age, The Great Gatsby explores themes of love, 
+            ambition, and the pursuit of the American Dream through the enigmatic figure of Jay Gatsby.
+        `,
+        url_image : "https://images.booksense.com/images/250/839/9781954839250.jpg",
+        published: 1925,
+        Language: ["English"],
+        category: ["Novel", "Classic"],
+        code: 3125,
+        discount: 0, // Discount in percentage
+        rated: 4.7,
+        user_comment: [
+            {
+                user_id: 1503,
+                name: "Oliver Gray",
+                comment: `
+                    A hauntingly beautiful tale of love and loss. Fitzgerald’s writing is unparalleled.
+                `,
+                date: "02:00 pm -15.10.2024",
+            },
+            {
+                user_id: 1516,
+                name: "Isabella Wood",
+                comment: `
+                    The imagery and themes are unforgettable. A must-read for fans of modern classics.
+                `,
+                date: "09:30 am -28.08.2023",
+            },
+            {
+                user_id: 1529,
+                name: "William Reed",
+                comment: `
+                    Fitzgerald captures the essence of an era and the fragility of dreams. Stunning!
+                `,
+                date: "04:20 pm -12.11.2024",
+            },
+        ],
+    },
+
+    {
+        id: 24,
+        title: "Wuthering Heights",
+        author: "Emily Brontë",
+        price: 8.99,
+        description: `
+            A Gothic novel of passion and revenge, Wuthering Heights follows the turbulent relationship 
+            between Catherine Earnshaw and Heathcliff, set against the wild Yorkshire moors.
+        `,
+        url_image : "https://m.media-amazon.com/images/I/81unikMK30L._AC_UF1000,1000_QL80_.jpg",
+        published: 1847,
+        Language: ["English"],
+        category: ["Novel", "Gothic Fiction"],
+        code: 4478,
+        discount: 0, // Discount in percentage
+        rated: 4.5,
+        user_comment: [
+            {
+                user_id: 1601,
+                name: "Sophia Mitchell",
+                comment: `
+                    Dark, brooding, and beautifully written. Brontë’s prose is stunning and evocative.
+                `,
+                date: "07:15 am -03.09.2024",
+            },
+            {
+                user_id: 1618,
+                name: "James Carter",
+                comment: `
+                    A haunting tale of love and vengeance. The characters and setting are unforgettable.
+                `,
+                date: "01:45 pm -14.10.2023",
+            },
+            {
+                user_id: 1624,
+                name: "Olivia Turner",
+                comment: `
+                    Brontë’s writing is deeply moving. This novel is a masterpiece of Gothic literature.
+                `,
+                date: "05:50 pm -25.08.2024",
+            },
+        ],
+    },
+    
+    {
+        id: 25,
+        title: "Little Women",
+        author: "Louisa May Alcott",
+        price: 6.99,
+        description: `
+            A heartwarming and timeless story of the March sisters as they navigate 
+            life, love, and family in Civil War-era America. A tale of hope and resilience.
+        `,
+        url_image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRNI2JXjCxzgCjqwmZbucwW_-ZKovhQRMPmw&s",
+        published: 1868,
+        Language: ["English", "Italian"],
+        category: ["Novel", "Classic"],
+        code: 5567,
+        discount: 0, // Discount in percentage
+        rated: 4.8,
+        user_comment: [
+            {
+                user_id: 1703,
+                name: "Emma Hill",
+                comment: `
+                    A charming and uplifting novel. The March sisters feel like family. Highly recommended.
+                `,
+                date: "10:40 am -05.10.2024",
+            },
+            {
+                user_id: 1717,
+                name: "Liam White",
+                comment: `
+                    Alcott’s story is filled with warmth and wisdom. A classic for all ages.
+                `,
+                date: "07:25 pm -16.09.2023",
+            },
+            {
+                user_id: 1725,
+                name: "Ava Roberts",
+                comment: `
+                    Beautifully written and full of heart. A story that stays with you long after reading.
+                `,
+                date: "01:10 pm -29.07.2024",
+            },
+        ],
+    },
+
+    {
+        id: 26,
+        title: "1984",
+        author: "George Orwell",
+        price: 12.49,
+        description: `
+            A dystopian novel that delves into a world of surveillance, totalitarianism, and loss of individuality. 
+            1984 is a powerful and chilling warning about the dangers of unchecked political power.
+        `,
+        url_image : "https://m.media-amazon.com/images/I/61NAx5pd6XL.jpg",
+        published: 1949,
+        Language: ["English", "German", "Russian"],
+        category: ["Novel", "Dystopian"],
+        code: 6164,
+        discount: 0, // Discount in percentage
+        rated: 4.9,
+        user_comment: [
+            {
+                user_id: 1801,
+                name: "Ethan Parker",
+                comment: `
+                    A harrowing yet essential read. Orwell’s vision of the future is disturbingly accurate.
+                `,
+                date: "02:30 pm -10.08.2024",
+            },
+            {
+                user_id: 1812,
+                name: "Sophia Carter",
+                comment: `
+                    Thought-provoking and brilliantly written. A book that everyone should read at least once.
+                `,
+                date: "06:15 pm -18.12.2023",
+            },
+            {
+                user_id: 1825,
+                name: "Jackson Morgan",
+                comment: `
+                    A masterpiece of modern literature. The themes are as relevant today as ever.
+                `,
+                date: "09:50 am -27.09.2024",
+            },
+        ],
+    },
+
+    {
+        id: 27,
+        title: "The Catcher in the Rye",
+        author: "J.D. Salinger",
+        price: 8.99,
+        description: `
+            A coming-of-age novel about the experiences and struggles of Holden Caulfield, 
+            a disillusioned teenager navigating adolescence in New York City.
+        `,
+        url_image : "https://savethecat.com/wp-content/uploads/2019/05/243a0ba33adbee20d3ed689fbf712ec8-jd-salinger-holden-caulfield.jpg",
+        published: 1951,
+        Language: ["English", "French"],
+        category: ["Novel", "Young Adult"],
+        code: 7219,
+        discount: 0, // Discount in percentage
+        rated: 4.4,
+        user_comment: [
+            {
+                user_id: 1902,
+                name: "Lily Taylor",
+                comment: `
+                    Raw, honest, and relatable. Salinger perfectly captures the teenage struggle with identity.
+                `,
+                date: "11:45 am -04.07.2024",
+            },
+            {
+                user_id: 1918,
+                name: "Daniel Johnson",
+                comment: `
+                    A deeply emotional and thought-provoking story. Holden Caulfield’s journey is unforgettable.
+                `,
+                date: "08:30 pm -16.10.2023",
+            },
+            {
+                user_id: 1923,
+                name: "Grace Evans",
+                comment: `
+                    A classic tale of adolescence that still resonates with readers today. Beautifully written.
+                `,
+                date: "05:20 pm -29.11.2024",
+            },
+        ],
+    },
+    
+    {
+        id: 28,
+        title: "The Alchemist",
+        author: "Paulo Coelho",
+        price: 9.99,
+        description: `
+            An enchanting novel about Santiago, a shepherd boy, on a journey to fulfill his personal legend. 
+            The Alchemist is a magical tale about self-discovery, dreams, and the interconnectedness of life.
+        `,
+        url_image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVVA1W3UDGSLRiVZKANNNqMD_6gfRxRjrGCA&s",
+        published: 1988,
+        Language: ["English", "Spanish", "Portuguese"],
+        category: ["Novel", "Inspirational"],
+        code: 8321,
+        discount: 20, // Discount in percentage
+        rated: 4.8,
+        user_comment: [
+            {
+                user_id: 2005,
+                name: "Mia Harris",
+                comment: `
+                    A beautifully written story with profound lessons about life and destiny. Truly inspiring.
+                `,
+                date: "03:40 pm -12.09.2024",
+            },
+            {
+                user_id: 2012,
+                name: "Benjamin Wright",
+                comment: `
+                    A timeless tale that inspires you to chase your dreams. Coelho’s writing is magical.
+                `,
+                date: "07:10 am -25.10.2023",
+            },
+            {
+                user_id: 2027,
+                name: "Ella Anderson",
+                comment: `
+                    Simple yet powerful. The Alchemist is a story that will stay with you forever.
+                `,
+                date: "09:55 pm -14.08.2024",
+            },
+        ],
+    },
+    
+    
+
+    
+    
+    
+    
 
     
 
