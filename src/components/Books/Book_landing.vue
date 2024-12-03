@@ -40,7 +40,7 @@ export default {
                     alt="book">
                 <h4>{{ Title }}
                 </h4>
-                <span>{{ Author }} | {{ Year }}</span>
+                <span class="author_year">{{ Author }} | {{ Year }}</span>
                 <span class="Category" >
                     {{ Book_category.join('/') }}
                 </span>
@@ -62,14 +62,14 @@ export default {
 }
 
 .each_book img {
-    width: 7rem;
+   
     height: 10rem;
 }
 
 .each_book {
     width: 12rem;
     padding: 5px;
-    height: 18.6rem;
+    height: 19rem;
 }
 
 .Each_book {
@@ -98,6 +98,16 @@ export default {
     -webkit-box-orient: vertical;
     overflow: hidden;
     width: 100%;
+    height: 2rem;
+}
+.wraping .author_year{
+    width: 100%;
+    text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    /* Limit to 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .Category {

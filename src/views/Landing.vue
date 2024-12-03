@@ -20,7 +20,6 @@ export default {
 
 <template>
     <div class="Landing">
-        <h2>Landing page</h2>
         <Book_Landing />
     </div>
 
