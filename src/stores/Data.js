@@ -69,7 +69,7 @@ export const BookData = [
         published: 2006,
         Language: ["English", "Khmer"],
         category: ["Motivational", "Inspirational", 
-        "Personal Development ", "Setf Help"],
+        "Personal Development ", "Seft Help"],
         code : 222,
         discount : 0,
         rated : 4,
