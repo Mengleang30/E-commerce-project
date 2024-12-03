@@ -36,7 +36,7 @@ export default {
                 </span>
             </div>
             <div class="price_btn">
-                <h4 class="price">$9.00</h4>
+                <h4 class="price">$9.000</h4>
                 <button class="btn">Add To Cart</button>
             </div>
         </div>
