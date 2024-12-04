@@ -54,7 +54,9 @@ export default {
         <article class="article">
             <h4>{{ Card_data[current_index].title }}</h4>
             <p> {{ Card_data[current_index].description }} </p>
-                <RouterLink :to="`/detail/${Card_data[current_index].id}`"><button>View Now</button></RouterLink>
+                <RouterLink :to="`/detail/${Card_data[current_index].id}`">
+                    <button>View Now</button>
+                </RouterLink>
         </article>
         <img :src="Card_data[current_index].url_image" alt="books">
     </div>

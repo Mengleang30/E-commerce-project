@@ -14,6 +14,7 @@ export default {
         Author : String,
         Year : Number,
         Book_category : Array,
+        LinkToDetail : Number,
     },
     data() {
         return {
@@ -47,7 +48,9 @@ export default {
             </div>
             <div class="price_btn">
                 <h4 class="price">$ {{ Price.toFixed(2) }}</h4>
-                <button class="btn">Add To Cart</button>
+                <RouterLink :to="`/detail/${ LinkToDetail}`">
+                    <button class="btn">View Now</button>
+                </RouterLink>
             </div>
         </div>
     </article>

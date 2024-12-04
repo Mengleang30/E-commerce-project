@@ -66,6 +66,7 @@ export default {
             :Url_img="Books.url_image"
             :Book_category="Books.category"
             :Price="Books.price"
+            :LinkToDetail="Books.id"
             />
         </div>
     </div>
