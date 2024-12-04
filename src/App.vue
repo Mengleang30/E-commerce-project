@@ -3,7 +3,9 @@
 import Card_book from './Layout/Card_book.vue';
 import Footer from './Layout/Footer.vue';
 import Header from './Layout/Header.vue';
-import { RouterView } from 'vue-router';
+import { RouterView,useRoute } from 'vue-router';
+
+const route = useRoute();
 
 
 
@@ -16,7 +18,7 @@ import { RouterView } from 'vue-router';
     <Header />
     <main class="Main_page">
         <div class="wrap_card">
-            <Card_book />
+            <Card_book v-if="route.name !== 'DetailBook'"/>
         </div>
         <RouterView :key="$route.params.id"/>
     </main>
