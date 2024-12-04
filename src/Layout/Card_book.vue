@@ -1,48 +1,43 @@
 <script>
+import { useBookStore } from '@/stores';
+
 export default {
     name: "Card_book",
 
+    setup() {
+
+        const cart_data = useBookStore();
+        return {
+            Card_data : cart_data.BookData
+        }
+
+    },
+    computed : {
+        FilterCard (){
+
+        }
+    },
+
     data() {
         return {
-            Card_data: [
-                {
-
-                    title: "The 7 Habits of Highly Effective People®",
-                    description: `These seven habits guide individuals in developing
-                discipline, integrity, and emotional intelligence, ultimately
-                leading to fulfilling and successful relationships and achievements.`,
-                    book_img: "https://th.bing.com/th/id/R.241d77e83e757b349dc5393cfb543151?rik=atrj7tViVkX%2bmg&pid=ImgRaw&r=0"
-
-                },
-                {
-
-                    title: "The Secret",
-                    description: `The Secret by Rhonda Byrne is a self-help book that explores the concept of the law of attraction, 
-                    which suggests that our thoughts and beliefs can shape our reality. Byrne emphasizes that positive
-                     thinking, visualization, and gratitude are key to attracting success, health, happiness, and other 
-                     desires into one’s life.`,
-                    book_img: "https://th.bing.com/th/id/OIP.ulGjOz3ZlaFmtAot7UKBGQHaJV?w=138&h=180&c=7&r=0&o=5&dpr=2.3&pid=1.7"
-
-                },
-                {
-
-                    title: "The Magic",
-                    description: `In The Magic, Rhonda Byrne reveals life-changing knowledge about the power of gratitude that was hidden within a 2,000-year-old sacred text. 
-                    Then, on an incredible 28-day journey, she teaches you how to apply this life-changing knowledge in your everyday life, completely transforming every aspect of your life into joy.`,
-                    book_img: "https://th.bing.com/th/id/OIP.5IePslOy6hKU_yG6GhFVGAHaLf?w=119&h=185&c=7&r=0&o=5&dpr=2.3&pid=1.7"
-
-                },
-            ],
-
             current_index: 0,
+            previous_index : 0,
         }
     },
     methods: {
         nextCard() {
-            this.current_index = (this.current_index + 1) % this.Card_data.length
+            setTimeout(()=>{
+                this.previous_index = this.current_index;
+                const random_index = Math.floor(Math.random() * this.Card_data.length);
+                this.current_index = random_index;
+            },250)
+           
         },
         previousCard() {
-            this.current_index = (this.current_index - 1 + this.Card_data.length) % this.Card_data.length;
+            setTimeout(()=>{
+                this.current_index = this.previous_index;
+            },250)
+           
         }
     },
 
@@ -59,9 +54,9 @@ export default {
         <article class="article">
             <h4>{{ Card_data[current_index].title }}</h4>
             <p> {{ Card_data[current_index].description }} </p>
-            <button>View Now</button>
+                <RouterLink :to="`/detail/${Card_data[current_index].id}`"><button>View Now</button></RouterLink>
         </article>
-        <img :src="Card_data[current_index].book_img" alt="books">
+        <img :src="Card_data[current_index].url_image" alt="books">
     </div>
 </template>
 

@@ -7,11 +7,12 @@ export const useBookStore = defineStore('BookData', {
     }),
 
     getters : {
+      getProductId: (state) => (id)=>{
+        return state.BookData.find((books)=>books.id==id)
+      }
         
     },
     actions: {
-        getBookData() {
-          console.log('BookData:', this.BookData); // Check if BookData is initialized
-        },
+      
       },
 })

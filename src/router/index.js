@@ -14,7 +14,7 @@ const routes = [
     component: Landing,
   },
   {
-    path: '/detail',
+    path: '/detail/:id',
     name: 'DetailBook',
     component: DetailBook,
   },

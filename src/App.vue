@@ -18,7 +18,7 @@ import { RouterView } from 'vue-router';
         <div class="wrap_card">
             <Card_book />
         </div>
-        <RouterView />
+        <RouterView :key="$route.params.id"/>
     </main>
 
     <Footer />
