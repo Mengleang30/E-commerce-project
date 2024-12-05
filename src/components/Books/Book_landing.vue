@@ -15,6 +15,8 @@ export default {
         Year : Number,
         Book_category : Array,
         LinkToDetail : Number,
+        HaveDiscount : Number,
+        AfterDiscount :  Number,
     },
     data() {
         return {
@@ -33,7 +35,7 @@ export default {
 </script>
 
 <template>
-    <article class="Each_book">
+    <article class="Each_book" v-if="true">
         <Favorite_icons :Clicked_favorite="Click_fav" @click="HandleClickFav" />
         <div class="each_book">
             <div class="wraping">
@@ -47,13 +49,19 @@ export default {
                 </span>
             </div>
             <div class="price_btn">
-                <h4 class="price">$ {{ Price.toFixed(2) }}</h4>
+                <h4 class="price" v-if="HaveDiscount==0">$ {{ Price.toFixed(2) }}</h4>
+                <div class="discount_UI" v-else>
+                    <h2 class="discount">{{ HaveDiscount }}%</h2>
+                    <h2 class="after_discount">${{ AfterDiscount.toFixed(2) }}</h2>
+                    <span class="before_dis">${{ Price.toFixed(2) }}</span>
+                </div>
                 <RouterLink :to="`/detail/${ LinkToDetail}`">
                     <button class="btn">View Now</button>
                 </RouterLink>
             </div>
         </div>
     </article>
+
 </template>
 <style scoped>
 .icons_love {
@@ -68,7 +76,15 @@ export default {
    
     height: 10rem;
 }
-
+.discount_UI{
+    display: flex;
+}
+.discount_UI .after_discount{
+    color: rgb(255, 52, 7);
+}
+.discount_UI .before_dis{
+    text-decoration: line-through;
+}
 .each_book {
     width: 12rem;
     padding: 5px;
@@ -91,6 +107,14 @@ export default {
     align-items: center;
     height: auto;
     width: 100%;
+}
+.discount {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    transform: rotate(-45deg);
+    color: red;
+    font-weight: bold;
 }
 
 .wraping h4 {

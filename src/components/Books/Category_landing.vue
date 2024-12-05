@@ -1,5 +1,6 @@
 <script>
 
+import { BookData } from '@/stores/Data';
 import Book_landing from './Book_landing.vue';
 import { useBookStore } from '@/stores';
 
@@ -15,7 +16,7 @@ export default {
             "Novel",
             "Philosophy",
             "Productivity",
-            ]
+            ],
         }
     },
     components: {
@@ -42,23 +43,28 @@ export default {
             Book_by_category
         }
     },
+    methods : {
+        afterDiscount(price){
+            
+        }
+
+    },
 
 }
 </script>
-
 
 <template>
     <div class="category_landing" v-for="category in this.Category_showing" :key="category" >
         <div class="wraping" >
             <h4 >Best {{ category }}</h4>
-            <div class="wraping_arrow">
-                <div class="left">&lt;</div>
-                <div class="right">&gt;</div>
-            </div>
+            <!-- <div class="wraping_arrow">
+                <div  class="left">&lt;</div>
+                <div  class="right">&gt;</div>
+            </div> -->
+            <span class="More_by_category">More</span>
+           
         </div>
-
-
-        <div class="contianer_book" v-if="FilterBooksByCategory(category).length>0">
+        <div class="contianer_book" v-if="FilterBooksByCategory(category).length>0" >
             <Book_landing v-for="Books in FilterBooksByCategory(category)" :key="Books.id"
             :Title="Books.title"
             :Author="Books.author"
@@ -67,6 +73,8 @@ export default {
             :Book_category="Books.category"
             :Price="Books.price"
             :LinkToDetail="Books.id"
+            :HaveDiscount="Books.discount"
+            :AfterDiscount="(Books.price)*(1 - Books.discount/100)"
             />
         </div>
     </div>
@@ -76,6 +84,7 @@ export default {
 .category_landing {
     height: auto;
     margin: 10px 0;
+   
 }
 
 .category_landing .wraping {
@@ -112,6 +121,7 @@ export default {
     gap: 5px;
     overflow-x: auto;
     padding-bottom: .8rem;
+    scroll-behavior: smooth;
 }
 ::-webkit-scrollbar {
     width: 8px; /* Width of the scrollbar */

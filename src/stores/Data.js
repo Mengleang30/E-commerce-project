@@ -19,7 +19,7 @@ export const BookData = [
         category: ["Motivational", "Inspirational", 
         "Personal Development ", "Setf Help"],
         code : 1,
-        discount : 0,
+        discount : 10,
         rated : 4,
         user_comment : [
             {
@@ -118,7 +118,7 @@ export const BookData = [
         Language: ["English"],
         category: ["Novel"],
         code : 2221,
-        discount : 0,
+        discount : 25,
         rated : 5,
         user_comment : [
             {
@@ -166,7 +166,7 @@ export const BookData = [
         Language: ["English"],
         category: ["Philosophy"],
         code : 2121,
-        discount : 0,
+        discount : 20,
         rated : 5,
         user_comment : [
             {
@@ -258,7 +258,7 @@ export const BookData = [
         Language: ["English"],
         category: ["Philosophy", "Education"],
         code : 2224,
-        discount : 0,
+        discount : 10,
         rated : 5,
         user_comment : [
             {
@@ -1117,7 +1117,7 @@ export const BookData = [
         Language: ["English", "German", "Russian"],
         category: ["Novel", "Dystopian"],
         code: 6164,
-        discount: 0, // Discount in percentage
+        discount: 5, // Discount in percentage
         rated: 4.9,
         user_comment: [
             {
