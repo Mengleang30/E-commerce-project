@@ -55,6 +55,8 @@ export default {
                     <h2 class="after_discount">${{ AfterDiscount.toFixed(2) }}</h2>
                     <span class="before_dis">${{ Price.toFixed(2) }}</span>
                 </div>
+
+                <!-- Link to each book -->
                 <RouterLink :to="`/detail/${ LinkToDetail}`">
                     <button class="btn">View Now</button>
                 </RouterLink>

@@ -17,6 +17,7 @@ const routes = [
     path: '/detail/:id',
     name: 'DetailBook',
     component: DetailBook,
+    
   },
   {
     path: '/list-book',

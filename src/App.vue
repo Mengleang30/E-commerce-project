@@ -20,9 +20,12 @@ const route = useRoute();
         <div class="wrap_card">
             <Card_book v-if="route.name !== 'DetailBook'"/>
         </div>
-        <RouterView :key="$route.params.id"/>
+        <RouterView v-slot="{Component}">
+            <KeepAlive exclude="Detail_book">
+                <component :is="Component"/>
+            </KeepAlive>
+        </RouterView>
     </main>
-
     <Footer />
 
 </template>

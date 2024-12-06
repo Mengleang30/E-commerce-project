@@ -16,6 +16,7 @@ export default {
             "Novel",
             "Philosophy",
             "Productivity",
+            "Education"
             ],
         }
     },
@@ -24,8 +25,9 @@ export default {
     },
 
     computed : {
+
+        /// Return a function to filter books for a specific category
         FilterBooksByCategory() {
-      // Return a function to filter books for a specific category
       return (category) =>
         this.Book_by_category.BookData.filter((book) =>
           book.category.some(
@@ -44,9 +46,6 @@ export default {
         }
     },
     methods : {
-        afterDiscount(price){
-            
-        }
 
     },
 
