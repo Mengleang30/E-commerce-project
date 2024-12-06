@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "e_commerce_project": "file:",
     "pinia": "^2.2.8",
     "vite": "^6.0.2",
     "vue": "^3.5.13",
