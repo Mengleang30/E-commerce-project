@@ -4,9 +4,9 @@
 <template>
     <article>
         <div class="favorites">
-            <h2>My Favourite</h2>
+            <h2>
     <div class="book-list">
-        <!-- Book Card Example -->
+
         <div class="book-card">
             <img src="https://m.media-amazon.com/images/I/81l3rZK4lnL._AC_UF1000,1000_QL80_.jpg" alt="Ikigai Book" class="book-image">
             <div class="book-content">
@@ -15,8 +15,11 @@
                 <a href="#" class="book-edition">Hardcover Edition</a>
             </div>
             <div class="book-actions">
-                <button class="delete-btn" title="Delete">🗑️</button>
-                <button class="add-btn" title="Add">➕</button>
+                <button class="delete-btn" title="Delete">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKwoPKQU2hidR3sNc12cNjYkuvDIR6p9_QgA&s" alt="Button" class="button-image">
+                    
+                        </button>
+                        <button class="add-btn" title="Add">➕</button>
             </div>
         </div>
                 <div class="book-card">
@@ -24,10 +27,13 @@
                     <div class="book-content">
                         <h3 class="book-title">You got this: 90...</h3>
                         <p class="book-price">$ 10.99</p>
-                        <a href="#" class="book-edition">Hardcover Edition</a>
+                        <span href="#" class="book-edition">Hardcover Edition</span>
                     </div>
                     <div class="book-actions">
-                        <button class="delete-btn" title="Delete">🗑️</button>
+                        <button class="delete-btn" title="Delete">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKwoPKQU2hidR3sNc12cNjYkuvDIR6p9_QgA&s" alt="Button" class="button-image">
+                    
+                        </button>
                         <button class="add-btn" title="Add">➕</button>
                     </div>
                 </div>
@@ -39,7 +45,10 @@
                         <a href="#" class="book-edition">Hardcover Edition</a>
                     </div>
                     <div class="book-actions">
-                        <button class="delete-btn" title="Delete">🗑️</button>
+                        <button class="delete-btn" title="Delete">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKwoPKQU2hidR3sNc12cNjYkuvDIR6p9_QgA&s" alt="Button" class="button-image">
+                    
+                        </button>
                         <button class="add-btn" title="Add">➕</button>
                     </div>
                 </div>
@@ -51,7 +60,10 @@
                         <a href="#" class="book-edition">Hardcover Edition</a>
                     </div>
                     <div class="book-actions">
-                        <button class="delete-btn" title="Delete">🗑️</button>
+                        <button class="delete-btn" title="Delete">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKwoPKQU2hidR3sNc12cNjYkuvDIR6p9_QgA&s" alt="Button" class="button-image">
+                    
+                        </button>
                         <button class="add-btn" title="Add">➕</button>
                     </div>
                 </div>
@@ -63,7 +75,10 @@
                         <a href="#" class="book-edition">Hardcover Edition</a>
                     </div>
                     <div class="book-actions">
-                        <button class="delete-btn" title="Delete">🗑️</button>
+                        <button class="delete-btn" title="Delete">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKwoPKQU2hidR3sNc12cNjYkuvDIR6p9_QgA&s" alt="Button" class="button-image">
+                    
+                        </button>
                         <button class="add-btn" title="Add">➕</button>
                     </div>
                 </div>
@@ -72,18 +87,35 @@
             <div class="social-share">
         <span>Share on:</span>
         <div class="social-icons">
-            <a href="#" title="Facebook">📘</a>
-            <a href="#" title="Twitter">🐦</a>
-            <a href="#" title="Telegram">📲</a>
-            <a href="#" title="Pinterest"></a>
-            <a href="#" title="WhatsApp">💬</a>
+            <a href="http://facebook.com" title="Facebook">
+                <img src="https://e7.pngegg.com/pngimages/201/462/png-clipart-computer-icons-facebook-facebook-logo-black-and-white-thumbnail.png" class="share-image">
+            </a>
+            <a href="http://Instagram.com" title="Instagram">
+                <img src="https://cdn3.iconfinder.com/data/icons/transparent-on-dark-grey/500/icon-04-512.png" class="share-image">
+            </a>
+            <a href="http://web.telegram.org" title="Telegram">
+                <img src="https://vladsydorchuk.github.io/htmlcssjs_introduce/images/telegram.png" class="share-image">
+            </a>
+            <a href="http://Twitter.com" title="Twitter">
+                <img src="https://sweetwaternow.nyc3.cdn.digitaloceanspaces.com/wp-content/uploads/2024/01/Depositphotos_676194222_XL-1-scaled.jpg" class="share-image">
+            </a>
+            <a href="http://Pinterest.com" title="Pinterest">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjuEnG5nObeDxGDzNOX7d0VKeNx5mL08a2yg&s" class="share-image">
+            </a>
+            <a href="http://Whatapp.com" title="WhatsApp">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6c_wkx7wDbOuteOhc4LDZF2hPtEw-VzujAw&s" class="share-image">
+            </a>
+            
             </div>
             </div>
+        </h2>
         </div>
+    
     </article>
+    
 </template>
 
-<style>
+<style scoped>
 
 .favorites {
     max-width: 800px;
@@ -97,28 +129,28 @@
 
 h2 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 
 .book-list {
-    max-height: 400px;
-    overflow-y: auto; /* Enables vertical scrolling */
-    padding-right: 10px; /* Prevents scrollbar overlap with content */
-    scrollbar-width: thin;
-    scrollbar-color: #bbb #f0f0f0;
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 15px;
+    scrollbar-width: 40px;
+    scrollbar-color: #636161 #dee2e1;
 }
 
 
 .book-list::-webkit-scrollbar {
-    width: 8px;
+    width: 20px;
 }
 .book-list::-webkit-scrollbar-thumb {
-    background: #bbb;
-    border-radius: 4px;
+    background: #202020;
+    border-radius: 50px;
 }
 .book-list::-webkit-scrollbar-thumb:hover {
-    background: #888;
+    background: #1b1a1a;
 }
 
 .book-card {
@@ -127,25 +159,31 @@ h2 {
     justify-content: space-between;
     padding: 15px; /* Inside card spacing */
     margin-bottom: 15px; /* Spacing between cards */
-    border: 1px solid #ddd;
+    border: 1px solid #d3cdcd;
     border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: #f3f2f2e1;
+    box-shadow: 0 2px 4px rgb(167, 163, 163);
 }
 .book-card:last-child {
     border-bottom: none;
 }
 
 .book-image {
-    height: 60px;
+    height: 80px;
     width: auto;
     border-radius: 5px;
     margin-right: 10px;
 }
+.button-image {
+    height: 20px;
+    border-radius: 1px;
+    margin-right: 1px;
+}
+
 
 .book-content {
     flex-grow: 1;
-    margin-right: 10px; /* Adds space between content and buttons */
+    margin-right: 10px;
 }
 
 .book-title {
@@ -204,6 +242,7 @@ button {
 .add-product-btn {
     display: block;
     margin: 0 auto;
+    margin-top: 50px;
     padding: 10px 20px;
     background-color: #000;
     color: #fff;
@@ -215,22 +254,25 @@ button {
 }
 
 .add-product-btn:hover {
-    background-color: #333;
+    background-color: #f3ecec;
 }
 
 .social-share {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 60px;
+}
+.share-image{
+    height: 20px;
+    border-radius: 1px;
+    margin-right: 1px;
 }
 
+
 .social-share .social-icons a {
-    margin: 12px;
-    font-size: 20px;
+    margin: 8px;
+    font-size: 40px;
     color: #333;
     text-decoration: none;
 }
 
-.social-share .social-icons a:hover {
-    color: #dadfe4;
-}
 </style>
