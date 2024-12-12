@@ -1,5 +1,35 @@
 <script setup>    
 
+import { ref, onMounted, onUnmounted } from 'vue';
+
+const currentDateTime = ref(""); 
+let intervalId = null; 
+
+function updateDateTime() {
+  // Get the current date and time in Cambodia
+  const options = {
+    timeZone: "Asia/Phnom_Penh",
+    year: "numeric",
+    month: "short", 
+    day: "2-digit",
+    weekday: "short", 
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  };
+  currentDateTime.value = new Date().toLocaleTimeString("en-US", options);
+}
+
+
+onMounted(() => {
+  updateDateTime(); 
+  intervalId = setInterval(updateDateTime, 1000); 
+});
+
+onUnmounted(() => {
+  clearInterval(intervalId);
+});
 
 </script>   
 
@@ -17,6 +47,7 @@
                 <img src="https://img.icons8.com/?size=100&id=19318&format=png&color=000000" alt=""> 
                 <img src="https://img.icons8.com/?size=100&id=38863&format=png&color=000000" alt="">   
             </div>  
+            
             </div>  
 
             <div class="wrap_link"> 
@@ -49,10 +80,10 @@
             <div class="wrapping_div">  
                 <div class="phone"> 
                     <img src="https://img.icons8.com/?size=100&id=ufkkYBXJSuPy&format=png&color=000000" alt=""> 
-                    <span>Phone</span>  
+                    <span>Phone </span>  
                     
                 </div>  
-                <i class="specific">+885 102973812</i>
+                <i class="specific">+885 102973812 (24/24h)</i>
                 </div> 
                  
                 <div class="wrapping_div">  
@@ -60,18 +91,14 @@
                     <img src="https://img.icons8.com/?size=100&id=PZTTDl8ML4vy&format=png&color=000000" alt=""> 
                     <span>Address</span>    
                 </div>  
-                <address class="specific">Phnom Penh,
+                <address class="specific">ITC ,Phnom Penh,
                     Cambodia
+                    <p>{{ currentDateTime }}</p>
                 </address>    
             </div>  
-                
             </div>  
           
             </div>  
-            
-
-
-
         </div>  
         
     </footer>   
@@ -89,7 +116,6 @@
     box-shadow: 0px 4px 3px rgb(0, 0, 0, 20%);  
     border-radius: .16rem;  
     border: 2px solid rgb(136, 136, 136);   
-
 }   
 .wrapping_footer{   
     display:grid;  
@@ -197,7 +223,7 @@
     height: auto;
     font-weight: 500;
     padding: 5px;
-    width: 90%;
+    width: 95%;
 }
 .wrapping_div:hover{
     background-color: floralwhite;

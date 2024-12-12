@@ -3,6 +3,7 @@
 import { BookData } from '@/stores/Data';
 import Book_landing from './Book_landing.vue';
 import { useBookStore } from '@/stores';
+import { computed } from 'vue';
 
 
 
@@ -41,8 +42,14 @@ export default {
     setup () {
         const Book_by_category = useBookStore();
         
+        const discountBooks = computed(()=>{
+            return Book_by_category.BookData.filter((books)=>books.discount>0);
+        })
+
+        
          return {
             Book_by_category,
+            discountBooks,
         }
 
     },
@@ -50,17 +57,13 @@ export default {
 </script>
 
 <template>
-    <div class="category_landing" v-for="category in this.Category_showing" :key="category" >
+
+<div class="category_landing">
         <div class="wraping" >
-            <div>{{ Book_by_category.FavoriteBooks }}</div>
-            <h4 >Best {{ category }}</h4>
-            <!-- <div class="wraping_arrow">
-                <div  class="left">&lt;</div>
-                <div  class="right">&gt;</div>
-            </div> -->           
+            <h4 >Discount Books</h4>         
         </div>
-        <div class="contianer_book" v-if="FilterBooksByCategory(category).length>0" >
-            <Book_landing  v-for="Books in FilterBooksByCategory(category)" :key="Books.id "
+        <div class="contianer_book">
+            <Book_landing  v-for="Books in discountBooks.slice(0,7)" :key="Books.id "
             :Title="Books.title"
             :Author="Books.author"
             :Year="Books.published"
@@ -75,6 +78,32 @@ export default {
             />
         </div>
     </div>
+    <div class="category_landing" v-for="category in this.Category_showing" :key="category" >
+        <div class="wraping" >
+          
+            <h4 >Best {{ category }}</h4>
+            <!-- <div class="wraping_arrow">
+                <div  class="left">&lt;</div>
+                <div  class="right">&gt;</div>
+            </div> -->           
+        </div>
+        <div class="contianer_book" v-if="FilterBooksByCategory(category).length>0" >
+            <Book_landing  v-for="Books in FilterBooksByCategory(category).slice(0,7)" :key="Books.id "
+            :Title="Books.title"
+            :Author="Books.author"
+            :Year="Books.published"
+            :Url_img="Books.url_image"
+            :Book_category="Books.category"
+            :Price="Books.price"
+            :LinkToDetail="Books.id"
+            :HaveDiscount="Books.discount"
+            :AfterDiscount="(Books.price)*(1 - Books.discount/100)"
+            :idBook="Books.id"
+            :Clicked_favorite="false"
+            />
+        </div>
+    </div>
+   
 </template>
 
 <style>
@@ -96,7 +125,9 @@ export default {
     overflow-x: auto;
     padding-bottom: .8rem;
     scroll-behavior: smooth;
+    
 }
+
 ::-webkit-scrollbar {
     width: 8px; /* Width of the scrollbar */
     height: 6px;

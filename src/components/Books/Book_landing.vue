@@ -118,6 +118,12 @@ export default {
     box-shadow: 2px 2px 2px rgb(0, 0, 0, 20%);
     border-radius: .1rem;
     outline: 1px solid rgb(221, 221, 221);
+    transition: all .3s;
+}
+.Each_book:hover{
+    transform: scale(1.01);
+    background-color: rgb(239, 239, 239);
+
 }
 
 .wraping {

@@ -60,6 +60,11 @@ export default {
       <BackButton @click="Back" />
       <div class="img_container">
         <img :src="found_book.url_image" alt="" />
+        <hr />
+        <div class="book_description">
+          <h4>Description</h4>
+          <p>{{ found_book.description }}</p>
+        </div>
       </div>
       <article class="information_container">
         <h2>{{ found_book.title }}</h2>
@@ -77,18 +82,65 @@ export default {
           </div>
         </div>
 
-        <div class="label_inform">
-          Rated : <Star v-for="i in Math.floor(found_book.rated)" :key="i" />
+        <div class="grid_container">
+          <div class="box_inform">
+            <h4>Author</h4>
+            <p>{{ found_book.author }}</p>
+          </div>
+          <div class="box_inform">
+            <h4>Price</h4>
+            <p class="price">${{ found_book.price }}</p>
+          </div>
+          <div class="box_inform">
+            <h4>Rated</h4>
+            <div class="wrap_star">
+              <Star v-for="i in Math.floor(found_book.rated)" :key="i" />
+            </div>
+          </div>
+          <div class="box_inform">
+            <h4>Language</h4>
+            <p>{{ found_book.Language.join(", ") }}</p>
+          </div>
+
+          <div class="box_inform">
+            <h4>Category</h4>
+            <p>{{ found_book.category.join(", ") }}</p>
+          </div>
+          <div class="box_inform">
+            <h4>Published</h4>
+            <p>{{ found_book.published }}</p>
+          </div>
+          <div class="box_inform">
+            <h4>Discount</h4>
+            <p>{{ found_book.discount }}%</p>
+          </div>
+
+          <div class="box_inform">
+            <h4>Code</h4>
+            <p>{{ found_book.code }}</p>
+          </div>
         </div>
-        <div class="label_inform">Published : {{ found_book.published }}</div>
-        <div class="label_inform">
-          Category : {{ found_book.category.join(" + ") }}
-        </div>
-        <div class="label_inform">Code : {{ found_book.code }}</div>
+
         <hr />
-        <div class="book_description">
-          <h4>Description</h4>
-          <p>{{ found_book.description }}</p>
+      </article>
+    </div>
+    <div class="comment_container" >
+        <h3>Comment</h3>
+      <article class="each_comment" v-for="userComment in found_book.user_comment" :key="userComment">
+        <img
+          src="https://img.icons8.com/?size=100&id=mlMB8cHGuy5i&format=png&color=000000"
+          alt=""
+        />
+        <div class="warp">
+          <div class="box_comment">
+            <div class="profile">
+                <span class="name">{{ userComment.name}}</span>
+                <div class="date">
+                    <span >{{ userComment.date }}</span>
+                </div>
+            </div>
+            <div class="comment">{{ userComment.comment }}</div>
+          </div>
         </div>
       </article>
     </div>
@@ -96,7 +148,7 @@ export default {
   <h2 v-else>Book not found</h2>
 </template>
 
-<style>
+<style scoped>
 .detail_book {
   width: auto;
   min-height: 80vh;
@@ -110,44 +162,86 @@ export default {
   border-radius: 0.6rem;
   position: relative;
   padding-top: 2.4rem;
-  box-shadow: 2px 2px 3px rgb(148, 148, 148);
+  box-shadow: 3px 3px 5px rgb(148, 148, 148);
+  outline: 1px solid rgb(158, 158, 158);
 }
 .book_container img {
-  width: 16rem;
-  height: 24rem;
+  width: 13rem;
+  height: 20rem;
 }
 
 .book_description {
   width: 100%;
   padding: 2px;
+  font-size: 0.8rem;
 }
 
+.grid_container {
+  padding: 2px;
+  display: grid;
+  margin: 1rem 0;
+  gap: 4px;
+  height: auto;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+}
+.box_inform {
+  background: linear-gradient(
+    to left bottom,
+    #686868,
+    #5e5f5f,
+    #202020,
+    #6e6f6d,
+    #7b7b7b
+  );
+  display: flex;
+  flex-grow: 1;
+  height: auto;
+  flex-direction: column;
+  padding: 5px;
+  align-items: center;
+  border: 2px solid rgb(136, 136, 136);
+  border-radius: 0.6rem;
+  color: white;
+}
+
+.box_inform:hover {
+  background: rgb(50, 54, 57);
+}
+.box_inform p {
+  font-size: small;
+  text-align: center;
+}
+.box_inform .price {
+  font-size: medium;
+}
+.wrap_star {
+  display: flex;
+  gap: 5px;
+}
 .img_container {
-  width: 18rem;
-  background-color: antiquewhite;
+  width: 22rem;
   border: 1px solid rgb(133, 133, 133);
-  height: 100%;
+
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   padding: 5px;
   box-shadow: 2px 2px 3px rgb(148, 148, 148);
   border-radius: 5px;
+  gap: 10px;
 }
 
-.information_container h2 {
-}
 .information_container {
   padding-left: 1rem;
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  row-gap: 0.8rem;
+  row-gap: 0.25rem;
   height: auto;
+  flex-grow: 1;
 }
 .wrap_cart {
   display: flex;
   align-items: center;
+  margin: 1rem 0;
   gap: 0.8rem;
 }
 
@@ -166,7 +260,7 @@ export default {
   cursor: pointer;
 }
 .wrap_cart .subtract {
-  background-color: rgb(174, 174, 174);
+  background-color: rgb(102, 102, 102);
   opacity: 80%;
 }
 .subtract:hover {
@@ -238,4 +332,59 @@ input[type="number"]::-webkit-inner-spin-button {
   cursor: pointer;
   color: rgb(218, 69, 10);
 }
+
+.comment_container {
+  background: linear-gradient(rgba(217, 217, 217, 1), rgba(255, 255, 255, 1));
+  padding: .3rem;
+  margin: 0.5rem 0.5rem;
+  box-shadow: 3px 3px 5px rgb(148, 148, 148);
+  outline: 1px solid rgb(158, 158, 158);
+}
+.comment_container img {
+  width: 3rem;
+  height: 3rem;
+}
+.each_comment {
+   
+    display: flex;
+    padding: 5px;
+    gap: 2px;
+    flex-grow: 1;
+   
+}
+.warp{
+    display: flex;
+    min-width: 40%;
+    border-radius: .4rem;
+}
+
+.date{
+    font-size: 10px;
+}
+.name{
+    font-size: 0.9rem;
+}
+.box_comment{
+    padding: 5px;
+    
+    flex-grow: 1;
+}
+
+.profile {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.each_comment .comment{
+    background: linear-gradient(to right bottom, #8e9797, #96a19e, #a1aaa4, #adb3a9, #bcbcaf);
+    display: block;
+    padding: 5px;
+    border: 1px solid rgb(159, 156, 156);
+    border-radius: .4rem;
+    font-size: small;
+    box-shadow: 3px 3px 5px rgb(148, 148, 148);
+    outline: 1px solid rgb(158, 158, 158);
+}
+
 </style>
