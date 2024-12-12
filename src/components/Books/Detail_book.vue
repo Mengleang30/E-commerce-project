@@ -62,24 +62,29 @@ export default {
         <img :src="found_book.url_image" alt="" />
         <hr />
         <div class="book_description">
-          <h4>Description</h4>
+          <h3>Description</h3>
           <p>{{ found_book.description }}</p>
         </div>
       </div>
       <article class="information_container">
         <h2>{{ found_book.title }}</h2>
-        <div class="label_inform">
-          Price :
+        <div class="label_inform" v-if="found_book.discount==0">
+            <p>Price :</p>
           <h2 class="price">${{ found_book.price.toFixed(2) }}</h2>
+        </div>
+        <div class="label_inform" v-else>
+            <p>Price :</p>
+            <div class="wrap_price">
+                <h3 class="price">${{ found_book.price.toFixed(2)*(1-found_book.discount/100) }}</h3>
+                <p>${{ found_book.price }}</p>
+            </div>
         </div>
         <div class="wrap_cart">
           <div class="subtract" @click="SubNumberOrder">-</div>
           <input type="number" placeholder="1" v-model="this.numberOrder" />
           <div class="adding" @click="AddNumberOrder">+</div>
           <button>Add To Cart</button>
-          <div class="wrapping_fav">
-            <Fovite_icons :Clicked_favorite="true" class="Favorite_btn" />
-          </div>
+         
         </div>
 
         <div class="grid_container">
@@ -88,7 +93,7 @@ export default {
             <p>{{ found_book.author }}</p>
           </div>
           <div class="box_inform">
-            <h4>Price</h4>
+            <h4>Original Price</h4>
             <p class="price">${{ found_book.price }}</p>
           </div>
           <div class="box_inform">
@@ -118,6 +123,12 @@ export default {
           <div class="box_inform">
             <h4>Code</h4>
             <p>{{ found_book.code }}</p>
+          </div>
+          <div class="box_inform">
+            <h4>Favorite</h4>
+            <div class="wrapping_fav">
+            <Fovite_icons :Clicked_favorite="true" class="Favorite_btn" />
+          </div>
           </div>
         </div>
 
@@ -165,15 +176,26 @@ export default {
   box-shadow: 3px 3px 5px rgb(148, 148, 148);
   outline: 1px solid rgb(158, 158, 158);
 }
+.img_container {
+  display: flex;
+  width: 25rem;
+  align-items: center;
+  flex-direction: column;
+  padding: 5px;
+  border-radius: 5px;
+  gap: 10px;
+}
 .book_container img {
-  width: 13rem;
-  height: 20rem;
+    aspect-ratio: 2/3;
+    width: 80%;
 }
 
 .book_description {
   width: 100%;
   padding: 2px;
-  font-size: 0.8rem;
+  /* font-size: 0.8rem; */
+  font-size: clamp(0.7rem, 2vw, 1rem); 
+  text-align: center;
 }
 
 .grid_container {
@@ -204,6 +226,16 @@ export default {
   color: white;
 }
 
+.wrap_price{
+    display: flex;
+   
+}
+.wrap_price p{
+    text-decoration:line-through;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
 .box_inform:hover {
   background: rgb(50, 54, 57);
 }
@@ -218,19 +250,7 @@ export default {
   display: flex;
   gap: 5px;
 }
-.img_container {
-  width: 22rem;
-  border: 1px solid rgb(133, 133, 133);
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 5px;
-  box-shadow: 2px 2px 3px rgb(148, 148, 148);
-  border-radius: 5px;
-  gap: 10px;
-}
 
 .information_container {
   padding-left: 1rem;
@@ -242,7 +262,8 @@ export default {
   display: flex;
   align-items: center;
   margin: 1rem 0;
-  gap: 0.8rem;
+  gap: 0.4rem;
+  
 }
 
 .wrap_cart .subtract,

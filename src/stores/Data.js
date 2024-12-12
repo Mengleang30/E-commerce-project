@@ -49,6 +49,15 @@ export const BookData = [
                 `,
                 date : "12 : 30 pm -30.10.2023",
             },
+            {
+                user_id : 231,
+                name : "Alien",
+                comment : `
+                Great book, Come in great condition. A go-to when needing reminding
+                of the good in life nad laws of attraction. 
+                `,
+                date : "12 : 30 pm -30.10.2023",
+            },
 
         ], 
     },
@@ -91,6 +100,14 @@ export const BookData = [
                 of the good in life nad laws of attraction. 
                 `,
                 date : "09 : 30 pm -12.12.2024",
+            },
+            {
+                user_id: 430,
+                name: "Mia Clark",
+                comment: `
+                    Some parts felt too speculative, but overall a brilliant perspective on humanity's evolution.
+                `,
+                date: "05:20 pm -26.11.2024",
             },
             {
                 user_id : 231,
