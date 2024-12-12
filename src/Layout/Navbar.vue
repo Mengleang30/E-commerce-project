@@ -5,20 +5,36 @@ export default {
         Nav_name : String,
         Link : String,
         Image : String,
-        isSelectRoute : Boolean
+        isSelectRoute : Boolean,
+        NavWithCart : String,
     }
 }
 </script>
 <template>
     <nav>
         <ul>
-            <li>
-                <RouterLink :class="{active : isSelectRoute}"  class="link" :to=Link>
+            <RouterLink :class="{active : isSelectRoute}"  class="link" :to=Link>
                     <img :src="Image" alt="">
-                    {{ Nav_name }}
-                </RouterLink>
-            </li>
+                    <span>{{ Nav_name }}</span>
+                    <div class="Number_cart" v-if="NavWithCart=='Cart'">0</div>
+            </RouterLink>
         </ul>
     </nav>
 
 </template>
+
+<style>
+
+.Number_cart{
+    background-color: red;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: aliceblue;
+}
+
+</style>

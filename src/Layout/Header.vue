@@ -9,6 +9,7 @@ import feedback from '@/assets/icons_nav/feedback.png'
 import login from '@/assets/icons_nav/login.png'
 import product from '@/assets/icons_nav/product.png'
 import books from '@/assets/icons_nav/books.png'
+import logo_bookstore from '@/assets/logo_bookstore.jpg'
 
 
 export default {
@@ -19,6 +20,8 @@ export default {
 
     data() {
         return {
+
+            logo : logo_bookstore,
 
             NavBar_data: [
                 {
@@ -103,19 +106,27 @@ export default {
     <header ref="navbarRef">
 
         <div class="option">
-            <svg @click="toggleNavbar" :class="isRotated ? 'rotated' : 'non-rotated'" xmlns="http://www.w3.org/2000/svg"
+            <div class="wrap_logo">
+                <svg @click="toggleNavbar" :class="isRotated ? 'rotated' : 'non-rotated'" xmlns="http://www.w3.org/2000/svg"
                 fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
-            <h3 class="title">Book Store</h3>
+                <img  class="logo":src="logo" alt="">
+            </div>
         </div>
 
         <transition name="nav-transition">
-            <div v-if="isNavbarVisible" class="wrap_nav">
-                <Navbar v-for="NavbarItem in NavBar_data" :Nav_name="NavbarItem.nav_name" :Link="NavbarItem.link"
+        <div v-if="isNavbarVisible" class="wrap_nav">
+            <h3>Welcome to Books Shop</h3>
+            <hr>
+            <Navbar v-for="NavbarItem in NavBar_data" :Nav_name="NavbarItem.nav_name" :Link="NavbarItem.link"
                     :key="NavbarItem.nav_name" :Image="NavbarItem.icon"
-                    :isSelectRoute="isSelectRoute(NavbarItem.link)" />
-            </div>
+                    :isSelectRoute="isSelectRoute(NavbarItem.link)" 
+                    :NavWithCart = "NavbarItem.nav_name"
+                    />
+            <p>You can sign Up to create personal account .</p>
+        </div>
+        
         </transition>
 
 
@@ -143,12 +154,7 @@ export default {
             </RouterLink>
             <RouterLink to="/login" class="sign_in">
                 Sign In
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75
-                     0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 
-                14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                </svg>
+                <img src="https://img.icons8.com/?size=100&id=SGzXySsTA7pR&format=png&color=000000" alt="">
 
             </RouterLink>
         </div>
@@ -158,9 +164,9 @@ export default {
 
 <style>
 header {
-    background-color: rgb(211, 211, 211);
+    background-color: rgb(255, 255, 255);
     display: flex;
-    height: 5rem;
+    min-height: 5rem;
     align-items: center;
     position: sticky;
     top: 0;
@@ -169,7 +175,7 @@ header {
     column-gap: 1rem;
     justify-content: space-between;
     z-index: 300;
-  
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -195,11 +201,22 @@ header svg {
     gap: 6px;
 
 }
-
+.wrap_logo{
+    background-color: white;
+    align-items: center;
+    display: flex;
+}
+.wrap_logo 
 .title,
 ::placeholder {
     text-shadow: 0px 4px 2px rgb(0, 0, 0, 20%);
 
+}
+
+.logo {
+    height: 4.5rem;
+    width: 9rem;
+    border-radius: .5rem;
 }
 
 ::placeholder {
@@ -270,10 +287,12 @@ header .number_cart {
     border-radius: .4rem;
     text-decoration: none;
     color: black;
+    font-size: small;
     box-shadow: 3px 3px 3px rgb(0, 0, 0, 20%);
+    gap: 3px;
 }
 
-.sign_in svg {
+.sign_in img {
     width: 1.6rem;
     cursor: pointer;
 }
@@ -291,10 +310,8 @@ header .number_cart {
 }
 
 nav {
-    padding: .4rem;
-    background-color: rgb(199, 199, 199);
-
-    width: 10rem;
+    padding: .2rem;
+    /* background-color: rgb(234, 234, 234); */
     height: auto;
 }
 
@@ -303,36 +320,49 @@ nav ul {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    height: 100%;
+    height: auto;
 }
 
 nav ul img {
-    width: 1.5rem;
+    width: 2rem;
 }
 
-nav ul li .link {
+nav ul .link {
     text-decoration: none;
     color: black;
-    background-color: rgba(248, 243, 243, 1);
+    background-color: rgb(255, 255, 255);
     display: flex;
-    height: 2.4rem;
+    height: 3rem;
     align-items: center;
-    padding-left: 10px;
+    padding-left: 1.2rem;
     gap: .8rem;
     border-radius: 0.3rem;
-    box-shadow: 3px 3px 3px rgb(0, 0, 0, 20%);
+    box-shadow: 3px 3px 6px rgb(0, 0, 0, 20%);
+    width: 14rem;
 }
 
+nav ul .link:hover {
+    background-color: rgb(234, 234, 234);
+   
+}
 
 .wrap_nav {
     position: absolute;
     z-index: 100;
-    left: 1rem;
+    left: 0rem;
     height: auto;
-    top: 3.6rem;
+    top: 6.5rem;
+    background-color: whitesmoke;
+    display: flex;
+    max-width: 15rem;
+    flex-direction: column;
     transition: transform 0.8s ease; 
+    padding: 5px;
+    box-shadow: 3px 3px 4px rgba(93, 93, 93, 0.2);
+    gap: 6px;
+    text-align: center;
 }
+
 
 .nav-transition-enter-active,
 .nav-transition-leave-active {
@@ -341,23 +371,24 @@ nav ul li .link {
 
 .nav-transition-enter, 
 .nav-transition-leave-to {
-  transform: translateX(-100%);  /* Position for both entering and leaving */
+  transform: translateX(-100%); 
 }
 .nav-transition-enter-to {
-  transform: translateX(0); /* Position when the nav is fully visible */
+  transform: translateX(0);
 }
 
 
-nav ul li .link.active {
-    background-color: #62affc;
+nav ul .link.active {
+   
     color: white;
     font-weight: bold;
+    text-decoration: underline;
+    outline: 2px solid rgb(16, 152, 220);
+    background-image: linear-gradient(to right bottom, #629aee, #4e8aea, #3b7be6, #296be0, #165ada);
 }
 
 .rotated {
     transform: rotate(90deg);
-    background-color: rgb(222, 222, 222);
-    border-radius: 50%;
     transition: transform 0.3s;
 }
 

@@ -25,46 +25,42 @@ export default {
     },
 
     computed : {
-
         /// Return a function to filter books for a specific category
         FilterBooksByCategory() {
-      return (category) =>
+        return (category) =>
         this.Book_by_category.BookData.filter((book) =>
           book.category.some(
             (bookCategory) =>
               bookCategory.trim().toLocaleLowerCase() === category.trim().toLocaleLowerCase()
           )
         );
+
     },
     },
 
     setup () {
-        const Book_by_category = useBookStore(); 
+        const Book_by_category = useBookStore();
         
-        return {
-            Book_by_category
+         return {
+            Book_by_category,
         }
-    },
-    methods : {
 
     },
-
 }
 </script>
 
 <template>
     <div class="category_landing" v-for="category in this.Category_showing" :key="category" >
         <div class="wraping" >
+            <div>{{ Book_by_category.FavoriteBooks }}</div>
             <h4 >Best {{ category }}</h4>
             <!-- <div class="wraping_arrow">
                 <div  class="left">&lt;</div>
                 <div  class="right">&gt;</div>
-            </div> -->
-            <span class="More_by_category">More</span>
-           
+            </div> -->           
         </div>
         <div class="contianer_book" v-if="FilterBooksByCategory(category).length>0" >
-            <Book_landing v-for="Books in FilterBooksByCategory(category)" :key="Books.id"
+            <Book_landing  v-for="Books in FilterBooksByCategory(category)" :key="Books.id "
             :Title="Books.title"
             :Author="Books.author"
             :Year="Books.published"
@@ -74,6 +70,8 @@ export default {
             :LinkToDetail="Books.id"
             :HaveDiscount="Books.discount"
             :AfterDiscount="(Books.price)*(1 - Books.discount/100)"
+            :idBook="Books.id"
+            :Clicked_favorite="false"
             />
         </div>
     </div>
@@ -88,32 +86,9 @@ export default {
 
 .category_landing .wraping {
     display: flex;
-    justify-content: space-between;
     padding: 5px 10px;
 }
 
-.wraping_arrow {
-    display: flex;
-    font-size: larger;
-    gap: 10px;
-    padding-right: 4%;
-}
-
-.wraping_arrow .left,
-.right {
-    background-color: rgb(255, 255, 255);
-    width: 1.6rem;
-    height: 1.6rem;
-    text-align: center;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 2px 2px 2px rgb(0, 0, 0, 20%);
-}
-.wraping_arrow .left:hover,
-.right:hover {
-    background-color: rgb(219, 255, 243);
-   
-}
 .contianer_book {
     display: flex;
     padding: 2.6px;
