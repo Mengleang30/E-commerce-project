@@ -1,9 +1,9 @@
 <script>
 
-import { BookData } from '@/stores/Data';
 import Book_landing from './Book_landing.vue';
 import { useBookStore } from '@/stores';
 import { computed } from 'vue';
+import FiveStar from './FiveStar.vue';
 
 
 
@@ -22,7 +22,8 @@ export default {
         }
     },
     components: {
-        Book_landing
+        Book_landing,
+        FiveStar,
     },
 
     computed : {
@@ -45,8 +46,7 @@ export default {
         const discountBooks = computed(()=>{
             return Book_by_category.BookData.filter((books)=>books.discount>0);
         })
-
-        
+       
          return {
             Book_by_category,
             discountBooks,
@@ -58,7 +58,7 @@ export default {
 
 <template>
 
-<div class="category_landing">
+    <div class="category_landing">
         <div class="wraping" >
             <h4 >Discount Books</h4>         
         </div>
@@ -81,11 +81,7 @@ export default {
     <div class="category_landing" v-for="category in this.Category_showing" :key="category" >
         <div class="wraping" >
           
-            <h4 >Best {{ category }}</h4>
-            <!-- <div class="wraping_arrow">
-                <div  class="left">&lt;</div>
-                <div  class="right">&gt;</div>
-            </div> -->           
+            <h4 >Best {{ category }}</h4>         
         </div>
         <div class="contianer_book" v-if="FilterBooksByCategory(category).length>0" >
             <Book_landing  v-for="Books in FilterBooksByCategory(category).slice(0,7)" :key="Books.id "
@@ -103,10 +99,12 @@ export default {
             />
         </div>
     </div>
+    <FiveStar />
+
    
 </template>
 
-<style>
+<style scoped>
 .category_landing {
     height: auto;
     margin: 10px 0;
@@ -127,6 +125,7 @@ export default {
     scroll-behavior: smooth;
     
 }
+
 
 ::-webkit-scrollbar {
     width: 8px; /* Width of the scrollbar */

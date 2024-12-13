@@ -1,11 +1,13 @@
 <script>
 import { useBookStore } from "@/stores";
 
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import BackButton from "./Btn/BackButton.vue";
+import BackButton from "./Btn_Elements/BackButton.vue";
 import Fovite_icons from "./Fovite_icons.vue";
-import Star from "./Btn/Star.vue";
+import Star from "./Btn_Elements/Star.vue";
+import alert_message from "./Btn_Elements/alert_message.vue";
+import RelatedBooks from "./RelatedBooks.vue";
 
 export default {
   name: "Detail_book",
@@ -13,28 +15,57 @@ export default {
     BackButton,
     Fovite_icons,
     Star,
+    alert_message,
+    RelatedBooks,
+  },
+
+
+  setup() {
+    const bookStore = useBookStore();
+    const route = useRoute();
+    const ShowAlert = ref(false)
+    const isLoading = ref(true)
+
+    const bookId = ref(parseInt(route.params.id)); 
+    
+    const found_book = computed(() => {
+      return bookStore.getProductId(bookId.value);
+    });
+
+    
+    const booksRelated = computed (()=> {
+      const category = found_book.value.category;
+      if (!category) return [];
+      return bookStore.BookData.filter((books)=>books.id !== bookId && 
+      books.category.some((cat) => category.includes(cat))
+    )})
+    isLoading.value = false;
+
+    watch (
+      ()=>route.params.id,
+      (newId)=>{
+        bookId.value = parseInt(newId);
+        window.scrollTo(0, 0);
+        console.log("New Book ID:", bookId.value);
+      }
+    )
+
+    return {
+      found_book,
+      ShowAlert,
+      booksRelated,
+      bookId,
+      isLoading
+    };
   },
   mounted() {
     window.scrollTo(0, 0);
   },
-  setup() {
-    const bookStore = useBookStore();
-    const route = useRoute();
-
-    const bookId = parseInt(route.params.id);
-
-    const found_book = computed(() => {
-      return bookStore.getProductId(bookId);
-    });
-
-    return {
-      found_book,
-    };
-  },
   data() {
     return {
-      numberOrder: 0,
+      numberOrder: 1,
       Clicked_fav: true,
+      
     };
   },
   methods: {
@@ -50,6 +81,15 @@ export default {
         this.numberOrder -= 1;
       }
     },
+    addToCart(){
+      if(this.numberOrder>0){
+        this.ShowAlert = true
+      setTimeout(()=>{
+        this.ShowAlert = false
+      },3000)
+      }
+     
+    },
   },
 };
 </script>
@@ -57,6 +97,7 @@ export default {
 <template>
   <div v-if="found_book" class="detail_book">
     <div class="book_container">
+    <alert_message v-if="ShowAlert"/>
       <BackButton @click="Back" />
       <div class="img_container">
         <img :src="found_book.url_image" alt="" />
@@ -73,18 +114,17 @@ export default {
           <h2 class="price">${{ found_book.price.toFixed(2) }}</h2>
         </div>
         <div class="label_inform" v-else>
-            <p>Price :</p>
             <div class="wrap_price">
-                <h3 class="price">${{ found_book.price.toFixed(2)*(1-found_book.discount/100) }}</h3>
+                <h3 class="price">${{ (found_book.price*(1-found_book.discount/100)).toFixed(2) }}</h3>
                 <p>${{ found_book.price }}</p>
+              <br>
             </div>
         </div>
         <div class="wrap_cart">
           <div class="subtract" @click="SubNumberOrder">-</div>
           <input type="number" placeholder="1" v-model="this.numberOrder" />
           <div class="adding" @click="AddNumberOrder">+</div>
-          <button>Add To Cart</button>
-         
+          <button @click="addToCart">Add To Cart</button>
         </div>
 
         <div class="grid_container">
@@ -112,6 +152,10 @@ export default {
             <p>{{ found_book.category.join(", ") }}</p>
           </div>
           <div class="box_inform">
+            <h4>Available Format</h4>
+            <p>{{ found_book.format.join(", ") }}</p>
+          </div>
+          <div class="box_inform">
             <h4>Published</h4>
             <p>{{ found_book.published }}</p>
           </div>
@@ -119,17 +163,18 @@ export default {
             <h4>Discount</h4>
             <p>{{ found_book.discount }}%</p>
           </div>
-
-          <div class="box_inform">
-            <h4>Code</h4>
-            <p>{{ found_book.code }}</p>
-          </div>
           <div class="box_inform">
             <h4>Favorite</h4>
             <div class="wrapping_fav">
             <Fovite_icons :Clicked_favorite="true" class="Favorite_btn" />
           </div>
           </div>
+
+          <div class="box_inform">
+            <h4>Code</h4>
+            <p>{{ found_book.code }}</p>
+          </div>
+        
         </div>
 
         <hr />
@@ -155,6 +200,8 @@ export default {
         </div>
       </article>
     </div>
+    
+    <RelatedBooks :RelatedBooks="booksRelated" /> 
   </div>
   <h2 v-else>Book not found</h2>
 </template>

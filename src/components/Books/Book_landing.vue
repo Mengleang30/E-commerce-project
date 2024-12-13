@@ -207,4 +207,6 @@ export default {
 .price_btn .btn:hover {
     background-color: red;
 }
+
+
 </style>
