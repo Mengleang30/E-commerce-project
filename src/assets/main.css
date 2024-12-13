@@ -9,4 +9,5 @@
 #app{
 font-family: "Parkinsans", sans-serif;
 position: relative;
+background-image: linear-gradient(to right top, #393537, #585257, #78727a, #9894a0, #b7b8c7, #bbc1d0, #bfcad8, #c3d3df, #b1c1c8, #a1afb2, #939d9d, #858b8a);
 }

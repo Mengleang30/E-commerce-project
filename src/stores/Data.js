@@ -5,6 +5,7 @@ export const BookData = [
         title: "The Magic",
         author: "Rhonda Byrne",
         price : 9.00,
+        format: ["Paperback", "Hardcover","Ebook", "Audiobook"],
         description: `
         In The Magic, Rhonda Byrne reveals life-changing 
         knowledge about the power of gratitude that was 
@@ -49,6 +50,15 @@ export const BookData = [
                 `,
                 date : "12 : 30 pm -30.10.2023",
             },
+            {
+                user_id : 231,
+                name : "Alien",
+                comment : `
+                Great book, Come in great condition. A go-to when needing reminding
+                of the good in life nad laws of attraction. 
+                `,
+                date : "12 : 30 pm -30.10.2023",
+            },
 
         ], 
     },
@@ -58,6 +68,7 @@ export const BookData = [
         title: "The Secret",
         author: "Rhonda Byrne",
         price : 7,
+        format: ["Paperback", "Hardcover","Ebook", "Audiobook"],
         description: `The Secret by Rhonda Byrne is a self-help book that explores the 
         concept of the law of attraction, which suggests that our 
         thoughts and beliefs can shape our reality. Byrne emphasizes 
@@ -93,6 +104,14 @@ export const BookData = [
                 date : "09 : 30 pm -12.12.2024",
             },
             {
+                user_id: 430,
+                name: "Mia Clark",
+                comment: `
+                    Some parts felt too speculative, but overall a brilliant perspective on humanity's evolution.
+                `,
+                date: "05:20 pm -26.11.2024",
+            },
+            {
                 user_id : 231,
                 name : "Alien",
                 comment : `
@@ -109,6 +128,7 @@ export const BookData = [
         title: "The Art of Bending Time: A Forbidden Return",
         author: "Quinn Jamison",
         price : 24.99,
+        format: ["Paperback", "Hardcover","Ebook", "Audiobook"],
         description: `Lavinia is lost without the world she left behind—the only way forward is to find herself again. Almost 
         nothing seems to help until she meets a friend at a library she often visits for solace. Except there seems to be something strange 
         about the place; Lavinia is hearing whispers from the other side again, and not only the voice she wishes to hear.
@@ -156,6 +176,8 @@ export const BookData = [
         title: "Nicomachean Ethics",
         author: "Aristotle",
         price : 15.99,
+        format: ["Paperback", "Hardcover","Ebook"],
+        format: ["Paperback", "Hardcover","Ebook", "Audiobook"],
         description: `Previously published as Ethics, Aristotle's The Nicomachean Ethics addresses the question of how to 
         live well and originates the concept of cultivating a virtuous character as the basis of his ethical system. Here Aristotle sets out
          to examine the nature of happiness, and argues that happiness consists in 'activity of the soul in accordance with virtue', including moral 
@@ -204,6 +226,7 @@ export const BookData = [
         title: "The Daily Meditations Bible",
         author: "Christopher H. White",
         price : 15.97,
+        format: ["Paperback", "Hardcover","Ebook", "Audiobook"],
         description: `A Timeless Collection of the Best Quotes from Marcus Aurelius on the Art of Successful Living | With Stoic Wisdom & Modern-Adapted Insights for the Contemporary Man
         `,
         url_image : "https://m.media-amazon.com/images/I/41v7f-hkVnL._AC_SF480,480_.jpg",
@@ -249,6 +272,7 @@ export const BookData = [
         title: "TThe Beginner's Guide to Stoicism",
         author: "Matthew Van Natta",
         price : 8.52,
+        format: ["Paperback", "Hardcover","Ebook", "Audiobook"],
         description: `Being a stoic means embracing positivity and self-control through the ability
          to accept the uncertainty of outcomes. With this stoicism guide, 
          the beginner stoic will learn how to take charge of their emotions on the path to sustained happiness and satisfaction.
@@ -297,6 +321,7 @@ export const BookData = [
         title: "Stillness Is the Key",
         author: "Ryan Holiday",
         price : 13.02,
+        format: ["Paperback", "Hardcover","Ebook", "Audiobook"],
         description: `In The Obstacle Is the Way and Ego Is the Enemy, bestselling author Ryan Holiday made ancient wisdom wildly popular with a new generation of leaders in sports, 
         politics, and technology. In his new book, Stillness Is the Key, 
         Holiday draws on timeless Stoic and Buddhist philosophy to show why slowing down is the secret weapon for those charging ahead.
@@ -346,6 +371,7 @@ export const BookData = [
         title: "The Richest Man in Babylon - The Original 1926 Classic (Reader's Library Classics)",
         author: "George S. Clason",
         price : 5.99,
+        format: ["Hardcover","Ebook", "Audiobook"],
         description: `
         he Richest Man in Babylon. Largely seen as a 
         classic in personal financial advice, The Richest Man in Babylon 
@@ -394,6 +420,7 @@ export const BookData = [
         title: "Atomic Habits: An Easy & Proven Way to Build Good Habits & Break Bad Ones",
         author: "James Clear",
         price: 11.99,
+        format: ["Paperback", "Hardcover","Ebook"],
         description: `
             Atomic Habits offers a proven framework for improving every day. 
             James Clear, one of the world’s leading experts on habit formation, 
@@ -443,6 +470,7 @@ export const BookData = [
         title: "The Alchemist",
         author: "Paulo Coelho",
         price: 8.49,
+        format: ["Paperback", "Hardcover", "Audiobook"],
         description: `
             The Alchemist is an enchanting novel that has inspired a devoted following around the world. 
             A fable about following your dreams, it tells the mystical story of Santiago, 
@@ -488,6 +516,7 @@ export const BookData = [
         title: "Deep Work: Rules for Focused Success in a Distracted World",
         author: "Cal Newport",
         price: 13.99,
+        format: ["Paperback", "Hardcover"],
         description: `
             Deep Work is an indispensable guide for anyone seeking focused success in a world 
             full of distractions. Cal Newport lays out strategies to cultivate focus and maximize productivity.
@@ -532,6 +561,7 @@ export const BookData = [
         title: "Sapiens: A Brief History of Humankind",
         author: "Yuval Noah Harari",
         price: 14.99,
+        format: ["Hardcover","Ebook", "Audiobook"],
         description: `
             Sapiens explores the history of humankind from the Stone Age to the modern era, 
             examining how biology and history have shaped our societies, cultures, and the human psyche.
@@ -576,6 +606,7 @@ export const BookData = [
         title: "Think and Grow Rich",
         author: "Napoleon Hill",
         price: 9.99,
+        format: ["Paperback", "Hardcover","Ebook",],
         description: `
             Think and Grow Rich is one of the most influential books on success and personal achievement. 
             It distills Hill's philosophy on wealth-building and outlines actionable steps to achieve your goals.
@@ -620,6 +651,7 @@ export const BookData = [
         title: "Educated: A Memoir",
         author: "Tara Westover",
         price: 12.99,
+        format: ["Paperback", "Hardcover","Audiobook"],
         description: `
             Educated is a memoir by Tara Westover, recounting her journey from growing up in a strict 
             and abusive household in rural Idaho to earning a Ph.D. from Cambridge University. 
@@ -665,6 +697,7 @@ export const BookData = [
         title: "The Subtle Art of Not Giving a F*ck: A Counterintuitive Approach to Living a Good Life",
         author: "Mark Manson",
         price: 9.99,
+        format: ["Hardcover","Audiobook"],
         description: `
             In this book, Mark Manson uses raw honesty and humor to challenge traditional self-help tropes, 
             teaching readers how to focus on what truly matters and let go of superficial expectations.
@@ -709,6 +742,7 @@ export const BookData = [
         title: "1984",
         author: "George Orwell",
         price: 7.49,
+        format: ["Paperback","Ebook", "Audiobook"],
         description: `
             George Orwell's dystopian masterpiece, 1984, is a chilling tale of a world 
             dominated by surveillance, propaganda, and totalitarian rule. 
@@ -754,6 +788,7 @@ export const BookData = [
         title: "Becoming",
         author: "Michelle Obama",
         price: 18.99,
+        format: ["Hardcover","Ebook"],
         description: `
             Becoming is the deeply personal memoir of Michelle Obama, chronicling her journey 
             from her childhood on the South Side of Chicago to her years as the First Lady 
@@ -799,6 +834,7 @@ export const BookData = [
         title: "The Four Agreements: A Practical Guide to Personal Freedom",
         author: "Don Miguel Ruiz",
         price: 8.99,
+        format: ["Paperback", "Hardcover","Ebook"],
         description: `
             In The Four Agreements, Don Miguel Ruiz reveals the source of self-limiting beliefs 
             that rob us of joy and create needless suffering. Based on ancient Toltec wisdom, 
@@ -844,6 +880,7 @@ export const BookData = [
         title: "The Power of Positive Thinking",
         author: "N. Vincent Peale",
         price: 11.99,
+        format: ["Paperback", "Hardcover", "Audiobook"],
         description: `
             The Power of Positive Thinking is a self-help classic that has inspired millions 
             with its practical techniques and examples for harnessing positivity, 
@@ -889,6 +926,7 @@ export const BookData = [
         title: "To Kill a Mockingbird",
         author: "Harper Lee",
         price: 9.99,
+        format: ["Hardcover","Ebook", "Audiobook"],
         description: `
             A timeless novel of a young girl, Scout Finch, in the racially charged South of the 1930s. 
             Through the eyes of Scout, the story explores profound themes of justice, morality, and human kindness.
@@ -932,6 +970,7 @@ export const BookData = [
         title: "Pride and Prejudice",
         author: "Jane Austen",
         price: 7.49,
+        format: ["Paperback", "Hardcover"],
         description: `
             A beloved novel of manners and romance, Pride and Prejudice centers on Elizabeth Bennet 
             as she navigates society, love, and family expectations in 19th-century England.
@@ -976,6 +1015,7 @@ export const BookData = [
         title: "The Great Gatsby",
         author: "F. Scott Fitzgerald",
         price: 10.99,
+        format: ["Paperback", "Hardcover","Ebook",],
         description: `
             A dazzling and tragic portrait of the Jazz Age, The Great Gatsby explores themes of love, 
             ambition, and the pursuit of the American Dream through the enigmatic figure of Jay Gatsby.
@@ -1020,6 +1060,7 @@ export const BookData = [
         title: "Wuthering Heights",
         author: "Emily Brontë",
         price: 8.99,
+        format: ["Hardcover","Ebook", "Audiobook"],
         description: `
             A Gothic novel of passion and revenge, Wuthering Heights follows the turbulent relationship 
             between Catherine Earnshaw and Heathcliff, set against the wild Yorkshire moors.
@@ -1064,6 +1105,7 @@ export const BookData = [
         title: "Little Women",
         author: "Louisa May Alcott",
         price: 6.99,
+        format: ["Paperback", "Hardcover","Ebook", "Audiobook"],
         description: `
             A heartwarming and timeless story of the March sisters as they navigate 
             life, love, and family in Civil War-era America. A tale of hope and resilience.
@@ -1108,6 +1150,7 @@ export const BookData = [
         title: "1984",
         author: "George Orwell",
         price: 12.49,
+        format: ["Paperback", "Hardcover","Ebook", "Audiobook"],
         description: `
             A dystopian novel that delves into a world of surveillance, totalitarianism, and loss of individuality. 
             1984 is a powerful and chilling warning about the dangers of unchecked political power.
@@ -1152,6 +1195,7 @@ export const BookData = [
         title: "The Catcher in the Rye",
         author: "J.D. Salinger",
         price: 8.99,
+        format: ["Paperback", "Hardcover","Ebook", "Audiobook"],
         description: `
             A coming-of-age novel about the experiences and struggles of Holden Caulfield, 
             a disillusioned teenager navigating adolescence in New York City.
@@ -1196,6 +1240,7 @@ export const BookData = [
         title: "The Alchemist",
         author: "Paulo Coelho",
         price: 9.99,
+        format: ["Paperback", "Hardcover","Ebook", "Audiobook"],
         description: `
             An enchanting novel about Santiago, a shepherd boy, on a journey to fulfill his personal legend. 
             The Alchemist is a magical tale about self-discovery, dreams, and the interconnectedness of life.

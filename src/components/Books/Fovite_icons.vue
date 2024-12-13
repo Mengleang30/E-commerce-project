@@ -6,7 +6,6 @@ export default {
         Clicked_favorite: Boolean,
     },
 
-
 }
 
 </script>
