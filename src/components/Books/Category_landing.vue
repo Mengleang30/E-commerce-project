@@ -13,11 +13,14 @@ export default {
         return {
             Category_showing : [
             "Motivational",
-            "Inspirational",
+            "Classic",
+             "Romance",
             "Novel",
             "Philosophy",
-            "Productivity",
-            "Education"
+            "Adventure",
+            "History",
+            "Education",
+
             ],
         }
     },
@@ -44,12 +47,24 @@ export default {
         const Book_by_category = useBookStore();
         
         const discountBooks = computed(()=>{
-            return Book_by_category.BookData.filter((books)=>books.discount>0);
+            return (Book_by_category.BookData.filter((books)=>books.discount>19)).sort((a, b)=>b.discount - a.discount);
         })
+        
+        const filterBooksByCategory = (category) => {
+    return Book_by_category.BookData.filter((book) =>
+        book.category.some(
+            (bookCategory) =>
+                bookCategory.trim().toLocaleLowerCase() ===
+                category.trim().toLocaleLowerCase()
+        )
+    );
+};
+
        
          return {
             Book_by_category,
             discountBooks,
+            filterBooksByCategory
         }
 
     },
@@ -60,10 +75,10 @@ export default {
 
     <div class="category_landing">
         <div class="wraping" >
-            <h4 >Discount Books</h4>         
+            <h4 class="tittle_discount">Discount Books 20% off</h4>         
         </div>
         <div class="contianer_book">
-            <Book_landing  v-for="Books in discountBooks.slice(0,7)" :key="Books.id "
+            <Book_landing  v-for="Books in discountBooks.slice(0,20)" :key="Books.id "
             :Title="Books.title"
             :Author="Books.author"
             :Year="Books.published"
@@ -84,7 +99,7 @@ export default {
             <h4 >Best {{ category }}</h4>         
         </div>
         <div class="contianer_book" v-if="FilterBooksByCategory(category).length>0" >
-            <Book_landing  v-for="Books in FilterBooksByCategory(category).slice(0,7)" :key="Books.id "
+            <Book_landing  v-for="Books in FilterBooksByCategory(category).slice(0,20)" :key="Books.id "
             :Title="Books.title"
             :Author="Books.author"
             :Year="Books.published"
@@ -125,7 +140,9 @@ export default {
     scroll-behavior: smooth;
     
 }
-
+.tittle_discount{
+    color: rgb(255, 11, 11);
+}
 
 ::-webkit-scrollbar {
     width: 8px; /* Width of the scrollbar */

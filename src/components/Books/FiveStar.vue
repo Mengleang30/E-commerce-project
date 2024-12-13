@@ -6,7 +6,7 @@
             </h3>         
         </div>
         <div class="contianer_book">
-            <Book_landing  v-for="Books in fiveStarBooks.slice(0,12)" :key="Books.id "
+            <Book_landing  v-for="Books in fiveStarBooks.slice(0,20)" :key="Books.id "
             :Title="Books.title"
             :Author="Books.author"
             :Year="Books.published"
@@ -36,7 +36,7 @@ export default {
     setup(){
     const store = useBookStore();
     const fiveStarBooks = computed(()=>{
-    return store.BookData.filter((books)=> books.rated>4)
+    return store.BookData.filter((books)=> books.rated==5)
         })
     return {fiveStarBooks,}
 
