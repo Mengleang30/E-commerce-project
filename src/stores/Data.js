@@ -2182,7 +2182,7 @@ export const BookData = [
     {
         id: 53,
         title: "ភូមិតិរឆ្ជាន",
-        author: "ឌឿក​ អំ​ ឌឹក គាម",
+        author: "ឌឿក​ អំ,​ ឌឹក គាម",
         price: 10.49,
         format: ["Paperback", "Hardcover", "Ebook"],
         description: `

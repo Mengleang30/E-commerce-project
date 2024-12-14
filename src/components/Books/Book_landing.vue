@@ -193,7 +193,7 @@ export default {
 }
 
 .price_btn .btn {
-    background-color: rgba(39, 133, 255, 0.82);
+    background-color: rgba(27, 25, 156, 0.82);
     border: none;
     border-radius: .2rem;
     padding: 4px;
