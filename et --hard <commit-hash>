@@ -1,0 +1,186 @@
+[33mcommit a878e1a4840158c4f7acc0f4f5484c76a2ee3e2b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Merge: 6306ceb 2cd9e15
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Sat Dec 14 13:09:34 2024 +0700
+
+    Merge remote-tracking branch 'origin/Darong_login'
+
+[33mcommit 6306ceb82f3b40be5eccbc2ebed447b483547e80[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Sat Dec 14 00:34:12 2024 +0700
+
+    Collection data completed 100 books
+
+[33mcommit 5c8ea6643d69051b8e5faab4f73926b99c9d9e66[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Fri Dec 13 14:41:58 2024 +0700
+
+    fix some issue in deatails
+
+[33mcommit 2892a6e4706f3527cc8992785b944c93210097ee[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Fri Dec 13 00:10:20 2024 +0700
+
+    fix some issue
+
+[33mcommit ca76adae5d0abfee6576e6a9bc9356ccba5a4488[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Thu Dec 12 23:02:08 2024 +0700
+
+    design detail each book
+
+[33mcommit 6007fb0e913a6e1dbc895f0b6e2711df1a3c6f1f[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Thu Dec 12 13:52:48 2024 +0700
+
+    I update footer
+
+[33mcommit 1845704f2adb93810789b23120d5233400709f0e[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Thu Dec 12 11:02:25 2024 +0700
+
+    I updated header, navnbar  ui and created loading between swtiching components
+
+[33mcommit 2cd9e157b02a764121aa4e04263b5b432423cb97[m[33m ([m[1;31morigin/Darong_login[m[33m)[m
+Author: pokdarong <podarong@gmail.com>
+Date:   Fri Dec 6 15:16:30 2024 +0700
+
+    Create Login page
+
+[33mcommit c40a476d4d7c4158db3a44fcfa91eb16c82cb647[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Fri Dec 6 10:20:09 2024 +0700
+
+    apply keep-alive in app.vue for set specific component re-render
+
+[33mcommit ed5e89d66896435178b2e1194931a06522cd6470[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Thu Dec 5 18:11:45 2024 +0700
+
+    create discount book list in landing
+
+[33mcommit e9f5fef38b9a95284d899fd989477a822aeef5db[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Wed Dec 4 17:43:53 2024 +0700
+
+    fix some issue in landing
+
+[33mcommit bcb392db5ae1101efeb09c79102b97c73ad8376c[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Wed Dec 4 17:16:51 2024 +0700
+
+    card will hide if in the detials route
+
+[33mcommit 0739481aad5dda0e8f2bd8392d93b76cfe168e26[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Wed Dec 4 17:07:58 2024 +0700
+
+    create navigate from card to show books in details book by using id params
+
+[33mcommit 95d357b09e3108509a8887c79e316277c79d5bd8[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Tue Dec 3 22:40:29 2024 +0700
+
+    Add more data in store
+
+[33mcommit 66e8ba32c853623a6e04185f0c26bfc4ce0b9ed4[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Tue Dec 3 22:12:02 2024 +0700
+
+    Add more data in store and fix some isuse
+
+[33mcommit 8651032ebd85db6f229efb748b087ae06586ce7b[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Tue Dec 3 17:21:15 2024 +0700
+
+    update
+
+[33mcommit 3cc27cb2adcd4a228765f93b6c246902546c6d3b[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Tue Dec 3 17:04:24 2024 +0700
+
+    Enable list book to landing page by using data in store
+
+[33mcommit aa0ea1ce8b54c70171a8f8b1ed5aab88d9074a2f[m
+Author: Mengleang30 <novmengleang14@gmail.com>
+Date:   Tue Dec 3 10:17:25 2024 +0700
+
+    testing
+
+[33mcommit 86e5a5174f42a2fad6f45bca14108fe6b93cde9f[m
+Author: Mengleang <novmengleang14@gmail.com>
+Date:   Mon Dec 2 17:37:22 2024 +0700
+
+    create store static data
+
+[33mcommit 5372c0342911eb3139261f46c7c2e82d021f86bb[m
+Author: Mengleang <novmengleang14@gmail.com>
+Date:   Mon Dec 2 16:50:06 2024 +0700
+
+    Create category component in landing page
+
+[33mcommit aa0e978c6ecaa72581f48a4ec3544f313e1b68bd[m
+Author: Mengleang <novmengleang14@gmail.com>
+Date:   Sun Dec 1 15:43:58 2024 +0700
+
+    I create transition smoothly
+
+[33mcommit d05ed26e3de87d5f0e5bf3170c48c96269bce825[m
+Author: Mengleang <novmengleang14@gmail.com>
+Date:   Sun Dec 1 15:17:50 2024 +0700
+
+    update header
+
+[33mcommit 8b0114625fd97a06ae19e6327d1c67576112378f[m
+Author: Mengleang <novmengleang14@gmail.com>
+Date:   Sun Dec 1 14:35:58 2024 +0700
+
+    update card can change card by click arrow icon
+
+[33mcommit 429cdccb21a86e9c9079f1b39851dad772a68dc7[m
+Author: Mengleang <novmengleang14@gmail.com>
+Date:   Sun Dec 1 13:29:39 2024 +0700
+
+    cliking outside to close nav , and rotate icons
+
+[33mcommit 7a11cf0bb0343d556729da4a91a03989a9056339[m
+Author: Mengleang <novmengleang14@gmail.com>
+Date:   Fri Nov 29 22:32:08 2024 +0700
+
+    create card_book and design
+
+[33mcommit b29c3123cce6e0963e684e630a4ce30b661a8393[m
+Author: Mengleang <novmengleang14@gmail.com>
+Date:   Fri Nov 29 21:11:08 2024 +0700
+
+    create footer component
+
+[33mcommit 7c246a039575d51464fd37c79bb225e9cc8bcbc1[m
+Author: Mengleang <novmengleang14@gmail.com>
+Date:   Fri Nov 29 20:26:44 2024 +0700
+
+    organize structure project
+
+[33mcommit d1a2b1d34861b793a16b12fdd53024ae4c71ec83[m
+Author: Mengleang <novmengleang14@gmail.com>
+Date:   Fri Nov 29 10:33:50 2024 +0700
+
+    edit navbar
+
+[33mcommit a1347e8022a784045757d8d471cc238a488ea207[m
+Author: Mengleang <novmengleang14@gmail.com>
+Date:   Sat Nov 23 11:01:00 2024 +0700
+
+    create vue-router in navbar and , make navbar can be show and hide by click
+
+[33mcommit d84f7466e31ec51beef6ba0d9feb69a26964fc32[m
+Author: Mengleang <novmengleang14@gmail.com>
+Date:   Sat Nov 23 09:15:59 2024 +0700
+
+    Create header UI
+
+[33mcommit a3e31810d1c365c4629e78ab8991bd06c0d1c73e[m
+Author: Mengleang <novmengleang14@gmail.com>
+Date:   Fri Nov 22 11:37:55 2024 +0700
+
+    create first project
