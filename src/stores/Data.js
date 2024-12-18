@@ -1512,7 +1512,17 @@ export const BookData = [
     code: 4927,
     discount: 20,
     rated: 5,
-    user_comment: [],
+    user_comment: [
+        {
+            user_id: 3001,
+            name: "Hannah Reed",
+            comment: `
+                            A heartbreaking yet uplifting story. Zusak's writing is poetic and unforgettable.
+                        `,
+            date: "10:15 am -05.11.2024",
+          },
+
+    ],
   },
   {
     id: 37,
@@ -1552,7 +1562,9 @@ export const BookData = [
     code: 4192,
     discount: 18,
     rated: 4.7,
-    user_comment: [],
+    user_comment: [
+      
+    ],
   },
 
     {

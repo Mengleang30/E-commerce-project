@@ -1,5 +1,5 @@
 <script>
-import { useBookStore } from '@/stores';
+
 import Favorite_icons from './Fovite_icons.vue'
 export default {
 
@@ -19,34 +19,29 @@ export default {
         HaveDiscount : Number,
         AfterDiscount :  Number,
         idBook : Number,
-        
+        isFavorite: Boolean
     },
-
-    data (){
-        return {
-            Click_fav : false,
-        }
-    },
-
+  
     setup (){
-        const BooksFav = useBookStore();
-        const handleFavoriteBooks = (id)=>{
-            if (BooksFav.FavoriteBooks.includes(id)){
-                BooksFav.removeFromFavorite(id);
-            }
-        else{
-            BooksFav.addToFavorite(id);
-        }
-        }
-        return {
-            handleFavoriteBooks,
+    //     const BooksFav = useBookStore();
+    //     const handleFavoriteBooks = (id)=>{
+    //         if (BooksFav.FavoriteBooks.includes(id)){
+    //             BooksFav.removeFromFavorite(id);
+    //         }
+    //     else{
+    //         BooksFav.addToFavorite(id);
+    //     }
+    //     }
+    //     return {
+    //         handleFavoriteBooks,
            
-        }
+    //     }
+    // },
     },
     methods : {
-        handleAddFavorite(){
-            this.handleFavoriteBooks(this.idBook);
-        }
+        onFavoriteClick() {
+      this.$emit("addFavorite", this.idBook); // Emit the favorite book ID to the parent
+    },
     },
     
 }
@@ -54,7 +49,8 @@ export default {
 
 <template>
     <article class="Each_book" v-if="true" >
-        <Favorite_icons :Clicked_favorite="Click_fav" @click="this.handleAddFavorite(idBook)"/>
+        <Favorite_icons :Clicked_favorite="isFavorite" @click="onFavoriteClick"
+         />
         <div class="each_book">
             <div class="wraping">
                 <img :src="Url_img"

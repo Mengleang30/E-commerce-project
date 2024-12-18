@@ -7,7 +7,8 @@ export default {
         Image : String,
         isSelectRoute : Boolean,
         NavWithCart : String,
-    }
+        NumberCart : Number
+    },
 }
 </script>
 <template>
@@ -16,7 +17,7 @@ export default {
             <RouterLink :class="{active : isSelectRoute}"  class="link" :to=Link>
                     <img :src="Image" alt="">
                     <span>{{ Nav_name }}</span>
-                    <div class="Number_cart" v-if="NavWithCart=='Cart'">0</div>
+                    <div class="Number_cart" v-if="NavWithCart=='Cart'">{{ NumberCart }}</div>
             </RouterLink>
         </ul>
     </nav>

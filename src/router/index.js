@@ -13,7 +13,8 @@ const authGuard = (to, from, next) => {
   if (authStore.loggedInUser) {
     next(); // Allow access if logged in
   } else {
-    next('/login'); // Redirect to login page if not logged in
+    // next('/login'); // Redirect to login page if not logged in
+    alert("As Guest cannot access this feature , please sign in")
   }
 };
 

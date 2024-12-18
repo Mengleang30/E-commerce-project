@@ -1,6 +1,6 @@
 <script>
 import Navbar from "./Navbar.vue";
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { RouterLink } from "vue-router";
 
 import cart from "@/assets/icons_nav/cart.png";
@@ -10,11 +10,74 @@ import login from "@/assets/icons_nav/login.png";
 import product from "@/assets/icons_nav/product.png";
 import books from "@/assets/icons_nav/books.png";
 import logo_bookstore from "@/assets/logo_bookstore.jpg";
+import { useUserStore } from "@/stores/userBookStore";
 
 export default {
   name: "Header",
   components: {
     Navbar,
+  },
+
+  setup() {
+    const isNavbarVisible = ref(false);
+    const isRotated = ref(false);
+    const navbarRef = ref(null);
+
+    const userStore = useUserStore();
+
+
+    const countCart = computed (()=>{
+      if(!userStore.loggedInUser){
+        return 0;
+      }
+      return userStore.loggedInUser.cart.length;
+    })
+
+    const ShowOptionLogout = ref(false);
+
+    const handleShowOptionLogout = () => {
+      ShowOptionLogout.value = !ShowOptionLogout.value;
+    };
+
+    const userName = computed(() => {
+      return userStore.loggedInUser?.username || "Guest";
+    });
+
+    const handleLogout = () => {
+      userStore.logout(); // Call logout method
+      ShowOptionLogout.value = !ShowOptionLogout.value;
+    };
+
+    const toggleNavbar = () => {
+      isNavbarVisible.value = !isNavbarVisible.value;
+      isRotated.value = !isRotated.value;
+    };
+
+    const handleClickOutside = (e) => {
+      if (navbarRef.value && !navbarRef.value.contains(e.target)) {
+        isNavbarVisible.value = false;
+        isRotated.value = false;
+      }
+    };
+    onMounted(() => {
+      document.addEventListener("click", handleClickOutside);
+    });
+    onUnmounted(() => {
+      document.addEventListener("click", handleClickOutside);
+    });
+
+    return {
+      isNavbarVisible,
+      toggleNavbar,
+      isRotated,
+      navbarRef,
+      userName,
+      userStore,
+      handleLogout,
+      countCart,
+      ShowOptionLogout,
+      handleShowOptionLogout,
+    };
   },
 
   data() {
@@ -48,7 +111,7 @@ export default {
           icon: feedback,
         },
         {
-          nav_name: "Login",
+          nav_name: "Sign In or Sign Up",
           link: "/login",
           icon: login,
         },
@@ -56,41 +119,16 @@ export default {
     };
   },
 
+  computed: {
+    NavBar_Data() {
+      return this.NavBar_data;
+    },
+  },
+
   methods: {
     isSelectRoute(route) {
       return this.$route.path === route;
     },
-  },
-
-  setup() {
-    const isNavbarVisible = ref(false);
-    const isRotated = ref(false);
-    const navbarRef = ref(null);
-
-    const toggleNavbar = () => {
-      isNavbarVisible.value = !isNavbarVisible.value;
-      isRotated.value = !isRotated.value;
-    };
-
-    const handleClickOutside = (e) => {
-      if (navbarRef.value && !navbarRef.value.contains(e.target)) {
-        isNavbarVisible.value = false;
-        isRotated.value = false;
-      }
-    };
-    onMounted(() => {
-      document.addEventListener("click", handleClickOutside);
-    });
-    onUnmounted(() => {
-      document.addEventListener("click", handleClickOutside);
-    });
-
-    return {
-      isNavbarVisible,
-      toggleNavbar,
-      isRotated,
-      navbarRef,
-    };
   },
 };
 </script>
@@ -119,18 +157,38 @@ export default {
 
     <transition name="nav-transition">
       <div v-if="isNavbarVisible" class="wrap_nav">
-        <h3>Welcome to Books Shop</h3>
+        <h4>Welcome to Books Shop</h4>
+        <div class="Nav_profile">
+          <img
+            src="https://img.icons8.com/?size=100&id=1cYVFPowIgtd&format=png&color=000000"
+            alt=""
+            width="45"
+          />
+          <div class="profile_nav">
+            <h4>{{ this.userName }}</h4>
+            <u>{{ userStore.loggedInUser?.email }}</u>
+          </div>
+        </div>
         <hr />
         <Navbar
-          v-for="NavbarItem in NavBar_data"
+          v-for="NavbarItem in this.NavBar_Data"
           :Nav_name="NavbarItem.nav_name"
           :Link="NavbarItem.link"
           :key="NavbarItem.nav_name"
           :Image="NavbarItem.icon"
           :isSelectRoute="isSelectRoute(NavbarItem.link)"
           :NavWithCart="NavbarItem.nav_name"
+          :-number-cart="countCart"
+          
         />
-        <p>You can sign Up to create personal account .</p>
+        <div>
+          <p v-if="!userStore.loggedInUser">
+            You can sign Up to create personal account .
+          </p>
+          <p v-else>
+            Now you can purchase,add to your favorite and view history of purchasing.
+          </p>
+        </div>
       </div>
     </transition>
 
@@ -156,7 +214,7 @@ export default {
 
     <div class="cart_sign_in">
       <RouterLink to="/cart" class="header_cart">
-        <!-- <div class="number_cart">1</div> -->
+        <div class="number_cart">{{ countCart }}</div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -171,13 +229,26 @@ export default {
           />
         </svg>
       </RouterLink>
-      <RouterLink to="/login" class="sign_in">
-        Sign In
+      <RouterLink to="/login" class="sign_in" v-if="!userStore.loggedInUser">
+        {{ this.userName }}
         <img
           src="https://img.icons8.com/?size=100&id=SGzXySsTA7pR&format=png&color=000000"
           alt=""
         />
       </RouterLink>
+      <div class="sign_in" v-else>
+        <p class="username">{{ this.userName }}</p>
+        <img
+          src="https://img.icons8.com/?size=100&id=SGzXySsTA7pR&format=png&color=000000"
+          alt=""
+        />
+        <span @click="handleShowOptionLogout" class="logout">Logout</span>
+      </div>
+      <div class="option_logout" v-if="ShowOptionLogout">
+        <h4>Do you want logout ?</h4>
+        <button class="noBtn" @click="handleShowOptionLogout">No</button>
+        <button class="yesBtn" @click="handleLogout">Logout</button>
+      </div>
     </div>
   </header>
 </template>
@@ -204,7 +275,7 @@ header svg {
 }
 
 .search_form {
-  width: 50%;
+  width: 36%;
 }
 
 .search_form,
@@ -229,7 +300,7 @@ header svg {
 }
 
 .logo {
-  height: 4rem;
+  height: 4.2rem;
   width: 8rem;
   border-radius: 0.5rem;
 }
@@ -241,7 +312,7 @@ header svg {
 
 .search_form input,
 button {
-  height: 2.5rem;
+  height: 2.2rem;
   outline: 1px solid rgba(0, 0, 0, 0.3);
   border: none;
   box-shadow: 0px 4px 3px rgb(0, 0, 0, 20%);
@@ -250,7 +321,7 @@ button {
 .search_form button {
   position: absolute;
   right: 0;
-  width: 2.8rem;
+  width: 2.4rem;
   padding: 0.1rem;
   border-radius: 0 0.6rem 0.6rem 0;
   background-color: rgba(237, 237, 237, 1);
@@ -258,7 +329,7 @@ button {
 }
 
 .search_form button svg {
-  width: 1.5rem;
+  width: 1.2rem;
 }
 
 .search_form input {
@@ -303,11 +374,16 @@ header .number_cart {
   font-size: small;
   box-shadow: 3px 3px 3px rgb(0, 0, 0, 20%);
   gap: 3px;
+
 }
 
 .sign_in img {
   width: 1.6rem;
   cursor: pointer;
+}
+.sign_in .username{
+  overflow: hidden;
+  width: 4.2rem;
 }
 
 .cart_sign_in {
@@ -411,5 +487,64 @@ nav ul .link.active {
 .non-rotated {
   transform: rotate(0deg);
   transition: transform 0.3s;
+}
+
+.logout {
+  color: red;
+  font-size: 0.75rem;
+}
+
+
+
+.option_logout {
+  background-color: #eeeeee;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  top: 5rem;
+  right: 1rem;
+  box-shadow: 2px 2px 3.6px rgba(29, 28, 28, 0.4);
+}
+.noBtn,
+.yesBtn {
+  background-color: white;
+  width: 30%;
+  margin: 10%;
+  border: none;
+  outline: none;
+  border-radius: 0.5rem;
+  height: 2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.noBtn {
+  background-color: rgb(228, 228, 228);
+}
+.noBtn:hover {
+  background-color: rgb(255, 255, 255);
+}
+.yesBtn {
+  background-color: red;
+  color: white;
+}
+
+.yesBtn:hover {
+  background-color: rgb(255, 27, 27);
+  color: white;
+}
+
+.Nav_profile {
+  display: flex;
+  align-items: center;
+  gap: 5%;
+}
+.profile_nav{
+  text-align: start;
+  width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+    /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
+   overflow: hidden;
 }
 </style>

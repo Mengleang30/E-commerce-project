@@ -1,7 +1,6 @@
 <script>
 import Book_Landing from '@/components/Books/Category_landing.vue';
 import Detail_book from '@/components/Books/Detail_book.vue';
-import FiveStar from '@/components/Books/FiveStar.vue';
 import { useBookStore } from '@/stores';
 export default {
     name: "Landing",
