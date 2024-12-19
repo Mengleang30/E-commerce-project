@@ -18,8 +18,8 @@
             :HaveDiscount="Books.discount"
             :AfterDiscount="(Books.price)*(1 - Books.discount/100)"
             :idBook="Books.id"
-            :Clicked_favorite="false"
-            v-memo="[Books.id]"
+            :isFavorite="isBookFavorite(Books.id)"
+            @addFavorite="toggleFavorite(Books.id)"
             />
         </div>
     </div>
@@ -28,6 +28,7 @@
 
 <script >
 import Book_landing from './Book_landing.vue';
+import { useUserStore } from '@/stores/userBookStore';
 
 export default {
     name : "RelatedBooks",
@@ -40,6 +41,24 @@ export default {
         required: true,
     },
     },
+    setup() {
+
+    const userStore = useUserStore(); // Access user store
+
+    // Check if a book is already a favorite
+    const isBookFavorite = (bookId) => {
+      return userStore.loggedInUser?.favorite.includes(bookId);
+    };
+
+    // Add or remove book from favorites
+    const toggleFavorite = (bookId) => {
+      const result = userStore.addToFavorite(bookId);
+      console.log(result.message, bookId);
+    };
+
+    return { isBookFavorite, toggleFavorite };
+
+    }
 
 
 }

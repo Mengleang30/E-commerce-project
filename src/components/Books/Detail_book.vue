@@ -8,6 +8,7 @@ import Fovite_icons from "./Fovite_icons.vue";
 import Star from "./Btn_Elements/Star.vue";
 import alert_message from "./Btn_Elements/alert_message.vue";
 import RelatedBooks from "./RelatedBooks.vue";
+import { useUserStore } from "@/stores/userBookStore";
 
 export default {
   name: "Detail_book",
@@ -24,49 +25,101 @@ export default {
     const bookStore = useBookStore();
     const route = useRoute();
     const ShowAlert = ref(false)
-    const isLoading = ref(true)
 
+    const NotLoginMessage = ref('')
+
+    const userStore = useUserStore();
+
+    
+    // find id for books needed to details
     const bookId = ref(parseInt(route.params.id)); 
     
     const found_book = computed(() => {
       return bookStore.getProductId(bookId.value);
     });
 
+   
+    // call action from userStore for adding cart for each users
+    const numberOrder = ref(1);
+    const handleAddCart=()=>{
+      if(!userStore.loggedInUser){
+        NotLoginMessage.value = "You must be logged in to add items to the cart.";
+        setTimeout(() => {
+          NotLoginMessage.value = "";
+        }, 2000);
+        console.log("You must be logged in to add items to the cart.");
+      return;
+      }
+
+      if(numberOrder.value > 0 && found_book.value){
+        const Ordered = userStore.addToCart(found_book.value.id, numberOrder.value);
+        ShowAlert.value = true;
+        setTimeout(() => (ShowAlert.value = false), 3000); // Auto-hide the alert
+        console.log(Ordered.message);
+        console.log(userStore.loggedInUser?.cart)
+      }
+
+    }
     
+
+    // display related books
     const booksRelated = computed (()=> {
       const category = found_book.value.category;
       if (!category) return [];
-      return bookStore.BookData.filter((books)=>books.id !== bookId && 
+      return bookStore.BookData.filter((books)=>books.id !== bookId && found_book.value.id !==books.id &&
       books.category.some((cat) => category.includes(cat))
     )})
-    isLoading.value = false;
-
+ 
     watch (
       ()=>route.params.id,
       (newId)=>{
         bookId.value = parseInt(newId);
-        window.scrollTo(0, 0);
+       setTimeout(() => {
+    window.scrollTo(0, 0);
+    }, 300); // Simulated loading delay
         console.log("New Book ID:", bookId.value);
       }
     )
 
+    
+    // mark for books that already in favorite
+    const checkFavorite = (BookId) => {
+      return userStore.loggedInUser && userStore.loggedInUser.favorite.includes(BookId);
+    };
+
+    // call action add favorite from userStore 
+    const handleAddFavorite = (BookId) => {
+      if (!userStore.loggedInUser) {
+        NotLoginMessage.value = "You must be logged in to add items to the favorite.";
+        setTimeout(() => {
+          NotLoginMessage.value = "";
+        }, 2000);
+        console.log("You must be logged in to add favorites.");
+        return;
+      }
+      console.log("Adding to favorite, Book ID:", BookId);
+      const result = userStore.addToFavorite(BookId);
+      console.log(result.message);
+      console.log("Logged In User:", userStore.loggedInUser);
+      console.log("Favorites:", userStore.loggedInUser?.favorite);
+
+    };
+
+   
     return {
       found_book,
       ShowAlert,
       booksRelated,
       bookId,
-      isLoading
+      checkFavorite,
+      handleAddFavorite,
+      handleAddCart,
+      numberOrder,
+      NotLoginMessage
     };
   },
   mounted() {
     window.scrollTo(0, 0);
-  },
-  data() {
-    return {
-      numberOrder: 1,
-      Clicked_fav: true,
-      
-    };
   },
   methods: {
     Back() {
@@ -81,15 +134,6 @@ export default {
         this.numberOrder -= 1;
       }
     },
-    addToCart(){
-      if(this.numberOrder>0){
-        this.ShowAlert = true
-      setTimeout(()=>{
-        this.ShowAlert = false
-      },3000)
-      }
-     
-    },
   },
 };
 </script>
@@ -98,6 +142,7 @@ export default {
   <div v-if="found_book" class="detail_book">
     <div class="book_container">
     <alert_message v-if="ShowAlert"/>
+    <p class="alert_successful">{{ NotLoginMessage }}</p>
       <BackButton @click="Back" />
       <div class="img_container">
         <img :src="found_book.url_image" alt="" />
@@ -122,9 +167,9 @@ export default {
         </div>
         <div class="wrap_cart">
           <div class="subtract" @click="SubNumberOrder">-</div>
-          <input type="number" placeholder="1" v-model="this.numberOrder" />
+          <input type="number" placeholder="1" v-model="numberOrder" />
           <div class="adding" @click="AddNumberOrder">+</div>
-          <button @click="addToCart">Add To Cart</button>
+          <button @click="handleAddCart">Add To Cart</button>
         </div>
 
         <div class="grid_container">
@@ -156,6 +201,16 @@ export default {
             <p>{{ found_book.format.join(", ") }}</p>
           </div>
           <div class="box_inform">
+            <h4>Favorite</h4>
+            <div class="wrapping_fav">
+            <Fovite_icons 
+               :Clicked_favorite="checkFavorite(found_book.id)"
+               @click="handleAddFavorite(found_book.id)"
+            
+            class="Favorite_btn" />
+          </div>
+          </div>
+          <div class="box_inform">
             <h4>Published</h4>
             <p>{{ found_book.published }}</p>
           </div>
@@ -163,13 +218,6 @@ export default {
             <h4>Discount</h4>
             <p>{{ found_book.discount }}%</p>
           </div>
-          <div class="box_inform">
-            <h4>Favorite</h4>
-            <div class="wrapping_fav">
-            <Fovite_icons :Clicked_favorite="true" class="Favorite_btn" />
-          </div>
-          </div>
-
           <div class="box_inform">
             <h4>Code</h4>
             <p>{{ found_book.code }}</p>
@@ -182,7 +230,8 @@ export default {
     </div>
     <div class="comment_container" >
         <h3>Comment</h3>
-      <article class="each_comment" v-for="userComment in found_book.user_comment" :key="userComment">
+        <p v-if="found_book.user_comment==[]">No comments yet.</p>
+      <article v-else class="each_comment" v-for="userComment in found_book.user_comment" :key="userComment">
         <img
           src="https://img.icons8.com/?size=100&id=mlMB8cHGuy5i&format=png&color=000000"
           alt=""
@@ -201,7 +250,8 @@ export default {
       </article>
     </div>
     
-    <RelatedBooks :RelatedBooks="booksRelated" /> 
+    <RelatedBooks :RelatedBooks="booksRelated" 
+    /> 
   </div>
   <h2 v-else>Book not found</h2>
 </template>

@@ -6,6 +6,18 @@ import Landing from '@/views/Landing.vue'
 import ListBook from '@/views/List_book.vue'
 import Login from '@/components/Users/Login.vue'
 import Feedback from '@/views/Feedback_page.vue'
+import { useUserStore } from '@/stores/userBookStore'
+
+const authGuard = (to, from, next) => {
+  const authStore = useUserStore();
+  if (authStore.loggedInUser) {
+    next(); // Allow access if logged in
+  } else {
+    // next('/login'); // Redirect to login page if not logged in
+    alert("As Guest cannot access this feature , please sign in")
+  }
+};
+
 
 const routes = [
   {
@@ -28,11 +40,13 @@ const routes = [
     path: '/favorite',
     name: 'Favorite',
     component: Favorite,
+    beforeEnter : authGuard,
   },
   {
     path: '/cart',
     name: 'Cart',
     component: Cart,
+    beforeEnter : authGuard,
   },
   {
     path: '/login',
@@ -43,6 +57,7 @@ const routes = [
     path : "/feedback",
     name : "Feedback",
     component : Feedback,
+    beforeEnter : authGuard,
   },
 ]
 

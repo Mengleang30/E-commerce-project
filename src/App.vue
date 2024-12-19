@@ -13,11 +13,14 @@ watch(
   (newRoute, oldRoute) => {
     if (newRoute != oldRoute) {
       isLoading.value = true;
+      window.scrollTo(0, 0);
     }
     setTimeout(() => {
       isLoading.value = false;
     }, 500);
+   
   }
+  
 );
 </script>
 
@@ -34,7 +37,7 @@ watch(
         />
       </div>
       <RouterView v-slot="{ Component }">
-        <KeepAlive exclude="Detail_book">
+        <KeepAlive exclude="Detail_book" >
           <component :is="Component" />
         </KeepAlive>
       </RouterView>

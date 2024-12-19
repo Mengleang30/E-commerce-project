@@ -10,24 +10,20 @@
 </script>
 
 
-<style scoped>
+<style >
 
 .alert_successful{
   display: flex;
   position: absolute;
-  align-items: center;
   color: rgba(39, 195, 15, 0.999);
   font-weight: bold;
-  justify-content: center;
-  background-color: aliceblue;
-  width: 14rem;
+  width: auto;
   padding: 5px;
   border-radius: .5rem;
   right: 1%;
   top: 1%;
   padding: 1px;
   font-size: .9rem;
-  box-shadow: 2px 2px 4px rgba(70, 71, 70, 0.4);
   gap: 2px;
   transition: all 0.6s;
 }
