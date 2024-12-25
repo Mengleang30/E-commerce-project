@@ -82,5 +82,40 @@ export const useUserStore = defineStore("userStore", {
       this.loggedInUser.cart.push({ bookId, quantity });
       return { success: true, message: `Added book ID ${bookId} to your cart.` };
     },
+
+    increaseQuantity(bookId) {
+      if (!this.loggedInUser) return;
+      const cartItem = this.loggedInUser.cart.find((item) => item.bookId === bookId);
+      if (cartItem) {
+        cartItem.quantity += 1; 
+      }
+    },
+    
+    decreaseQuantity(bookId) {
+      if (!this.loggedInUser) return;
+      const cartItem = this.loggedInUser.cart.find((item) => item.bookId === bookId);
+      if (cartItem.quantity > 0) {
+        cartItem.quantity -= 1; 
+      // } else if (cartItem) {
+      //   // Optionally remove item if quantity reaches 0
+      //   this.loggedInUser.cart = this.loggedInUser.cart.filter((item) => item.bookId !== bookId);
+      // }
+      }
+    },
+
+    updateCartQuantity(bookId, newQuantity) {
+      if (!this.loggedInUser) return;
+  
+      const cartItem = this.loggedInUser.cart.find(item => item.bookId === bookId);
+      if (cartItem) {
+        cartItem.quantity = newQuantity;
+      }
+    },
+
+    removeCarted(Id){
+      this.loggedInUser.cart = this.loggedInUser.cart.filter((item) => item.bookId !== Id);
+
+    }
+    
   },
 });

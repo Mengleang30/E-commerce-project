@@ -63,19 +63,19 @@ onUnmounted(() => {
 
       <div class="wrap_link">
         <h4>Quick links</h4>
-        <a href="">Home</a>
-        <a href="">Feature</a>
-        <a href="">How to Work</a>
-        <a href="">FAQ</a>
-        <a href="">Contact</a>
+        <a href="#">Home</a>
+        <a href="#">Feature</a>
+        <a href="#">How to Work</a>
+        <a href="#">FAQ</a>
+        <a href="#">Contact</a>
       </div>
       <div class="wrap_link">
         <h4>Legal Links</h4>
-        <a href="">Teams of Service</a>
-        <a href="">Privacy Policy</a>
-        <a href="">Supports</a>
-        <a href="">Help Center</a>
-        <a href="">Security</a>
+        <a href="#">Teams of Service</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Supports</a>
+        <a href="#">Help Center</a>
+        <a href="#">Security</a>
       </div>
       <div class="wrap_link_Customer">
         <h4>Customer Service</h4>

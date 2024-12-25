@@ -15,9 +15,9 @@ const authGuard = (to, from, next) => {
   } else {
     // next('/login'); // Redirect to login page if not logged in
     alert("As Guest cannot access this feature , please sign in")
+    next("/login");
   }
 };
-
 
 const routes = [
   {
