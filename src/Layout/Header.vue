@@ -48,6 +48,7 @@ export default {
       ShowOptionLogout.value = !ShowOptionLogout.value;
     };
 
+    
     const toggleNavbar = () => {
       isNavbarVisible.value = !isNavbarVisible.value;
       isRotated.value = !isRotated.value;
@@ -151,7 +152,9 @@ export default {
             d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
           />
         </svg>
-        <img class="logo" :src="logo" alt="" />
+        <RouterLink to="/">
+          <img class="logo" :src="logo" alt="" />
+        </RouterLink>
       </div>
     </div>
 
@@ -212,7 +215,7 @@ export default {
       </button>
     </div>
 
-    <div class="cart_sign_in">
+    <div class="cart_sign_in" >
       <RouterLink to="/cart" class="header_cart">
         <div class="number_cart">{{ countCart }}</div>
         <svg
@@ -244,10 +247,14 @@ export default {
         />
         <span @click="handleShowOptionLogout" class="logout">Logout</span>
       </div>
-      <div class="option_logout" v-if="ShowOptionLogout">
-        <h4>Do you want logout ?</h4>
-        <button class="noBtn" @click="handleShowOptionLogout">No</button>
-        <button class="yesBtn" @click="handleLogout">Logout</button>
+      <div class="modal-overlay" v-if="ShowOptionLogout"  @click="handleShowOptionLogout">
+        <div class="option_logout" @click.stop>
+          <h4>Do you want logout ?</h4>
+          <div class="btnContainer">
+            <button class="noBtn" @click="handleShowOptionLogout">No</button>
+            <button class="yesBtn" @click="handleLogout">Logout</button>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -294,6 +301,10 @@ header svg {
   align-items: center;
   display: flex;
 }
+.wrap_logo svg:hover{
+  background-color: rgb(227, 227, 227);
+  
+}
 .wrap_logo .title,
 ::placeholder {
   text-shadow: 0px 4px 2px rgb(0, 0, 0, 20%);
@@ -303,6 +314,10 @@ header svg {
   height: 4.2rem;
   width: 8rem;
   border-radius: 0.5rem;
+  background-color: #296be0;
+}
+.logo:hover{
+  background-color: rgb(164, 164, 164);
 }
 
 ::placeholder {
@@ -500,20 +515,24 @@ nav ul .link.active {
   background-color: #eeeeee;
   border-radius: 6px;
   padding: 8px;
-  position: absolute;
-  top: 5rem;
-  right: 1rem;
+  width: 50%;
+  height: auto;
+  text-align: center;
   box-shadow: 2px 2px 3.6px rgba(29, 28, 28, 0.4);
+  z-index: 1001;
+}
+.option_logout .btnContainer{
+  display: flex;
 }
 .noBtn,
 .yesBtn {
   background-color: white;
-  width: 30%;
+  width:12rem;
   margin: 10%;
   border: none;
   outline: none;
   border-radius: 0.5rem;
-  height: 2rem;
+  height: 2.2rem;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -547,4 +566,17 @@ nav ul .link.active {
   -webkit-box-orient: vertical;
    overflow: hidden;
 }
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
 </style>
