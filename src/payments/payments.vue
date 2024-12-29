@@ -1,19 +1,68 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { defineProps } from 'vue';
+import {saveAs} from 'file-saver'
+import Qrcode from '@/assets/Qrcode.jpg'
 
+
+const cardNumber = ref("");
+const messageCard = ref("");
+
+const CVV = ref("");
 const activeMethod = ref("");
 const agreed = ref(false);
+const selectedMethod = ref(undefined);
 
-const selectMethod = (methods)=>{
-  activeMethod.value=methods;
+const showQr = ref(false);
+
+const validateCardNumber = () => {
+  const number = cardNumber.value;
+  if (!/^\d{13,19}$/.test(number)) {
+    messageCard.value = "Invalid card length. Must be 13-19 digits.";
+    return false;
+  }
+
+  messageCard.value = ""; // Clear message if valid
+  return true;
+};
+
+
+
+const showQrCode = ()=>{
+  showQr.value = !showQr.value;
 }
+
+
+const downloadQr = ()=>{
+ 
+  fetch(Qrcode)
+  .then((rep)=>rep.blob())
+  .then((blob)=>{
+    saveAs(blob, "BookShopQr.jpg");
+  })
+  .catch((err)=>{
+    console.error("Error download : ", err);
+  })
+} 
+
+const selectMethod = (methodsName)=>{
+  activeMethod.value=methodsName;
+
+  selectedMethod.value = methods.find((m) => m.name === methodsName);
+
+  if(showQr.value==true){
+    showQr.value = false;
+  }
+  
+  
+}
+
 
 
 const methods = [
   { name: "Credit Card", icons: ["https://thumbs.dreamstime.com/b/web-141701054.jpg", "https://images.seeklogo.com/logo-png/29/2/visa-logo-png_seeklogo-299317.png?v=1958564521198137576"] },
-  { name: "Paypal", icon: "https://img.utdstc.com/icon/d49/c48/d49c4851fcbdecccece71a27cddf0a6bddb23173461e763ec32cd08eeb778c69:200" },
-  { name: "Google Pay", icon: "https://play-lh.googleusercontent.com/HArtbyi53u0jnqhnnxkQnMx9dHOERNcprZyKnInd2nrfM7Wd9ivMNTiz7IJP6-mSpwk" },
+  { name: "Paypal", icon: "https://img.utdstc.com/icon/d49/c48/d49c4851fcbdecccece71a27cddf0a6bddb23173461e763ec32cd08eeb778c69:200"},
+  { name: "Google Pay", icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQR4ArUxtci1ip0bL0K9hs9QtwcJGy_gu9iYA&s" },
   { name: "Apple Pay", icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSjFABHvm8QvXtakqYBhCKx7pPSHHQUKHlwg&s" },
   { name: "ABA Pay", icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtY2aqkYA54jTqgCQmP2Zl0W7BwjM_XQ7vjg&s" },
   { name: "Acleda Pay", icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM37KLHTgu31C4LMRGMBzIu7QwwJXVeOC-EA&s" },
@@ -21,6 +70,9 @@ const methods = [
 defineProps({
   total : {
     type : Number,
+  },
+  click_close: {
+    type : Function,
   }
 }
  
@@ -29,31 +81,88 @@ defineProps({
 </script>
 <template>
   <div class="payment">
+    <img @click="click_close" class="close" src="https://img.icons8.com/?size=100&id=13903&format=png&color=000000" alt="">
     <div class="payMethod">
       <h3>How do you want to pay ?</h3>
+
       <div
-        v-for="method in methods" class="method"
+        v-for="method in methods" class="method" :title="method.name"
         :key="method.name"
         :class="{ 'method-active': activeMethod === method.name }"
-        @click="selectMethod(method.name)"
-      >
-        {{ method.name }}
+        @click="selectMethod(method.name)" >
+
+        <span>{{ method.name }}</span>
         <div v-if="method.icons" class="master_cart">
           <img v-for="icon in method.icons" :key="icon" :src="icon" alt="" />
         </div>
         <img v-else :src="method.icon" alt="" />
+        
       </div>
+
+      <div v-if="selectedMethod" class="selected_method" >
+
+        <div class="icons">
+          <div v-if="selectedMethod.icons">
+            <img v-for="icon in selectedMethod.icons" :src="icon" alt="" :key="icon">
+          </div>
+          <img v-else :src="selectedMethod.icon" alt="">
+          <h3>{{ selectedMethod.name }}</h3>
+        </div>
+        
+        <div v-if="showQr" class="Qrcode_show_container">
+          <img @click="downloadQr" class="download" src="https://img.icons8.com/?size=100&id=vDfvxaQA6L2e&format=png&color=000000" alt="">
+          <div class="title">
+            <h4>Book Shop</h4>
+            <span>$ 0</span>
+          </div>
+          <hr>
+          <img class="Qrcode_show" src="https://img.icons8.com/?size=100&id=45920&format=png&color=000000" alt="">
+          <img @click="showQrCode" class="close" src="https://img.icons8.com/?size=100&id=13903&format=png&color=000000" alt="">
+        </div>
+
+        <div class="container">
+            <div >Card Number </div>
+            <input class="cardNumber" v-model="cardNumber" @input="validateCardNumber" type="number" placeholder="Enter Card" inputmode="numeric">
+            <p class="Invalid">{{ messageCard }}</p>
+        <div>
+          Expire Date 
+          <div>
+            <input type="month" placeholder="MM" max="12" min="0" maxlength="2" >
+            <input type="number" placeholder="YY" max="3000"min="2000" maxlength="4"  >
+          </div>
+          <div class="wrapQR">
+            <div>
+              <div>Security Code</div>
+              <input type="number" maxlength="3" placeholder="CVV">
+            </div>
+            <div @click="showQrCode" class="qrcode" title="using QR">
+              <img src="@/assets/icons_qr_code.gif" alt="">
+              <span>Using QR</span>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      
       <div class="accept">
         <input type="checkbox" v-model="agreed"/>
         <p v-if="agreed">Thank you for agreeing!</p>
         <p v-else>Agree with the payment</p>
       </div>
+
       <div class="total">
         <h3>Total : ${{ total.toFixed(2) }}</h3>
-        <button :disabled="!agreed || !activeMethod">Pay Now</button>
+        <button :disabled="!agreed || !activeMethod">Pay Now
+          <img width="25" height="25" src="https://img.icons8.com/officel/30/cheap-2.png" alt="lock-2"/>
+        </button>
       </div>
+    
     </div>
   </div>
+  
+
+  
 </template>
 
 
@@ -62,20 +171,30 @@ defineProps({
 .payment{
     padding: 5px;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     z-index: 1001;
-    
+    position: relative;
+    display: flex;
+    height: auto;
 }
-.payMethod .close{
-  width: 1.5rem;
+.payment .close{
+  width: 2.05rem;
   position: absolute;
-  right: 1%;
-  top: 1%;
+  z-index: 2000;
+  right: 2%;
+  top: 2%;
+  cursor: pointer;
+  transition: all .2s;
 }
+.payment .close:active{
+  transform: scale(1.05);
+}
+.payment .close:hover{
+  background-color: rgb(255, 36, 36);
+  border-radius: 50%;
+}
+
 .payMethod{
-    padding: .2rem;
+    padding: .5rem;
     display: flex;
     flex-direction: column;
     width: auto;
@@ -83,6 +202,7 @@ defineProps({
     background-color: rgb(235, 235, 235);
     padding: 10px 25px;
     border-radius: .65rem;
+    overflow: auto;
     box-shadow: 2px 2px 2px rgba(70, 70, 70, 0.3);
     position: relative;
 }
@@ -91,7 +211,7 @@ defineProps({
     margin-top: .4rem;
     align-items: center;
     display: flex;
-    width: 16rem;
+    width: 18rem;
     height: 3rem;
     padding: 5px 15px;
     justify-content: space-between;
@@ -132,12 +252,16 @@ defineProps({
 .total button {
     background-color: royalblue;
     color: white;
-    width: 5rem;
+    width: 5.4rem;
+    height: 2.5rem;
     border: none;
     border-radius: .4rem;
     transition: all 0.2s;
     outline: none;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .total button:disabled{
   background-color: grey;
@@ -145,7 +269,7 @@ defineProps({
 
 }
 .total button:enabled{
-  background-color: red;
+  background-color: rgb(20, 177, 255);
 }
 .total button:enabled:hover{
   background-color: rgb(246, 28, 28);
@@ -175,6 +299,121 @@ defineProps({
   height: 1.2rem;
   accent-color: blue;
   cursor: pointer;
+}
+
+
+.selected_method {
+  background-color: rgb(252, 252, 247);
+  margin-top: .2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: .5rem;
+  padding: 5px;
+  gap: 5px;
+
+
+}
+.selected_method img {
+  width: 2rem;
+  border-radius: .4rem;
+  padding: 1px;
+  margin: 1px;
+}
+.selected_method .icons{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: space-evenly;
+  background-color: aliceblue;
+  border-radius: .6rem;
+  padding: 5px;
+}
+
+.selected_method .container{
+  text-align: start;
+
+}
+.selected_method .container input{
+  width: 49%;
+  height: 2rem;
+  margin: 1px;
+  text-align: center;
+}
+
+.selected_method .container .cardNumber  {
+  width: 100%;
+  -moz-appearance: textfield;
+  appearance: textfield;
+  -webkit-appearance: textfield;
+}
+
+.wrapQR {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  
+}
+.wrapQR img {
+  width: 2.4rem;
+ 
+}
+
+.wrapQR .qrcode{
+  background-color: rgb(229, 241, 254);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 5px;
+  box-shadow: 1px 1px 2px rgba(174, 174, 174,.6);
+  width: 50%;
+  border-radius: .4rem;
+  transition: ease-in-out 1s;
+}
+.wrapQR .qrcode:hover{
+  background-color: snow;
+}
+
+.Qrcode_show_container{
+  background-color: rgb(255, 255, 255);
+  position: absolute;
+  width: 100%;
+  height: 80%;
+  translate: -50% -50%;
+  top: 60%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  color: #007BFF;
+}
+.Qrcode_show_container .Qrcode_show{
+  width: 8rem;
+  border: 2px solid rgb(201, 202, 199);
+  box-shadow: 2px 2px 2px rgba(174, 174, 174,.6);
+  cursor: zoom-in;
+}
+.Qrcode_show_container hr{
+  width: 90%;
+  border: none;
+  border-top: 1px dashed #007BFF; 
+}
+
+.download {
+  width: 2.05rem;
+  position: absolute;
+  z-index: 2000;
+  right: 15%;
+  top: 25%;
+  cursor: pointer;
+  transition: all .2s;
+  cursor:alias;
+}
+
+.Invalid {
+  color: red;
+  font-size: small;
 }
 
 </style>
