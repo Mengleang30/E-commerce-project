@@ -6,9 +6,9 @@ import Qrcode from '@/assets/Qrcode.jpg'
 
 
 const cardNumber = ref("");
-const messageCard = ref("");
+const messageCard = ref("")
 
-const CVV = ref("");
+
 const activeMethod = ref("");
 const agreed = ref(false);
 const selectedMethod = ref(undefined);
