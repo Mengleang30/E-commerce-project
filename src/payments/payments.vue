@@ -3,18 +3,44 @@ import { computed, ref } from 'vue';
 import { defineProps } from 'vue';
 import {saveAs} from 'file-saver'
 import Qrcode from '@/assets/Qrcode.jpg'
+import invoice from './invoice.vue';
+import { useUserStore } from '@/stores/userBookStore';
 
 
-const cardNumber = ref("");
-const messageCard = ref("")
+const useStore = useUserStore();
 
 
 const activeMethod = ref("");
 const agreed = ref(false);
 const selectedMethod = ref(undefined);
 
-const showQr = ref(false);
 
+
+
+
+const cvv =ref('');
+const messageCvv = ref("");
+const validateCvv = () => {
+  const Cvv = parseInt(cvv.value, 10);
+
+  if( Cvv.length < 3 || Cvv.length > 3) {
+    messageCvv.value = "Your CVV invalid";
+    return false;
+  }
+  else if (isNaN(Cvv)){
+    messageCvv.value = "Must be 3 digits number !";
+    return false;
+  }
+
+  else {
+    messageCvv.value = "";
+    return true
+  }
+
+}
+
+const cardNumber = ref("");
+const messageCard = ref("")
 const validateCardNumber = () => {
   const number = cardNumber.value;
   if (!/^\d{13,19}$/.test(number)) {
@@ -26,8 +52,82 @@ const validateCardNumber = () => {
   return true;
 };
 
+const month = ref("");
+const messageMonth = ref('')
+const validateMonth = ()=>{
+  const Month = parseInt(month.value, 10);
+  if(isNaN(Month) || Month<1 || Month > 12){
+    messageMonth.value = "Invalid month !";
+    return false;
+  }
+
+  else {
+    messageMonth.value = "";
+    return true;
+
+  }
+
+}
 
 
+const year = ref("");
+const messageYear = ref("");
+const validateYear = ()=>{
+  const Year = parseInt(year.value,10);
+  if(isNaN(Year)){
+    messageYear.value = "Invalid year !";
+    return false;
+  }
+  else if( Year <2024 || Year >3000){
+    messageYear.value = "Invalid year !";
+    return false
+
+  }
+  else {
+    messageYear.value= "";
+    return true;
+  }
+ 
+
+}
+
+const invoiceShow = ref(false)
+const showInvoice = () =>{
+    invoiceShow.value = !invoiceShow.value;
+    if(invoiceShow.value==false){
+      useStore.clearInvoive();
+    }
+   
+}
+
+
+
+const Buy = () => {
+  // Ensure handleBuy updates the cart and bought status
+ 
+ 
+  // Validate the card details
+  const isCardNumberValid = validateCardNumber();
+  const isCvvValid = validateCvv();
+  const isMonthValid = validateMonth();
+  const isYearValid = validateYear();
+
+  // If QR is showing, toggle the invoice view
+  if (showQr.value === true) {
+    invoiceShow.value = !invoiceShow.value;
+    useStore.handleBuy()
+    return true 
+  }
+  
+  invoiceShow.value = true
+  // If any of the card validations fail, stop the process
+  if (!isCardNumberValid || !isCvvValid || !isMonthValid || !isYearValid) {
+    return false;  // Return false if validation fails
+  } 
+};
+
+
+const showQr = ref(false);
 const showQrCode = ()=>{
   showQr.value = !showQr.value;
 }
@@ -58,7 +158,6 @@ const selectMethod = (methodsName)=>{
 }
 
 
-
 const methods = [
   { name: "Credit Card", icons: ["https://thumbs.dreamstime.com/b/web-141701054.jpg", "https://images.seeklogo.com/logo-png/29/2/visa-logo-png_seeklogo-299317.png?v=1958564521198137576"] },
   { name: "Paypal", icon: "https://img.utdstc.com/icon/d49/c48/d49c4851fcbdecccece71a27cddf0a6bddb23173461e763ec32cd08eeb778c69:200"},
@@ -73,16 +172,17 @@ defineProps({
   },
   click_close: {
     type : Function,
-  }
+  },
 }
  
 )
 
 </script>
 <template>
-  <div class="payment">
-    <img @click="click_close" class="close" src="https://img.icons8.com/?size=100&id=13903&format=png&color=000000" alt="">
-    <div class="payMethod">
+  <div class="payment" >
+    <img @click="click_close" v-if="!invoiceShow==true" class="close" src="https://img.icons8.com/?size=100&id=13903&format=png&color=000000" alt="">
+    <img @click="showInvoice" v-else class="close" src="https://img.icons8.com/?size=100&id=13903&format=png&color=000000" alt="">
+    <div class="payMethod" v-if="!invoiceShow">
       <h3>How do you want to pay ?</h3>
 
       <div
@@ -122,18 +222,32 @@ defineProps({
 
         <div class="container">
             <div >Card Number </div>
-            <input class="cardNumber" v-model="cardNumber" @input="validateCardNumber" type="number" placeholder="Enter Card" inputmode="numeric">
+            <input class="cardNumber" v-model="cardNumber" 
+            @input="validateCardNumber" type="number" placeholder="Enter Card" inputmode="numeric">
             <p class="Invalid">{{ messageCard }}</p>
         <div>
           Expire Date 
-          <div>
-            <input type="month" placeholder="MM" max="12" min="0" maxlength="2" >
-            <input type="number" placeholder="YY" max="3000"min="2000" maxlength="4"  >
+          <div class="wrapDate">
+            <div>
+              <input v-model="month" class="input_date"
+            @input="validateMonth" type="month" placeholder="MM" max="12" min="0" maxlength="2" >
+            <p class="Invalid">{{ messageMonth }}</p>
+            </div>
+         <div>
+          <input v-model="year" 
+            @input="validateYear" class="input_date"
+            type="text" placeholder="YY" max="3000"min="2000" maxlength="4"  >
+            <p class="Invalid">{{ messageYear }}</p>
+         </div>
           </div>
           <div class="wrapQR">
             <div>
               <div>Security Code</div>
-              <input type="number" maxlength="3" placeholder="CVV">
+              <input 
+              v-model="cvv"
+              @input="validateCvv"
+              type="text" maxlength="3" placeholder="CVV">
+              <div class="Invalid">{{ messageCvv }}</div>
             </div>
             <div @click="showQrCode" class="qrcode" title="using QR">
               <img src="@/assets/icons_qr_code.gif" alt="">
@@ -153,16 +267,19 @@ defineProps({
 
       <div class="total">
         <h3>Total : ${{ total.toFixed(2) }}</h3>
-        <button :disabled="!agreed || !activeMethod">Pay Now
+        <button title="Buy Now" @click="Buy" :disabled="!agreed || !activeMethod || useStore.loggedInUser.cart.length === 0">Pay Now
           <img width="25" height="25" src="https://img.icons8.com/officel/30/cheap-2.png" alt="lock-2"/>
         </button>
       </div>
     
     </div>
+    <div v-else >
+      <invoice :-payment="selectedMethod.name" :-acc-id="cardNumber"
+      />
+    </div>
   </div>
-  
 
-  
+
 </template>
 
 
@@ -175,13 +292,14 @@ defineProps({
     position: relative;
     display: flex;
     height: auto;
+    font-size: 14px;
 }
 .payment .close{
-  width: 2.05rem;
+  width: 2rem;
   position: absolute;
   z-index: 2000;
-  right: 2%;
-  top: 2%;
+  right: 1.5%;
+  top: 1.5%;
   cursor: pointer;
   transition: all .2s;
 }
@@ -211,8 +329,8 @@ defineProps({
     margin-top: .4rem;
     align-items: center;
     display: flex;
-    width: 18rem;
-    height: 3rem;
+    width: 20rem;
+    height: 2.65rem;
     padding: 5px 15px;
     justify-content: space-between;
     gap: 1rem;
@@ -239,7 +357,7 @@ defineProps({
 
 }
 .payMethod .method img{
-   width: 2rem;
+   width: 1.8rem;
    border: 1px solid rgb(219, 219, 219);
    padding: 2px;
    border-radius: .5rem;
@@ -332,14 +450,20 @@ defineProps({
 }
 
 .selected_method .container{
-  text-align: start;
+  text-align: center;
+  height: auto;
 
 }
 .selected_method .container input{
-  width: 49%;
   height: 2rem;
   margin: 1px;
   text-align: center;
+  width: 5rem;
+  border: 1px solid rgba(179, 179, 179,0.7);
+  border-radius: .4rem;
+}
+.selected_method .container input:focus{
+ outline: 1px solid #007BFF;
 }
 
 .selected_method .container .cardNumber  {
@@ -353,6 +477,7 @@ defineProps({
   display: flex;
   align-items: center;
   width: 100%;
+  justify-content: space-between;
   
 }
 .wrapQR img {
@@ -364,10 +489,12 @@ defineProps({
   background-color: rgb(229, 241, 254);
   display: flex;
   align-items: center;
+  justify-content: center;
+  padding: 2px;
   cursor: pointer;
   margin-right: 5px;
   box-shadow: 1px 1px 2px rgba(174, 174, 174,.6);
-  width: 50%;
+  width: 40%;
   border-radius: .4rem;
   transition: ease-in-out 1s;
 }
@@ -414,6 +541,15 @@ defineProps({
 .Invalid {
   color: red;
   font-size: small;
+}
+
+.wrapDate {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.input_date{
+  width: 6.5rem;
 }
 
 </style>

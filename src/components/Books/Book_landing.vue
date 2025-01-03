@@ -157,6 +157,7 @@ export default {
     /* Limit to 2 lines */
     -webkit-box-orient: vertical;
     overflow: hidden;
+   
 }
 
 .Category {
@@ -188,6 +189,7 @@ export default {
 
 }
 
+
 .price_btn .btn {
     background-color: rgba(27, 25, 156, 0.82);
     border: none;
@@ -198,10 +200,67 @@ export default {
     width: 5rem;
     height: 2rem;
     font-size: 12px;
+    transition: all .3s;
 }
 
 .price_btn .btn:hover {
     background-color: red;
+}
+
+@media screen and (max-width : 460px) {
+  .each_book{
+    width: 8rem;
+    padding: 5px;
+    height: 12rem;
+  }
+  .each_book img{
+    height: 5rem;
+  }
+    .icons_love {
+        width: 1rem;
+        position: absolute;
+        right: 2%;
+        top: 2%;
+        cursor: pointer;
+    }
+    .discount_UI{
+        display: flex;
+    }
+    .discount_UI .after_discount{
+        color: rgb(255, 52, 7);
+    }
+    .discount_UI .before_dis{
+        text-decoration: line-through;
+    }
+    .wraping h4{
+       
+        height: 1rem;
+        font-size: 12px;
+    }
+    .wraping .author_year{
+        font-size: 10px;
+    }
+    .price_btn{
+        display: flex;
+        flex-direction: column;
+    }
+    .price_btn .price{
+        font-size: 14px;
+        
+    }
+    .price_btn .after_discount{
+        font-size: 14px;
+    }
+    .price_btn .btn {
+        height: 1.4rem;
+    }
+    
+    .Category {
+        height: 1rem;
+       
+    }
+    
+  
 }
 
 

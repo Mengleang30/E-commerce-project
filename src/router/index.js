@@ -7,6 +7,7 @@ import ListBook from '@/views/List_book.vue'
 import Login from '@/components/Users/Login.vue'
 import Feedback from '@/views/Feedback_page.vue'
 import { useUserStore } from '@/stores/userBookStore'
+import Search from '@/views/Search.vue'
 
 const authGuard = (to, from, next) => {
   const authStore = useUserStore();
@@ -58,6 +59,11 @@ const routes = [
     name : "Feedback",
     component : Feedback,
     beforeEnter : authGuard,
+  },
+  {
+    path: '/search',
+    component: Search,
+   
   },
 ]
 

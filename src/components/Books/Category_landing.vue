@@ -85,8 +85,6 @@ export default {
       );
     };
 
-   
-
     return {
       Book_by_category,
       discountBooks,
@@ -156,7 +154,6 @@ export default {
       />
     </div>
   </div>
- 
   <div class="category_landing_5star">
         <div class="wraping" >
             <h3 > 5 Stars Books ⭐⭐⭐⭐⭐
