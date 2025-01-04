@@ -19,6 +19,7 @@ export default{
 </script>
 
 <template>
+
     <h2>Favorite page</h2>
 
     <FavoriteBook/>
@@ -27,8 +28,11 @@ export default{
    
 </template>
 
-<style>
-
+<style scoped>
+h2{
+    text-align: center;
+    margin-top: 30px;
+}
 
 
 </style>

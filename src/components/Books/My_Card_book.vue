@@ -1,0 +1,455 @@
+<script setup>
+import { computed, devtools, ref } from 'vue';
+import { useUserStore } from '@/stores/userBookStore';
+import { useBookStore } from '@/stores';
+import payments from '@/payments/payments.vue';
+
+const userStore = useUserStore();
+const DataBooks = useBookStore();
+
+const pay = ref(false);
+
+const handleToPay = () => {
+  pay.value = true;
+}
+const increaseQuantity = (id) => {
+  userStore.increaseQuantity(id)
+}
+const decreaseQuantity = (id) => {
+  userStore.decreaseQuantity(id)
+}
+
+
+const CartBooks = computed(() => {
+  if (!userStore.loggedInUser) {
+    return [];
+  }
+
+  return userStore.loggedInUser.cart.map((cartItem) => {
+    const book = DataBooks.BookData.find((b) => b.id === cartItem.bookId);
+    if (book) {
+      return {
+        ...book,
+        qualities: cartItem.quantity
+      };
+
+    }
+    return null;
+  })
+
+
+
+})
+
+const totalPrice = computed(() => {
+  return CartBooks.value.reduce((sum, Carted) => {
+    return sum + Carted.qualities * Carted.price * (1 - Carted.discount / 100);
+  }, 0)
+})
+const handleRemove = (id) => {
+  userStore.removeCarted(id)("decrement");
+}
+
+const updateQuantity = (id, newQuantity) => {
+  userStore.updateCartQuantity(id, newQuantity);
+}
+
+</script>
+
+<template scope>
+  <div>
+
+    <div class="Card">
+      <h2>
+        <div class="book-list">
+
+
+          <div v-if="pay" class="modal-overlay" @click="pay = false">
+            <div class="paymentContainer" @click.stop>
+              <payments :total="totalPrice" />
+            </div>
+          </div>
+
+
+          <div v-if="CartBooks.length > 0">
+            <div v-for="Carted in CartBooks" :key="Carted.id">
+              <div class="each_cart">
+
+                <img :src="Carted.url_image" alt="CartBooks" class="book-image">
+
+                <div class="book-content">
+
+                  <h3 class="book-title">{{ Carted.title }}</h3>
+                  <p class="book-quantity">Quantity: {{ Carted.qualities }} </p>
+                  <p class="book-price">Price: $ {{ (Carted.price * (1 - Carted.discount / 100)).toFixed(2) }}</p>
+
+
+                </div>
+                  <div>
+                    <div class="quantity-container">
+
+                      <div class="quantity-controls">
+                        <button @click="decreaseQuantity(Carted.id)">-</button>
+                        <input v-model="Carted.qualities" @input="updateQuantity(Carted.id, Carted.qualities)"
+                          type="number" id="quantity" min="1" max="99" value="1" />
+                        <button @click="increaseQuantity(Carted.id)">+</button>
+                      </div>
+
+                      <div class="remove-button">
+                        <button @click="handleRemove(Carted.id)">Remove</button>
+                      </div>
+                    </div>
+                  </div>
+
+
+                
+              </div>
+              <div class="sub_totals">
+                SubTotal: $ {{ (Carted.qualities * Carted.price * (1 - Carted.discount / 100)).toFixed(2) }}
+              </div>
+
+            </div>
+          </div>
+
+          <div v-else>
+            <h3>No cart yet</h3>
+          </div>
+
+        </div>
+
+      </h2>
+    </div>
+
+  </div>
+  <div v-if="CartBooks.length>0 ">
+
+    <div class="cart_Totals">
+      <dev class="Totals">
+        <h2>Cart Totals
+          _______________________________________________________
+
+        </h2>
+        <div class="end">
+          
+          <p>Shipping: $ 0.00</p>
+          <p>Total: $ {{ totalPrice.toFixed(2) }}</p>
+
+          <div class="paybtn">
+            <div class="book-price">
+              <h2> Total :
+                ${{ totalPrice.toFixed(2) }}
+              </h2>
+            </div>
+            <div class="Topay">
+              <button @click="handleToPay">To Pay</button>
+            </div>
+          </div>
+        </div>
+      </dev>
+
+    </div>
+  </div>
+
+</template>
+
+<style scoped>
+.Card {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f3eded;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(245, 244, 244, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+
+.book-list {
+  max-height: 900px;
+  overflow-y: auto;
+  padding-right: 15px;
+  scrollbar-width: 40px;
+  scrollbar-color: #636161 #dee2e1;
+}
+
+
+.book-list::-webkit-scrollbar {
+  width: 20px;
+}
+
+.book-list::-webkit-scrollbar-thumb {
+  background: #202020;
+  border-radius: 50px;
+}
+
+.book-list::-webkit-scrollbar-thumb:hover {
+  background: #1b1a1a;
+}
+
+.h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.book-image {
+  height: 100px;
+  width: 4rem;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 20px;
+}
+
+.book-content {
+  flex: 1;
+}
+
+.book-content div {
+  margin-bottom: 8px;
+}
+
+.book-title {
+
+  margin: 0;
+  font-size: 15px;
+
+}
+
+.book-quantity {
+  color: #333;
+  ;
+
+  font-size: 13px;
+  margin: 20px 0;
+}
+
+.book-price {
+  color: #333;
+  font-size: 13px;
+  margin: 10px 0;
+}
+
+.each_cart {
+
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  /* Inside card spacing */
+  margin-bottom: 20px;
+  /* Spacing between cards */
+  border: 1px solid #d3cdcd;
+  border-radius: 10px;
+  background: #f3f2f2e1;
+  box-shadow: 0 2px 4px rgb(167, 163, 163);
+
+
+}
+
+.each_cart button {
+  background: rgb(248, 247, 247);
+  border: rgb(243, 233, 233);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+  border-radius: 100%;
+  transition: background-color 0.3s ease;
+
+}
+
+.each_cart input {
+  width: 4rem;
+  height: 2rem;
+}
+
+.paybtn {
+  background-color: antiquewhite;
+  display: flex;
+  ;
+  gap: 1rem;
+  align-items: center;
+
+
+}
+
+.Topay button {
+  background-color: #0f0c0cc4;
+  color: white;
+  width: 8rem;
+  border: none;
+  border-radius: .4rem;
+  transition: all 0.2s;
+  outline: none;
+  cursor: pointer;
+}
+
+.book-content {
+  
+  margin-right: 10px;
+  text-align: top;
+  
+}
+
+.paybtn button {
+  width: 8rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+
+.coupon {
+  display: flex;
+  padding: 5px;
+  gap: 10px;
+  align-items: center;
+}
+
+.coupon input {
+  border: none;
+  padding-left: 10px;
+  border-radius: .4rem;
+  width: 40%;
+  height: 2rem;
+}
+
+.coupon button {
+  background-color: rgb(17, 17, 18);
+  color: white;
+  width: 5rem;
+  border: none;
+  border-radius: .4rem;
+  transition: all 0.2s;
+  outline: none;
+  cursor: pointer;
+}
+
+.coupon-input {
+  width: calc(100% - 90px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.apply-btn {
+  width: 80px;
+  padding: 10px;
+  background-color: #333333fb;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cart_Totals {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  gap: 10px;
+  background: #eee8e8;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(248, 243, 243, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+.Totals {
+  margin: 20px;
+  max-height: 900px;
+  overflow-y: auto;
+  padding-left: 15px;
+  scrollbar-width: 40px;
+  scrollbar-color: #636161 #dee2e1;
+}
+
+.quantity-container {
+  display: flex;
+  align-items: center;
+  
+  margin: 40px;
+  width: 40%;
+
+  gap: 10px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: end;
+ 
+  gap: 10px;
+  border-radius: 20px;
+  padding: 5px 15px;
+  background-color: #f5f1f1ea;
+}
+
+.quantity-controls button {
+  background: #f5f1f1ea;
+  border: none;
+  font-size: 16px;
+  /* Slightly larger size */
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.quantity-controls input {
+  width: 40px;
+  text-align: center;
+  border: none;
+  font-size: 15px;
+}
+
+.remove-button button {
+  background-color: #e70e0e;
+  color: rgb(250, 245, 245);
+  border: none;
+  float: inline-end;
+  border-radius: 10px;
+  align-items: center;
+  padding: 5px 20px;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+.sub_totals {
+  padding: 10px;
+  margin: 10px;
+  font-size: 12px;
+  color: #131212b4;
+  
+  
+}
+
+.end {
+  padding: 15px;
+  margin: 2px;
+  line-height: 1.8;
+}
+@media(max-width: 768px) {
+
+
+  .quantity-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  }
+
+  .quantity-container.remove-button {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}
+</style>
