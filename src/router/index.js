@@ -5,7 +5,7 @@ import Favorite from '@/views/Favorite_page.vue'
 import Landing from '@/views/Landing.vue'
 import ListBook from '@/views/List_book.vue'
 import Login from '@/components/Users/Login.vue'
-import Feedback from '@/views/Feedback_page.vue'
+import History from '@/views/History.vue'
 import { useUserStore } from '@/stores/userBookStore'
 import Search from '@/views/Search.vue'
 
@@ -55,10 +55,9 @@ const routes = [
     component: Login,
   },
   {
-    path : "/feedback",
-    name : "Feedback",
-    component : Feedback,
-    beforeEnter : authGuard,
+    path : "/history",
+    name : "History",
+    component : History,
   },
   {
     path: '/search',

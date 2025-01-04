@@ -122,8 +122,8 @@ export default {
           icon: bookmark,
         },
         {
-          nav_name: "Feedback",
-          link: "/feedback",
+          nav_name: "History",
+          link: "/history",
           icon: feedback,
         },
         {
