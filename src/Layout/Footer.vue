@@ -132,9 +132,11 @@ onUnmounted(() => {
   box-shadow: 0px 4px 3px rgb(0, 0, 0, 20%);
   border-radius: 0.16rem;
   border: 2px solid rgb(136, 136, 136);
+ 
 }
 .wrapping_footer {
   display: grid;
+  
   padding: 5px;
   grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
   background-color: rgb(207, 207, 207);

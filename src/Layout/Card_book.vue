@@ -1,45 +1,71 @@
 <script>
 import { useBookStore } from '@/stores';
+import { ref } from 'vue';
+import { onMounted, onBeforeUnmount } from 'vue';
 
 export default {
     name: "Card_book",
 
     setup() {
+    const cart_data = useBookStore();
+    const current_Index = ref(0);
+    const previous_Index = ref(0);
+    const updateIndex = ref(null); 
 
-        const cart_data = useBookStore();
-        return {
-            Card_data : cart_data.BookData
-        }
+   
+    onMounted(() => {
+      autoUpdateCard();
+    });
 
-    },
-    computed : {
-        FilterCard (){
+  
+    onBeforeUnmount(() => {
+      if (updateIndex.value) {
+        clearInterval(updateIndex.value);
+      }
+    });
 
-        }
-    },
+    const autoUpdateCard = () => {
+    
+      if (updateIndex.value) {
+        clearInterval(updateIndex.value);
+      }
 
-    data() {
-        return {
-            current_index: 0,
-            previous_index : 0,
-        }
-    },
-    methods: {
-        nextCard() {
-            setTimeout(()=>{
-                this.previous_index = this.current_index;
-                const random_index = Math.floor(Math.random() * this.Card_data.length);
-                this.current_index = random_index;
-            },250)
-           
-        },
-        previousCard() {
-            setTimeout(()=>{
-                this.current_index = this.previous_index;
-            },250)
-           
-        }
-    },
+      // Start the interval
+      updateIndex.value = setInterval(() => {
+        current_Index.value = Math.floor(Math.random() * cart_data.BookData.length);
+        console.log("Random Index:", current_Index.value);
+      }, 4000);
+    };
+
+    const nextCard = () => {
+      
+      pauseCard();
+
+      current_Index.value = (current_Index.value + 1) % cart_data.BookData.length;
+
+      // pause for 5s
+      setTimeout(() => {
+        autoUpdateCard();
+      }, 6000);
+    };
+
+    const pauseCard = () => {
+      console.log("Pause random");
+      if (updateIndex.value) {
+        clearInterval(updateIndex.value);
+      }
+    };
+
+    return {
+      Card_data: cart_data.BookData,
+      current_Index,
+      previous_Index,
+      updateIndex,
+      autoUpdateCard,
+      nextCard,
+      pauseCard
+    };
+  }
 
 
 }
@@ -48,17 +74,17 @@ export default {
 <template>
     <div class="card">
         <div class="wrap_arrow">
-            <div @click="previousCard" class="left">&lt;</div>
+            <div @click="pauseCard" class="left">&lt;</div>
             <div @click="nextCard" class="right">&gt;</div>
         </div>
         <article class="article">
-            <h4>{{ Card_data[current_index].title }}</h4>
-            <p> {{ Card_data[current_index].description }} </p>
-                <RouterLink :to="`/detail/${Card_data[current_index].id}`">
-                    <button>View Now</button>
+            <h4>{{ Card_data[current_Index].title }}</h4>
+            <p>By : <strong>{{ Card_data[current_Index].author }}</strong> .{{ Card_data[current_Index].description }} </p>
+                <RouterLink :to="`/detail/${Card_data[current_Index].id}`">
+                    <button class="btn">View Now</button>
                 </RouterLink>
         </article>
-        <img :src="Card_data[current_index].url_image" alt="books">
+        <img :src="Card_data[current_Index].url_image" alt="books">
     </div>
 </template>
 
@@ -78,6 +104,7 @@ export default {
     position: relative;
     z-index: 120;
     transition: 1.8s all; 
+    
 }
 
 .wrap_arrow {
@@ -108,6 +135,7 @@ export default {
     font-weight: bold;
     box-shadow: 2px 2px 2px rgb(0, 0, 0, 20%);
     cursor: pointer;
+    transition: all .2s; 
 }
 
 .left {
@@ -125,6 +153,7 @@ export default {
     padding-top: 10px;
     height: auto;
     line-height: 1.5rem;
+    transition: all .3s; 
 }
 
 .card .article p {
@@ -147,7 +176,7 @@ export default {
     height: 1.6rem;
 }
 .card .article button:hover, .left:hover ,.right:hover{
-    background-color: rgb(60, 162, 245);
+    background-color: rgb(83, 173, 247);
     outline: none;
     color: aliceblue; 
 }
@@ -161,5 +190,26 @@ export default {
     margin-left: 1rem;
     outline: 1px solid rgb(255, 255, 255);
     cursor: pointer;
+    transition: all .4s;
+}
+
+
+@media screen and (max-width : 460px) {
+    .card img {
+    width: 7rem;
+    box-shadow: 2px 4px 2px rgb(0, 0, 0, 20%);
+    height: auto;
+}
+    .card {
+    height: 70%;
+    }
+    .card .article{
+    font-size: 14px;
+    }
+    .card .article .btn{
+        font-size: 12px;
+        width: 4rem;
+        margin-left: 30%;
+    }
 }
 </style>

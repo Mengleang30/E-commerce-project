@@ -302,6 +302,7 @@ export default {
   gap: 4px;
   height: auto;
   grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+
 }
 .box_inform {
   background: linear-gradient(
@@ -321,6 +322,7 @@ export default {
   border: 2px solid rgb(136, 136, 136);
   border-radius: 0.6rem;
   color: white;
+  
 }
 
 .wrap_price{
@@ -354,6 +356,7 @@ export default {
   row-gap: 0.25rem;
   height: auto;
   flex-grow: 1;
+
 }
 .wrap_cart {
   display: flex;
@@ -505,4 +508,41 @@ input[type="number"]::-webkit-inner-spin-button {
     outline: 1px solid rgb(158, 158, 158);
 }
 
+
+@media screen and (max-width : 460px) {
+  .box_inform{
+    justify-content: center;
+    font-size: 12px;
+  }
+  .box_inform p {
+    font-size: .6rem;
+  }
+  .wrapping_fav svg{
+    width: 1.5rem;
+  }
+  .wrap_cart .subtract,
+  .adding {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .wrap_cart button {
+    width: 4rem;
+    height: 2rem;
+    font-size: 10px;
+  }
+  .information_container {
+    font-size: 14px;
+  }
+  .label_inform .price{
+    font-size: 22px;
+  }
+  .BackBtn {
+    width: 2rem;
+  }
+  .alert_successful{
+    font-size: 10px;
+  }
+
+  
+}
 </style>

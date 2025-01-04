@@ -11,6 +11,7 @@ import product from "@/assets/icons_nav/product.png";
 import books from "@/assets/icons_nav/books.png";
 import logo_bookstore from "@/assets/logo_bookstore.jpg";
 import { useUserStore } from "@/stores/userBookStore";
+import { useBookStore } from "@/stores";
 
 export default {
   name: "Header",
@@ -24,6 +25,17 @@ export default {
     const navbarRef = ref(null);
 
     const userStore = useUserStore();
+    const useStore = useBookStore();
+
+    const textSearch = ref('');
+
+   
+
+    const handleSearch = ()=>{
+      useStore.setTextFromSearch(textSearch.value)
+      console.log(textSearch.value)
+      console.log(useStore.Search)
+    }
 
 
     const countCart = computed (()=>{
@@ -54,6 +66,7 @@ export default {
       isRotated.value = !isRotated.value;
     };
 
+   
     const handleClickOutside = (e) => {
       if (navbarRef.value && !navbarRef.value.contains(e.target)) {
         isNavbarVisible.value = false;
@@ -78,6 +91,8 @@ export default {
       countCart,
       ShowOptionLogout,
       handleShowOptionLogout,
+      textSearch,
+      handleSearch,
     };
   },
 
@@ -195,25 +210,21 @@ export default {
       </div>
     </transition>
 
+
     <div class="search_form">
-      <input type="text" placeholder="Search Book here..." />
-      <button>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="size-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-          />
-        </svg>
-      </button>
+      <input type="text" placeholder="Search..."  v-model="textSearch"/>
+      <div class="search_btn" title="Search Now">
+        <RouterLink to="/search">
+          <svg @click="handleSearch(textSearch)" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 80 80">
+          <path fill="#b6c9d6" d="M6.998,77.5c-1.202,0-2.331-0.468-3.181-1.317c-1.753-1.753-1.753-4.607,0-6.36l36.828-35.11 l4.656,4.661L10.17,76.191C9.329,77.032,8.199,77.5,6.998,77.5z"></path><path fill="#788b9c" d="M40.636,35.411l3.966,3.97L9.825,75.829C9.069,76.584,8.066,77,6.998,77 c-1.068,0-2.072-0.416-2.827-1.171c-1.559-1.559-1.559-4.095-0.017-5.637L40.636,35.411 M40.654,34.013L3.464,69.469 c-1.952,1.952-1.951,5.116,0,7.068C4.44,77.512,5.719,78,6.998,78c1.279,0,2.558-0.488,3.534-1.464L46,39.366L40.654,34.013 L40.654,34.013z"></path><g><path fill="#d1edff" d="M52,53.5c-14.061,0-25.5-11.439-25.5-25.5S37.939,2.5,52,2.5S77.5,13.939,77.5,28 S66.061,53.5,52,53.5z"></path><path fill="#788b9c" d="M52,3c13.785,0,25,11.215,25,25S65.785,53,52,53S27,41.785,27,28S38.215,3,52,3 M52,2 C37.641,2,26,13.641,26,28s11.641,26,26,26s26-11.641,26-26S66.359,2,52,2L52,2z"></path></g>
+          </svg>
+        </RouterLink>
+      
+      </div>
+       
     </div>
+
+
 
     <div class="cart_sign_in" >
       <RouterLink to="/cart" class="header_cart">
@@ -234,7 +245,7 @@ export default {
       </RouterLink>
       <RouterLink to="/login" class="sign_in" v-if="!userStore.loggedInUser">
         {{ this.userName }}
-        <img
+       <img
           src="https://img.icons8.com/?size=100&id=SGzXySsTA7pR&format=png&color=000000"
           alt=""
         />
@@ -281,9 +292,7 @@ header svg {
   background-color: transparent;
 }
 
-.search_form {
-  width: 36%;
-}
+
 
 .search_form,
 .option {
@@ -300,6 +309,7 @@ header svg {
   background-color: white;
   align-items: center;
   display: flex;
+
 }
 .wrap_logo svg:hover{
   background-color: rgb(227, 227, 227);
@@ -315,6 +325,7 @@ header svg {
   width: 8rem;
   border-radius: 0.5rem;
   background-color: #296be0;
+  display: flex;
 }
 .logo:hover{
   background-color: rgb(164, 164, 164);
@@ -325,33 +336,53 @@ header svg {
   font-family: "Times New Roman", Times, serif;
 }
 
-.search_form input,
-button {
+
+
+.search_form {
+  width: 40%;
+  min-width: 6rem;
+  padding: 5px;
   height: 2.2rem;
-  outline: 1px solid rgba(0, 0, 0, 0.3);
-  border: none;
-  box-shadow: 0px 4px 3px rgb(0, 0, 0, 20%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .3s;
+
 }
 
-.search_form button {
+
+.search_form .search_btn{
   position: absolute;
-  right: 0;
-  width: 2.4rem;
-  padding: 0.1rem;
-  border-radius: 0 0.6rem 0.6rem 0;
-  background-color: rgba(237, 237, 237, 1);
+  right: 1%;
+  top: 1%;
+  padding: 5px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: .7rem;
+}
+.search_btn:hover{
+  transform: scale(.9);
 }
 
-.search_form button svg {
-  width: 1.2rem;
+.search_btn svg{
+  width: 1.4rem;
+  height: 1.4rem;
 }
 
 .search_form input {
   outline: 1px solid rgb(132, 132, 132);
-  border-radius: 0.6rem;
   padding-left: 0.6rem;
   width: 100%;
+  height: 2.2rem;
+  outline: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: .4rem;
+  border: none;
+  box-shadow: 0px 4px 3px rgb(0, 0, 0, 20%);
 }
 
 header .header_cart {
@@ -398,7 +429,11 @@ header .number_cart {
 }
 .sign_in .username{
   overflow: hidden;
-  width: 4.2rem;
+  width: 5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+    /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
 }
 
 .cart_sign_in {
@@ -454,7 +489,7 @@ nav ul .link:hover {
   z-index: 100;
   left: 0rem;
   height: auto;
-  top: 6.02rem;
+  top: 100%;
   background-color: whitesmoke;
   display: flex;
   max-width: 15rem;
@@ -507,6 +542,7 @@ nav ul .link.active {
 .logout {
   color: red;
   font-size: 0.75rem;
+ 
 }
 
 
@@ -577,6 +613,41 @@ nav ul .link.active {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+}
+
+@media screen and (max-width : 460px) {
+  .header{
+    padding: .5rem;
+  }
+  .logo {
+    display: none;
+  }
+  
+  .search_form .search_btn{
+    top: 3px;
+    right: 3px;
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+  .search_form{
+    width: 65%;
+  }
+  .sign_in img{
+    display: none;
+  }
+  .sign_in{
+    display: flex;
+    flex-direction: column;
+  }
+  .logout {
+  color: red;
+  font-size: 0.75rem;
+  background-color: rgb(240, 240, 240);
+  width: 100%;
+  text-align: center;
+  border-radius: .2rem;
+}
+ 
 }
 
 </style>

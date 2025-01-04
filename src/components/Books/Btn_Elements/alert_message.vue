@@ -1,6 +1,6 @@
 <template>
       <div class="alert_successful">
-        <span> successfully added to cart</span>
+        <span> Successfully added to cart</span>
         <img  src="https://img.icons8.com/flat-round/50/checkmark.png" alt="checkmark"/>
       </div>
 </template>

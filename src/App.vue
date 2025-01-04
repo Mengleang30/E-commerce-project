@@ -36,11 +36,14 @@ watch(
           v-if="route.name !== 'DetailBook' && route.name !== 'Login'"
         />
       </div>
-      <RouterView v-slot="{ Component }">
-        <KeepAlive exclude="Detail_book" >
+      <RouterView > 
+
+      </RouterView > 
+        <!-- v-slot="{ Component }" -->
+        <!-- <KeepAlive exclude="Detail_book" >
           <component :is="Component" />
-        </KeepAlive>
-      </RouterView>
+        </KeepAlive> -->
+     
     </div>
   </main>
   <Footer />

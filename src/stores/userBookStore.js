@@ -1,10 +1,14 @@
 import { defineStore } from "pinia";
+import { useBookStore } from ".";
+
 
 export const useUserStore = defineStore("userStore", {
   state: () => ({
     users: [],
     nextIdUser: 1,
     loggedInUser: null,
+    nextPurchaseId: 100,
+    bookdata : useBookStore(),
   }),
 
   actions: {
@@ -20,7 +24,7 @@ export const useUserStore = defineStore("userStore", {
         email,
         favorite: [],
         cart: [],
-        history: [],
+        bought: [],
       };
       this.users.push(newUser);
       return { success: true, message: "Account created successfully!" };
@@ -115,7 +119,57 @@ export const useUserStore = defineStore("userStore", {
     removeCarted(Id){
       this.loggedInUser.cart = this.loggedInUser.cart.filter((item) => item.bookId !== Id);
 
+    },
+  
+    handleBuy () {
+      if (!this.loggedInUser || this.loggedInUser.cart.length === 0) {
+        return { success: false, message: "No items in the cart to purchase." };
+      }
+    
+      // Combine books by `bookId` for the purchase
+      const purchaseSummary = this.loggedInUser.cart.reduce((summary, item) => {
+        const existingItem = summary.find((entry) => entry.bookId === item.bookId);
+        if (existingItem) {
+          // Combine quantities if the book is already in the summary
+          existingItem.quantity += item.quantity;
+        } else {
+          // Add new entry if the book is not in the summary
+          summary.push(
+            {
+            bookId: item.bookId,
+            quantity: item.quantity,
+            purchaseId: this.nextPurchaseId++, // Unique purchase ID
+            purchaseDate: new Date().toISOString(),
+          }
+        );
+        }
+        return summary;
+      }, []);
+    
+      // Add combined purchases to the bought list
+      this.loggedInUser.bought.push(...purchaseSummary);
+    
+      // Clear the cart after purchase
+      this.loggedInUser.cart = [];
+    
+      console.log("Purchase summary:", purchaseSummary);
+    
+      return {
+        success: true,
+        message: "Purchase successful!",
+      };
+     
+    },
+    clearInvoive(){
+      this.loggedInUser.bought = [];
+    },
+    clearCart() {
+      this.loggedInUser.cart = []
     }
     
   },
+
+ 
+
+ 
 });
