@@ -9,7 +9,7 @@ export default {
     setup() {
     const cart_data = useBookStore();
     const current_Index = ref(0);
-    const previous_Index = ref(0);
+    // const previous_Index = ref(0);
     const updateIndex = ref(null); 
 
    
@@ -33,37 +33,38 @@ export default {
       // Start the interval
       updateIndex.value = setInterval(() => {
         current_Index.value = Math.floor(Math.random() * cart_data.BookData.length);
-        console.log("Random Index:", current_Index.value);
+        // console.log("Random Index:", current_Index.value);
       }, 4000);
     };
 
-    const nextCard = () => {
+    // const nextCard = () => {
       
-      pauseCard();
+    //   pauseCard();
 
-      current_Index.value = (current_Index.value + 1) % cart_data.BookData.length;
+    //   current_Index.value = (current_Index.value + 1) % cart_data.BookData.length;
 
-      // pause for 5s
-      setTimeout(() => {
-        autoUpdateCard();
-      }, 6000);
-    };
+    //   // pause for 5s
+    //   setTimeout(() => {
+    //     autoUpdateCard();
+    //   }, 6000);
+    // };
 
-    const pauseCard = () => {
-      console.log("Pause random");
-      if (updateIndex.value) {
-        clearInterval(updateIndex.value);
-      }
-    };
+    // const pauseCard = () => {
+    //   console.log("Pause random");
+    //   if (updateIndex.value) {
+    //     clearInterval(updateIndex.value);
+    //   }
+    // };
 
     return {
       Card_data: cart_data.BookData,
       current_Index,
-      previous_Index,
+      // previous_Index,
+      // nextCard,
+      // pauseCard,
       updateIndex,
       autoUpdateCard,
-      nextCard,
-      pauseCard
+      
     };
   }
 
@@ -73,10 +74,10 @@ export default {
 
 <template>
     <div class="card">
-        <div class="wrap_arrow">
+        <!-- <div class="wrap_arrow">
             <div @click="pauseCard" class="left">&lt;</div>
             <div @click="nextCard" class="right">&gt;</div>
-        </div>
+        </div> -->
         <article class="article">
             <h4>{{ Card_data[current_Index].title }}</h4>
             <p>By : <strong>{{ Card_data[current_Index].author }}</strong> .{{ Card_data[current_Index].description }} </p>

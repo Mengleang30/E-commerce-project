@@ -43,7 +43,7 @@ const calculateTotal = (invoice) => {
     const price = getBookPrice(item.bookId);
     const discount = getBookDiscount(item.bookId);
     const afterDiscout = price * (1 - discount/100)
-    return (total + afterDiscout * item.quantity).toFixed(2);
+    return (total + afterDiscout * item.quantity);
   }, 0);
 };
 
@@ -124,7 +124,7 @@ defineProps ({
       </tbody>
     </table>
 
-    <p class="total">Total: $ {{ calculateTotal(ListBookInvoice) }}</p>
+    <p class="total">Total: $ {{ calculateTotal(ListBookInvoice).toFixed(2) }}</p>
 
    
     <div class="footer">
