@@ -3,6 +3,11 @@ import { ref, onMounted, onUnmounted } from "vue";
 
 const currentDateTime = ref("");
 let intervalId = null;
+const show_feedback = ref(false);
+
+const hanldeShowFeedback= () =>{
+  show_feedback.value = !show_feedback.value
+}
 
 function updateDateTime() {
   // Get the current date and time in Cambodia
@@ -31,12 +36,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <footer class="footer">
+  <footer class="footer" >
     <hr />
     <div class="wrapping_footer">
       <div class="wrap_first">
         <h3>Contact Us</h3>
         <span>Follow Us</span>
+      
         <div class="wrap_icon">
           <img
             src="https://img.icons8.com/?size=100&id=118497&format=png&color=000000"
@@ -51,13 +57,25 @@ onUnmounted(() => {
             alt=""
           />
           <img
-            src="https://img.icons8.com/?size=100&id=19318&format=png&color=000000"
-            alt=""
-          />
-          <img
             src="https://img.icons8.com/?size=100&id=38863&format=png&color=000000"
             alt=""
           />
+        </div>
+        <h4 @click="hanldeShowFeedback" class="showFeedback">
+          Feedback
+        </h4>
+        <div v-if="show_feedback" class="feedback">
+         
+          <div class="wrapping_input">
+                Email 
+                <input type="email" placeholder="Email"></input>
+          </div>
+          <div class="wrapping_input"> 
+                <textarea type="text" placeholder="Write feedback here..."></textarea>
+          </div>
+          
+          <button>Submit</button>
+
         </div>
       </div>
 
@@ -249,4 +267,64 @@ onUnmounted(() => {
 .specific {
   font-size: 0.8rem;
 }
+
+.feedback{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 5px;
+}
+
+.feedback .wrapping_input{
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  justify-content: space-between;
+}
+.feedback .wrapping_input input , textarea{
+  width: 70%;
+  border: 1px solid rgb(196, 195, 195);
+  padding-left: 5px;
+  height: 2rem;
+  border-radius: .25rem;
+ 
+  
+}
+.feedback .wrapping_input textarea{
+  width: 100%;
+  border: 1px solid rgb(196, 195, 195);
+  resize: none;
+  resize: vertical;
+  min-height: 4rem;
+  max-height: 20rem;
+
+  
+  
+}
+.feedback button{
+  width: 50%;
+  border: 1px solid rgb(196, 195, 195);
+  text-align: center;
+  height: 1.6rem;
+  padding: 5px;
+  align-self: center;
+  border-radius: .3rem;
+  background-color: rgb(62, 125, 244);
+  margin-bottom: 4px;
+  color: white;
+  cursor: pointer;
+}
+.feedback button:hover{
+  background-color: red;
+ 
+}
+
+.showFeedback{
+  text-decoration: underline;
+  margin-top: 10px;
+  color: rgb(8, 172, 237);
+  cursor: pointer;
+
+}
+
 </style>

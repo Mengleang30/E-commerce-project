@@ -111,6 +111,7 @@ const Buy = () => {
   const isCvvValid = validateCvv();
   const isMonthValid = validateMonth();
   const isYearValid = validateYear();
+  window.scrollTo(0,0);
 
   // If QR is showing, toggle the invoice view
   if (showQr.value === true) {
@@ -119,11 +120,15 @@ const Buy = () => {
     return true 
   }
   
-  invoiceShow.value = true
+
   // If any of the card validations fail, stop the process
   if (!isCardNumberValid || !isCvvValid || !isMonthValid || !isYearValid) {
     return false;  // Return false if validation fails
   } 
+
+  invoiceShow.value = true;
+  useStore.handleBuy();
+  return true;
 };
 
 
@@ -181,7 +186,7 @@ defineProps({
 <template>
   <div class="payment" >
     <img @click="click_close" v-if="!invoiceShow==true" class="close" src="https://img.icons8.com/?size=100&id=13903&format=png&color=000000" alt="">
-    <img @click="showInvoice" v-else class="close" src="https://img.icons8.com/?size=100&id=13903&format=png&color=000000" alt="">
+    <img @click="click_close" v-else class="close" src="https://img.icons8.com/?size=100&id=13903&format=png&color=000000" alt="">
     <div class="payMethod" v-if="!invoiceShow">
       <h3>How do you want to pay ?</h3>
 
@@ -266,8 +271,12 @@ defineProps({
       </div>
 
       <div class="total">
-        <h3>Total : ${{ total.toFixed(2) }}</h3>
-        <button title="Buy Now" @click="Buy" :disabled="!agreed || !activeMethod || useStore.loggedInUser.cart.length === 0">Pay Now
+        <h3>Total : ${{ (total).toFixed(2) }}</h3>
+        <button title="Buy Now" @click="Buy" :disabled="
+        !agreed || 
+        !activeMethod || 
+        useStore.loggedInUser.cart.length === 0"
+        >Pay Now
           <img width="25" height="25" src="https://img.icons8.com/officel/30/cheap-2.png" alt="lock-2"/>
         </button>
       </div>

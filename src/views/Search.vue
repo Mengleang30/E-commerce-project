@@ -5,16 +5,18 @@ import { computed, watch } from "vue";
 const SearchBooks = useBookStore();
 const TextSearch = computed(() => SearchBooks.Search);
 const filterBooks = computed(() => {
-  if (TextSearch.value === "") {
+const SearchTerm = TextSearch.value.toLocaleLowerCase();
+ 
+
+  if (!SearchTerm) {
     return [];
   } else {
     return SearchBooks.BookData.filter((book) => {
-      const titleMatch = book.title.toLocaleLowerCase().includes(TextSearch.value.toLocaleLowerCase());
-      const authorMatch = book.author.toLocaleLowerCase().includes(TextSearch.value.toLocaleLowerCase());
-      
-      
+      const titleMatch = book.title.toLocaleLowerCase().includes(SearchTerm);
+      const authorMatch = book.author.toLocaleLowerCase().includes(SearchTerm);
+      const categoryMatch = book.category.join("").toLocaleLowerCase().includes(SearchTerm)
       // Return true if any field matches
-      return titleMatch || authorMatch ;
+      return titleMatch || authorMatch || categoryMatch;
     });
   }
 });
@@ -27,7 +29,7 @@ const highLightText = (text, query) => {
 
 <template>
   <div class="search_container">
-    <div class="search_page">
+    <div class="search_page" v-if="filterBooks.length>0">
       <span
         >The Result of <strong>{{ TextSearch }}</strong></span
       >
@@ -43,24 +45,35 @@ const highLightText = (text, query) => {
               ><br />
               <span v-html="highLightText(books.author, TextSearch)"></span
               ><br />
-              <span>{{ books.category.join("/ ") }}</span
+              <span v-html="highLightText(books.category.join(' /'), TextSearch)"></span
               ><br />
           </RouterLink>
         </div>
       </div>
     </div>
+
+  <h3 v-else>
+      Book not found !
+  </h3>
+  
   </div>
+  
+ 
 </template>
 
 <style scoped>
 .listBook img {
   width: 4rem;
 }
+h3{
+  text-align: center;
+}
 .Link{
     text-decoration: none;
     height: 7rem;
     display: flex;
     flex-direction: column;
+    color: black;
     justify-content: center;
 }
 .findByTitle .title {
