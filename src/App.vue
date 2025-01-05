@@ -53,7 +53,16 @@ watch(
 .Main_page {
   min-height: 90vh;
   padding: 2px;
+  min-height: 90vh;
+  padding: 2px;
 }
+.wrap_card {
+  display: flex;
+  margin-top: 0.5rem;
+  width: 100%;
+  overflow: auto;
+  justify-content: center;
+  height: auto;
 .wrap_card {
   display: flex;
   margin-top: 0.5rem;
