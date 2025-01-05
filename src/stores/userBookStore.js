@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useBookStore } from ".";
+
 
 
 export const useUserStore = defineStore("userStore", {
@@ -8,7 +8,6 @@ export const useUserStore = defineStore("userStore", {
     nextIdUser: 1,
     loggedInUser: null,
     nextPurchaseId: 100,
-    bookdata : useBookStore(),
   }),
 
   actions: {
@@ -25,6 +24,7 @@ export const useUserStore = defineStore("userStore", {
         favorite: [],
         cart: [],
         bought: [],
+        history: [],
       };
       this.users.push(newUser);
       return { success: true, message: "Account created successfully!" };
@@ -160,8 +160,19 @@ export const useUserStore = defineStore("userStore", {
       };
      
     },
+
+    addInvoiceToHistory (){
+
+    },
     clearInvoive(){
+     
+      if(!this.loggedInUser || this.loggedInUser.bought.length ===0){
+        return {success : false, message : "No invoice to clear"};
+
+      }
+      this.loggedInUser.history.push(...this.loggedInUser.bought);
       this.loggedInUser.bought = [];
+      return { success: true, message: "Invoices cleared and added to history." };
     },
     clearCart() {
       this.loggedInUser.cart = []
