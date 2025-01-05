@@ -51,8 +51,18 @@ watch(
 
 <style scoped>
 .Main_page {
-  min-height: 90vh;
+  min-height: 55vh;
   padding: 2px;
+
+  padding: 2px;
+}
+.wrap_card {
+  display: flex;
+  margin-top: 0.5rem;
+  width: 100%;
+  overflow: auto;
+  justify-content: center;
+  height: auto;
 }
 .wrap_card {
   display: flex;

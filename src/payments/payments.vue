@@ -92,13 +92,7 @@ const validateYear = ()=>{
 }
 
 const invoiceShow = ref(false)
-const showInvoice = () =>{
-    invoiceShow.value = !invoiceShow.value;
-    if(invoiceShow.value==false){
-      useStore.clearInvoive();
-    }
-   
-}
+
 
 
 
@@ -235,7 +229,7 @@ defineProps({
           <div class="wrapDate">
             <div>
               <input v-model="month" class="input_date"
-            @input="validateMonth" type="month" placeholder="MM" max="12" min="0" maxlength="2" >
+            @input="validateMonth" type="number" placeholder="MM" max="12" min="0" maxlength="2" >
             <p class="Invalid">{{ messageMonth }}</p>
             </div>
          <div>
