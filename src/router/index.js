@@ -58,6 +58,7 @@ const routes = [
     path : "/history",
     name : "History",
     component : History,
+    beforeEnter : authGuard,
   },
   {
     path: '/search',
