@@ -32,8 +32,7 @@ export const useUserStore = defineStore("userStore", {
 
     signIn(email, password) {
       const currentUser = this.users.find(
-        (user) => user.email === email && user.password === password
-      );
+        (user) => user.email === email && user.password === password);
       if (currentUser) {
         this.loggedInUser = currentUser;
         return {
@@ -126,7 +125,7 @@ export const useUserStore = defineStore("userStore", {
         return { success: false, message: "No items in the cart to purchase." };
       }
     
-      // Combine books by `bookId` for the purchase
+      // Combine books by bookId for the purchase
       const purchaseSummary = this.loggedInUser.cart.reduce((summary, item) => {
         const existingItem = summary.find((entry) => entry.bookId === item.bookId);
         if (existingItem) {

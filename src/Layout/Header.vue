@@ -252,6 +252,7 @@ export default {
           />
         </svg>
       </RouterLink>
+      
       <RouterLink to="/login" class="sign_in" v-if="!userStore.loggedInUser">
         {{ this.userName }}
        <img
@@ -560,7 +561,7 @@ nav ul .link.active {
   background-color: #eeeeee;
   border-radius: 6px;
   padding: 8px;
-  width: 50%;
+  width: 14rem;
   height: auto;
   text-align: center;
   box-shadow: 2px 2px 3.6px rgba(29, 28, 28, 0.4);

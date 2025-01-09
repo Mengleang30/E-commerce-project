@@ -8,6 +8,7 @@ import Login from '@/components/Users/Login.vue'
 import History from '@/views/History.vue'
 import { useUserStore } from '@/stores/userBookStore'
 import Search from '@/views/Search.vue'
+import SignUp from '@/components/Users/SignUp.vue'
 
 const authGuard = (to, from, next) => {
   const authStore = useUserStore();
@@ -53,6 +54,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+  },
+  {
+    path: '/signUp',
+    name: 'SignUp',
+    component: SignUp,
   },
   {
     path : "/history",
