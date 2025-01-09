@@ -4,9 +4,29 @@ import { defineStore } from "pinia";
 
 export const useUserStore = defineStore("userStore", {
   state: () => ({
-    users: [],
+    users: [
+      {
+        id: 1,
+        username : "leang",
+        password : "123",
+        email : "leang@",
+        favorite: [],
+        cart: [],
+        bought: [],
+        history: [],
+      }
+    ],
     nextIdUser: 1,
-    loggedInUser: null,
+    loggedInUser: {
+        id: 1,
+        username : "leang",
+        password : "123",
+        email : "leang@",
+        favorite: [],
+        cart: [],
+        bought: [],
+        history: [],
+    },
     nextPurchaseId: 100,
   }),
 
@@ -138,7 +158,7 @@ export const useUserStore = defineStore("userStore", {
             bookId: item.bookId,
             quantity: item.quantity,
             purchaseId: this.nextPurchaseId++, // Unique purchase ID
-            purchaseDate: new Date().toISOString(),
+            purchaseDate: new Date().toLocaleString(),
           }
         );
         }
@@ -150,8 +170,6 @@ export const useUserStore = defineStore("userStore", {
     
       // Clear the cart after purchase
       this.loggedInUser.cart = [];
-    
-      console.log("Purchase summary:", purchaseSummary);
     
       return {
         success: true,
@@ -169,7 +187,18 @@ export const useUserStore = defineStore("userStore", {
         return {success : false, message : "No invoice to clear"};
 
       }
-      this.loggedInUser.history.push(...this.loggedInUser.bought);
+
+
+
+      const EachHistory = {
+        id : this.purchaseId++,
+        item : [...this.loggedInUser.bought]
+      }
+      this.loggedInUser.history.push(EachHistory);
+      // const EachHistory = {
+      //   ...this.loggedInUser.bought,
+      // }
+      console.log("History ",this.loggedInUser.bought)
       this.loggedInUser.bought = [];
       return { success: true, message: "Invoices cleared and added to history." };
     },
