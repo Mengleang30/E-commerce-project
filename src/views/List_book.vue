@@ -1,11 +1,25 @@
 <script>
-
-export default{
-    name : "List_book"
-}
+    import search_component from "../components/Books/search_component.vue";
+    import list_book_panel from "../components/Books/list_book_panel.vue";
+    export default {
+        name: " list_book",
+        components: {
+            search_component,
+            list_book_panel,
+        }
+    }
 
 </script>
 
 <template>
-    <h2>List book page</h2>
+    <div class="main_panel">
+        <search_component/>
+        <list_book_panel/>
+    </div>
 </template>
+
+<style>
+    .main_panel{
+        display: flex;
+    }
+</style>
