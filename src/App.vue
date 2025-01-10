@@ -33,7 +33,7 @@ watch(
     <div v-else>
       <div class="wrap_card">
         <Card_book
-          v-if="route.name !== 'DetailBook' && route.name !== 'Login'"
+          v-if="route.name !== 'DetailBook' && route.name !== 'Login' && route.name!=='SignUp'"
         />
       </div>
       <RouterView > 

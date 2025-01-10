@@ -27,6 +27,7 @@ const highLightText = (text, query) => {
 };
 </script>
 
+
 <template>
   <div class="search_container">
     <div class="search_page" v-if="filterBooks.length>0">
