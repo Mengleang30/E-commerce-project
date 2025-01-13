@@ -5,16 +5,16 @@ import { computed, watch } from "vue";
 const SearchBooks = useBookStore();
 const TextSearch = computed(() => SearchBooks.Search);
 const filterBooks = computed(() => {
-const SearchTerm = TextSearch.value.toLocaleLowerCase();
+const SearchTerm = TextSearch.value.trim().toLocaleLowerCase();
  
 
   if (!SearchTerm) {
     return [];
   } else {
     return SearchBooks.BookData.filter((book) => {
-      const titleMatch = book.title.toLocaleLowerCase().includes(SearchTerm);
-      const authorMatch = book.author.toLocaleLowerCase().includes(SearchTerm);
-      const categoryMatch = book.category.join("").toLocaleLowerCase().includes(SearchTerm)
+      const titleMatch = book.title.trim().toLocaleLowerCase().includes(SearchTerm);
+      const authorMatch = book.author.trim().toLocaleLowerCase().includes(SearchTerm);
+      const categoryMatch = book.category.join("").trim().toLocaleLowerCase().includes(SearchTerm)
       // Return true if any field matches
       return titleMatch || authorMatch || categoryMatch;
     });
@@ -22,7 +22,10 @@ const SearchTerm = TextSearch.value.toLocaleLowerCase();
 });
 
 const highLightText = (text, query) => {
-  const regex = new RegExp(`${query}`, "ig"); //Case-insensitive matching
+
+  const adjustedQuery = query.trim().replace(/\s+/g, "\\s+");
+
+  const regex = new RegExp(`${adjustedQuery}`, "ig"); //Case-insensitive matching
   return text.replace(regex, `<mark>${query}</mark>`); // replace by highlight
 };
 </script>

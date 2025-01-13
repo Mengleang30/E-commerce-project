@@ -102,7 +102,7 @@ export default {
     text-decoration: line-through;
 }
 .each_book {
-    width: 12rem;
+    width: 12.8rem;
     padding: 5px;
     height: 19rem;
 }

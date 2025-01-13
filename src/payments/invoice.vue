@@ -7,17 +7,17 @@ import jsPDF from 'jspdf';
 const userStore = useUserStore();
 const bookDate = useBookStore();
 
-const purchase = userStore.handleBuy();
+
 
 const ListBookInvoice = userStore.loggedInUser.bought;
 
 
 
-console.log(purchase.message)
-console.log(userStore.loggedInUser.bought)
-console.log(userStore.loggedInUser.bought.map((item)=>item.purchaseId))
-console.log(userStore.loggedInUser.bought.map((item)=>item.bookId))
-console.log(userStore.loggedInUser.bought.map((item)=>item.quantity))
+// console.log(purchase.message)
+// console.log(userStore.loggedInUser.bought)
+// console.log(userStore.loggedInUser.bought.map((item)=>item.purchaseId))
+// console.log(userStore.loggedInUser.bought.map((item)=>item.bookId))
+// console.log(userStore.loggedInUser.bought.map((item)=>item.quantity))
 // const boughtItems = userStore.boughtItems;
 // console.log("Bought Items:", boughtItems);
 

@@ -9,7 +9,7 @@ export const useBookStore = defineStore('BookData', {
 
     actions : {
       setTextFromSearch(Text){
-          this.Search = Text
+          this.Search = Text;
        
       }
     },

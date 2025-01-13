@@ -55,6 +55,14 @@ export default {
       return userStore.loggedInUser.cart.length;
     })
 
+   
+    const show_notice = computed(()=>{
+      if(!userStore.loggedInUser || userStore.loggedInUser.history.length<1){
+        return false;
+      }
+      return true;
+    })
+
     const ShowOptionLogout = ref(false);
 
     const handleShowOptionLogout = () => {
@@ -90,6 +98,15 @@ export default {
       document.addEventListener("click", handleClickOutside);
     });
 
+
+    const check_online = computed(()=>{
+
+      if (navigator.onLine){
+        return {message : "You are online !" , status :true};
+      }
+        return {message : "You are offline !" , status :false};
+    })
+
     return {
       isNavbarVisible,
       toggleNavbar,
@@ -99,10 +116,12 @@ export default {
       userStore,
       handleLogout,
       countCart,
+      show_notice,
       ShowOptionLogout,
       handleShowOptionLogout,
       textSearch,
       handleSearch,
+      check_online,
     };
   },
 
@@ -210,6 +229,9 @@ export default {
           
         />
         <div>
+          <div>
+           <p :class="check_online.status ? 'online' : 'offline'">{{ check_online.message }}</p>
+          </div>
           <p v-if="!userStore.loggedInUser">
             You can sign Up to create personal account .
           </p>
@@ -252,15 +274,24 @@ export default {
           />
         </svg>
       </RouterLink>
+
+
+      <RouterLink to="/history" class="notification">
+        <img width="32" height="32" src="https://img.icons8.com/?size=100&id=z8yqcMdq4T2h&format=png&color=000000" alt="">
+        <div v-if="show_notice" class="number_notice"></div>
+      </RouterLink>
       
+
       <RouterLink to="/login" class="sign_in" v-if="!userStore.loggedInUser">
         {{ this.userName }}
+       
        <img
           src="https://img.icons8.com/?size=100&id=SGzXySsTA7pR&format=png&color=000000"
           alt=""
         />
       </RouterLink>
       <div class="sign_in" v-else>
+        
         <p class="username">{{ this.userName }}</p>
         <img
           src="https://img.icons8.com/?size=100&id=SGzXySsTA7pR&format=png&color=000000"
@@ -394,6 +425,9 @@ header svg {
   border: none;
   box-shadow: 0px 4px 3px rgb(0, 0, 0, 20%);
 }
+.search_form input:focus {
+  outline-color: #3173ec;
+}
 
 header .header_cart {
   position: relative;
@@ -430,6 +464,7 @@ header .number_cart {
   font-size: small;
   box-shadow: 3px 3px 3px rgb(0, 0, 0, 20%);
   gap: 3px;
+  position: relative;
 
 }
 
@@ -444,6 +479,16 @@ header .number_cart {
   -webkit-line-clamp: 1;
     /* Limit to 2 lines */
   -webkit-box-orient: vertical;
+  text-align: center;
+}
+.sign_in .status{
+  width: .6rem;
+  height: .6rem;
+  background-color: rgb(29, 246, 29);
+  position: absolute;
+  right: 0;
+  border-radius: 50%;
+  top: 0;
 }
 
 .cart_sign_in {
@@ -623,6 +668,28 @@ nav ul .link.active {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+}
+
+.notification{
+  position: relative;
+}
+.number_notice{
+  background-color: #296be0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: .6rem;
+  height: .6rem;
+  border-radius: 50%;
+}
+
+.online{
+  color: rgb(8, 223, 8);
+  font-weight: bold;
+}
+.offline{
+  color: rgb(255, 17, 0);
+  font-weight: bold;
 }
 
 @media screen and (max-width : 460px) {

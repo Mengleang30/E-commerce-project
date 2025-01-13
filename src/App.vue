@@ -4,9 +4,25 @@ import Card_book from "./Layout/Card_book.vue";
 import Footer from "./Layout/Footer.vue";
 import Header from "./Layout/Header.vue";
 import { RouterView, useRoute } from "vue-router";
+import Show_Landing from "./Layout/Show_Landing.vue";
 
 const route = useRoute();
 const isLoading = ref(false);
+
+const scrollToCard = () => {
+  const viewportHeight = window.innerHeight * 1.2;
+  window.scrollTo({
+    top: viewportHeight,
+    behavior: "smooth", 
+  });
+};
+const scrollToCardToTop = () => {
+  const viewportHeight = 0;
+  window.scrollTo({
+    top: viewportHeight,
+    behavior: "smooth", 
+  });
+};
 
 watch(
   () => route.name,
@@ -31,7 +47,8 @@ watch(
       <div class="spinner"></div>
     </div>
     <div v-else>
-      <div class="wrap_card">
+      <Show_Landing v-if="route.name=='Landing'" :-scroll="scrollToCard" :-scroll-to-top="scrollToCardToTop"/>
+      <div class="wrap_card" id="Card">
         <Card_book
           v-if="route.name !== 'DetailBook' && route.name !== 'Login' && route.name!=='SignUp'"
         />
@@ -50,6 +67,9 @@ watch(
 </template>
 
 <style scoped>
+ html {
+        scroll-behavior: smooth;
+    }
 .Main_page {
   min-height: 55vh;
   padding: 2px;
