@@ -186,7 +186,8 @@ export default {
 .category_landing .wraping {
   display: flex;
   padding: 5px 10px;
-  color: rgb(80, 80, 250);
+  font-size: 1.5rem;
+  color: rgb(0, 0, 255);
 }
 
 .contianer_book {

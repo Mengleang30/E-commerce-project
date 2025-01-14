@@ -73,7 +73,6 @@ watch(
 .Main_page {
   min-height: 55vh;
   padding: 2px;
-
   padding: 2px;
 }
 .wrap_card {

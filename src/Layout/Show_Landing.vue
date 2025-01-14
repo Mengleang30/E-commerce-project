@@ -72,71 +72,55 @@ defineProps ({
 
 <template>
     <div class="ShowLanding">
-
         <div class="left_show">
             <div class="wrap_quick_link">
-               
                 <div class="wrap_btn">
                     <button><RouterLink class="link" to="/list-book">Our Product</RouterLink> </button>
                     <button>Contact</button>
                     <button>Support</button>
                     <button>Custom Service</button>
+                </div>
             </div>
-           
-        </div>
-            
-        <div class="showing">
-            
-            <h1>
-                Huge collection of <strong>best books</strong> 
-            </h1>
-            <h2>Discover the Joy of Real Books</h2>
-            <div class="wrap_btn">
-                <button @click="Scroll">Start your collection today!</button>
-                <p class="telling_text">{{ texts[index] }}</p>
-            </div>
-            <p>
-                An online book is a resource in book-like form that is only available to read on 
-                the internet. It differs form the common idea of an e-book
+            <div class="showing"> 
+                <h1>
+                    Huge collection of <strong>best books</strong> 
+                </h1>
+                <h2>Discover the Joy of Real Books</h2>
+                <div class="wrap_btn">
+                    <button @click="Scroll">Start your collection today!</button>
+                    <p class="telling_text">{{ texts[index] }}</p>
+                </div>
+                <p>
+                    An online book is a resource in book-like form that is only available to read on 
+                    the internet. It differs form the common idea of an e-book
                 </p>  
-         
-        </div>
-
-        <div class="form">
-            <div class="wrap_form">
-                <input  @keydown.enter="handleSearch" type="text" placeholder="Search for books ..." v-model="textSearch">
-                <button type="submit" @click="handleSearch">
-                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0,0,256,256">
-                        <g fill="#ffffff" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(4,4)"><path d="M27,9c-9.925,0 -18,8.075 -18,18c0,9.925 8.075,18 18,18c4.12921,0 7.9263,-1.41263 10.9668,-3.75977l13.08203,13.08203c0.904,0.904 2.36944,0.904 3.27344,0c0.904,-0.904 0.904,-2.36944 0,-3.27344l-13.08203,-13.08203c2.34713,-3.0405 3.75977,-6.83758 3.75977,-10.9668c0,-9.925 -8.075,-18 -18,-18zM27,13c7.719,0 14,6.281 14,14c0,7.719 -6.281,14 -14,14c-7.719,0 -14,-6.281 -14,-14c0,-7.719 6.281,-14 14,-14z"></path></g></g>
-                        </svg>
-                 Search</button>
             </div>
-           
-        </div>
-
-        <div class="explore">
-            <h3>Explore Our Collections </h3>
-            <div>
-                
+            <div class="form">
+                <div class="wrap_form">
+                    <input  @keydown.enter="handleSearch" type="text" placeholder="Search for books ..." v-model="textSearch">
+                    <button type="submit" @click="handleSearch">
+                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0,0,256,256">
+                            <g fill="#ffffff" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(4,4)"><path d="M27,9c-9.925,0 -18,8.075 -18,18c0,9.925 8.075,18 18,18c4.12921,0 7.9263,-1.41263 10.9668,-3.75977l13.08203,13.08203c0.904,0.904 2.36944,0.904 3.27344,0c0.904,-0.904 0.904,-2.36944 0,-3.27344l-13.08203,-13.08203c2.34713,-3.0405 3.75977,-6.83758 3.75977,-10.9668c0,-9.925 -8.075,-18 -18,-18zM27,13c7.719,0 14,6.281 14,14c0,7.719 -6.281,14 -14,14c-7.719,0 -14,-6.281 -14,-14c0,-7.719 6.281,-14 14,-14z"></path></g></g>
+                            </svg>
+                    Search</button>
+                </div>
             </div>
-            <h4>Quick Search </h4>
-            <div class="wrap_grid">
-            <div class="container_explore">
-                <div v-for="list in Category" @click="handleSearchByCategory(list)" class="child">{{ list }}</div>
+            <div class="explore">
+                <h3>Explore Our Collections </h3>
+                <h4>Quick Search </h4>
+                <div class="wrap_grid">
+                    <div class="container_explore">
+                        <div v-for="list in Category" @click="handleSearchByCategory(list)" class="child">{{ list }}</div>
+                    </div>
+                    <div class="container_explore">
+                        <div v-for="list in Author" @click="handleSearchByCategory(list)" class="child">{{ list }}</div>
+                    </div>  
+                </div>
             </div>
-            <div class="container_explore">
-                <div v-for="list in Author" @click="handleSearchByCategory(list)" class="child">{{ list }}</div>
-            </div>
-            
-            </div>
-            
-        </div>
-        
         </div>        
-
-    <div class="backToTop" @click="ScrollToTop">
-       <img src="https://img.icons8.com/?size=100&id=80689&format=png&color=000000" alt="Back To Top">
-    </div>
+        <div class="backToTop" @click="ScrollToTop">
+            <img src="https://img.icons8.com/?size=100&id=80689&format=png&color=000000" alt="Back To Top">
+        </div>
     </div>
   
 </template>
@@ -186,6 +170,7 @@ defineProps ({
     flex-direction: column;
     gap: 2rem;
     justify-content: center;
+    /* font-size: 1rem; */
    
 }
 .showing h2{
@@ -194,6 +179,7 @@ defineProps ({
     -webkit-text-fill-color: transparent;
     text-align: center;
     animation: gradientTextAnimation 5s ease infinite;
+    font-size: 2.5rem;
 }
 @keyframes gradientTextAnimation {
     0% {
@@ -241,17 +227,20 @@ defineProps ({
 }
 .showing p{
     color: gray;
+    text-align: center;
 }
 .showing button {
     background-color: rgb(54, 13, 239);
     color: aliceblue;
-    width: 13rem;
+    width: 15rem;
     height: 3rem;
     border-radius: .6rem;
     border: 1px solid rgb(213, 208, 208);
     padding-left: 5px;
     box-shadow: 1px 1px 1px rgba(1, 1, 1, .2);
     align-self: center;
+    font-size: 1rem;
+    font-weight: bold;
 }
 .showing button a{
   color: aliceblue;
@@ -315,14 +304,16 @@ defineProps ({
     gap: 5px;
 }
 .wrap_quick_link .wrap_btn{
+    /* width: 500px; */
     margin-top: 5px;
     display: flex;
     gap: 1%;
     padding: 5px 10px;
     align-self: flex-end;
+    /* background-color: #1912ca; */
 }
 .wrap_quick_link button{
-    width: 6.5rem;
+    width: 9.5rem;
     align-self: center;
     height: 2rem;
     background-color: rgb(255, 255, 255);
@@ -331,6 +322,9 @@ defineProps ({
     color: #000000;
     transition: all .3s;
     border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 30px;
 }
 .wrap_quick_link button .link{
     text-decoration: none;
