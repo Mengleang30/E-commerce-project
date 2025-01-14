@@ -116,7 +116,7 @@ const CreatePDF = () => {
               2
               ) }}
             </td>
-            <td>
+            <td >
               {{ (
               getBookPrice(book.bookId) *
               (1 - getBookDiscount(book.bookId) / 100) *
@@ -126,7 +126,7 @@ const CreatePDF = () => {
           </tr>
         </tbody>
       </table>
-      <p class="total">Total: $ {{ calculateTotal(purchase.item) }}</p>
+      <p class="total">Total: $ {{ calculateTotal(purchase.item).toFixed(2) }}</p>
       <div class="footer">
         <hr />
         
@@ -228,6 +228,7 @@ table tr:nth-child(even) {
   font-weight: bold;
   font-size: 18px;
   color: #333;
+  
 }
 .footer .each_inform img {
   width: 1.6rem;
