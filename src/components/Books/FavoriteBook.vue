@@ -35,9 +35,11 @@ console.log(favoriteBooks.value);
 
 <template>
     <article>
+    
      <div class="favorites">
         
         <h2 >
+            <hr>
     <div class="book-list">
            
         <div v-for="namebook in favoriteBooks" class="book-card" :key="namebook.id">
@@ -94,6 +96,7 @@ console.log(favoriteBooks.value);
             
             </div>
             </div>
+            </hr>
         </h2>
        
         </div>
@@ -103,6 +106,11 @@ console.log(favoriteBooks.value);
 </template>
 
 <style scoped>
+hr{
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
 
 .favorites {
     max-width: 1500px;

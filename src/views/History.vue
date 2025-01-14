@@ -9,21 +9,16 @@ const bookDate = useBookStore();
 
 const ShowInvoice = ref(false)
 
+const hanldeShowInvoice = (()=>{
+  ShowInvoice.value = false;
+})
 
 const handleAvatarClick = (purchase) => {
   console.log("Avatar clicked:", purchase); 
   selectedPurchase.value = purchase; 
-  ShowInvoice.value = true
+  ShowInvoice.value = !ShowInvoice.value
 };
-const handleCloseBtn = () => {
-  handleAvatarClick.value = false;-
-  userStore.ListBookHistory();
- 
 
-}
-const click_close = (id) => {
-  userStore.click_close(id)
-}
 
 const selectedPurchase = ref(null);
 
@@ -31,7 +26,7 @@ const ListBookHistory = computed(() => {
   if (!userStore.loggedInUser) {
     return [];
   }
-  return userStore.loggedInUser.history;
+  return userStore.loggedInUser.history || [];
 });
 
 const getBookTitle = (bookId) => {
@@ -39,35 +34,22 @@ const getBookTitle = (bookId) => {
   return book.title.substring(0, 30) + (book.title.length > 10 ? '...' : ',')  || 'No Title';
 };
 
-defineProps({
 
-  click_close: {
-    type : Function,
-  },
-}
- 
-)
 
 </script>
 
 <template>
-  <div> 
+  <div class="historycontainer"> 
     <div v-if="ListBookHistory.length > 0"> 
       <h1 class="h2">History</h1>
-      <div class="payment"> 
-
-      
-    <his_invoice v-if="ShowInvoice=true" :purchase="selectedPurchase" />
-   
-    </div>
+    
       <div class="history-container">
         
-    
         <hr>
-        <div class="history-card" v-for="(book, index) in ListBookHistory" :key="book.id , index">
+        <div class="history-card" v-for="(book, index) in ListBookHistory" :key="book.id || index">
           
-            <div class="history-header">
-              <div class="avatar" @click="handleAvatarClick(book)">&#128100;</div>
+            <div class="history-header" @click="handleAvatarClick(book)">
+              <div class="avatar" >&#128100;</div>
               <div>
                 <div class="history-title">
                   <p><strong>Payment Method: </strong></p>
@@ -79,8 +61,6 @@ defineProps({
             </div>
           
           <div class="card-content">
-    
-    
             <span
               class="name"
               v-for="(invoice, index) in book.item"
@@ -94,43 +74,26 @@ defineProps({
       </div>
    
 
+   <div class="payments">
+   <his_invoice v-if="ShowInvoice"
+    :purchase="selectedPurchase" 
+    :closeBtn="hanldeShowInvoice" />
+   </div> 
    
-   </div>
-  </div>
+  </div></div>
 </template>
 
 
 
 <style scoped>
+.historycontainer{
+  position: relative;
+}
 hr{
   margin-top: 10px;
   width: 100%;
 }
-.payment{
-    padding: 5px;
-    text-align: center;
-    z-index: 1001;
-    position: relative;
-    display: flex;
-    height: auto;
-    font-size: 14px;
-}
-.payment .close{
-  width: 2rem;
-  position: absolute;
-  z-index: 2000;
-  right: 1.5%;
-  top: 1.5%;
-  cursor: pointer;
-  transition: all .2s;
-}
-.payment .close:active{
-  transform: scale(1.05);
-}
-.payment .close:hover{
-  background-color: rgb(255, 36, 36);
-  border-radius: 50%;
-}
+
    .h2 {
   text-align: center;
   margin-bottom: 30px;

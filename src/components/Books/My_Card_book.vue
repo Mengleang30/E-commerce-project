@@ -70,7 +70,7 @@ const updateQuantity = (id, newQuantity) => {
 
 <template scope>
   <div>
-
+<hr>
     <div class="Card">
       <div v-if="pay" class="modal-overlay" >
             <div class="paymentContainer" @click.stop>
@@ -82,6 +82,7 @@ const updateQuantity = (id, newQuantity) => {
 
           <div v-if="CartBooks.length > 0">
             <div v-for="Carted in CartBooks" :key="Carted.id">
+              <hr>
               <div class="each_cart">
 
                 <img :src="Carted.url_image" alt="CartBooks" class="book-image">
@@ -121,7 +122,7 @@ const updateQuantity = (id, newQuantity) => {
           </div>
 
           <div v-else class="No_cart">
-            <div>
+            <div class="empty">
             <h3>Empty Book Yet</h3>
           </div>
 </div>
@@ -169,6 +170,11 @@ const updateQuantity = (id, newQuantity) => {
 
 
 <style scoped>
+hr{
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
 .Card {
   max-width: 1500px;
   margin: 20px auto;
@@ -192,6 +198,12 @@ hr{
   width: 99%;
 }
 
+.empty{
+  font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    margin-top: 30px;
+    color: #11101065;
+}
 
 .book-list::-webkit-scrollbar {
   width: 20px;
@@ -438,8 +450,14 @@ hr{
   border: none;
   font-size: 15px;
 }
-
-
+.quantity-controls button:hover{
+  background-color: rgba(36, 34, 34, 0.493);
+  border-radius: 50%;
+}
+.remove-button:hover{
+  background-color: rgb(24, 23, 23);
+  border-radius: 50%;
+}
 .remove-button button {
   background-color: #f70707;
   color: rgb(250, 245, 245);

@@ -8,6 +8,7 @@ const userStore = useUserStore();
 const bookData = useBookStore();
 const props = defineProps({
   purchase: Object, 
+  closeBtn : Function,
 });
 
 console.log(props.purchase)
@@ -54,11 +55,12 @@ const CreatePDF = () => {
 </script>
 
 <template>
-    <div >
+    <div class="back" >
  
     
   <div v-if="purchase" class="paymentContainer">
     <div id="invoice">
+      
       <div class="invoice-container">
      
         
@@ -67,6 +69,9 @@ const CreatePDF = () => {
         <h1 class="NameShop">Book Store Invoice</h1>
       </div>
       <h4>Invoice Details</h4>
+      <button @click="closeBtn" class="closeBtn">
+      <img class="closebtn" src="https://img.icons8.com/?size=100&id=13903&format=png&color=000000" alt="">
+    </button>
       <hr />
       <div class="details">
         <div class="inform">
@@ -83,10 +88,7 @@ const CreatePDF = () => {
             <p v-else>
               <strong>Account Number: </strong>{{ purchase.AccId }}
             </p> -->
-            <p>
-              <strong>Email: </strong
-              >{{ userStore.loggedInUser.email.substring(0, 20) + '...' }}
-            </p>
+            
           </div>
         </div>
       </div>
@@ -142,15 +144,24 @@ const CreatePDF = () => {
 </template>
 
 <style scoped>
-
+.back{
+  color:#333;
+}
 .invoice-container {
   margin: 0 auto;
-  background: #ffffff;
+  color: rgb(17, 16, 16);
+  background: #fcfcfc;
   box-shadow: 0 4px 8px rgba(209, 18, 18, 0.1);
   border-radius: 8px;
   padding: 5px;
   margin: center;
  
+}
+.closebtn{
+  position: absolute;
+  right: 3%;
+
+  top: 5%;
 }
 #invoice {
   width: 100%;
@@ -286,30 +297,38 @@ table tr:nth-child(even) {
   }
 }
 
-.payment .close{
-  width: 2rem;
+.closebtn{
+  width: 2.4rem;
   
   position: absolute;
   z-index: 2000;
-  right: 1.5%;
-  top: 1.5%;
+  right: 1%;
+  top: 2.3%;
   cursor: pointer;
   transition: all .2s;
 }
-.payment .close:active{
+.closebtn:active{
   transform: scale(1.05);
 }
-.payment .close:hover{
+.closebtn:hover{
   background-color: rgb(255, 36, 36);
   border-radius: 50%;
 }
 .paymentContainer{
   color : rgb(22, 21, 21);
-  background-color: #1d1c1c62;
   padding: 1px;
-  width: 50% 50%;
-  top: 50px;
+  width: 90%;
+  height: 100%;
+  position: absolute;
+  top: 50%;
   
+  
+  left: 50%;
+  z-index: 150;
+  translate: -50% -50%;
+}
+.paymentContainer{
+  background-color: #221f1f5e;
   position: absolute;
 }
 </style>
