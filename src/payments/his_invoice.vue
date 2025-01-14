@@ -59,6 +59,9 @@ const CreatePDF = () => {
  
     
   <div v-if="purchase" class="paymentContainer">
+      <button @click="closeBtn" class="closeBtn">
+      <img class="closebtn" src="https://img.icons8.com/?size=100&id=13903&format=png&color=000000" alt="">
+    </button>
     <div id="invoice">
       
       <div class="invoice-container">
@@ -69,9 +72,7 @@ const CreatePDF = () => {
         <h1 class="NameShop">Book Store Invoice</h1>
       </div>
       <h4>Invoice Details</h4>
-      <button @click="closeBtn" class="closeBtn">
-      <img class="closebtn" src="https://img.icons8.com/?size=100&id=13903&format=png&color=000000" alt="">
-    </button>
+    
       <hr />
       <div class="details">
         <div class="inform">
@@ -81,14 +82,7 @@ const CreatePDF = () => {
         </div>
         <div class="right_details">
           <div class="inform">
-            <!-- <p><strong>Payment Method: </strong>{{ purchase.Payment }}</p>
-            <p v-if="purchase.AccId === ''">
-              <strong>Account Number: </strong>QRCode Pay
-            </p>
-            <p v-else>
-              <strong>Account Number: </strong>{{ purchase.AccId }}
-            </p> -->
-            
+        
           </div>
         </div>
       </div>
@@ -160,7 +154,6 @@ const CreatePDF = () => {
 .closebtn{
   position: absolute;
   right: 3%;
-
   top: 5%;
 }
 #invoice {
@@ -303,8 +296,8 @@ table tr:nth-child(even) {
   
   position: absolute;
   z-index: 2000;
-  right: 1%;
-  top: 2.3%;
+  right: 2%;
+  top: 8%;
   cursor: pointer;
   transition: all .2s;
 }
@@ -322,14 +315,9 @@ table tr:nth-child(even) {
   height: 100%;
   position: absolute;
   top: 50%;
-  
-  
   left: 50%;
   z-index: 150;
   translate: -50% -50%;
 }
-.paymentContainer{
-  background-color: #221f1f5e;
-  position: absolute;
-}
+
 </style>

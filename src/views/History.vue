@@ -80,7 +80,11 @@ const getBookTitle = (bookId) => {
     :closeBtn="hanldeShowInvoice" />
    </div> 
    
-  </div></div>
+  </div>
+  <div class="no_history">
+    <h3>No history payment yet</h3>
+  </div>
+  </div>
 </template>
 
 
@@ -88,6 +92,12 @@ const getBookTitle = (bookId) => {
 <style scoped>
 .historycontainer{
   position: relative;
+}
+.no_history{
+  background-color: whitesmoke;
+  margin-top: 10px;
+  padding: 10px;
+  text-align: center;
 }
 hr{
   margin-top: 10px;

@@ -379,4 +379,32 @@ defineProps ({
     background-color: #2821ff;
     color: #fffffd;
 }
+
+
+
+@media screen and (max-width : 460px) {
+    .showing h2{
+        font-size: 1.4rem;
+    }
+    .left_show .form .wrap_form button{
+        font-size: small;
+    }
+    .wrap_quick_link button{
+        font-size: 0.8rem;
+        width: 6rem;
+    }
+ }
+
+@media screen and (max-width : 560px) {
+    .showing h2{
+        font-size: 1.6rem;
+    }
+    .left_show .form .wrap_form button{
+        font-size: small;
+    }
+    .wrap_quick_link button{
+        font-size: 0.8rem;
+        width: 6rem;
+    }
+ }
 </style>
