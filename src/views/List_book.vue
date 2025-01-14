@@ -4,7 +4,6 @@
     export default {
         name: " list_book",
         components: {
-            search_component,
             list_book_panel,
         }
     }
@@ -13,12 +12,11 @@
 
 <template>
     <div class="main_panel">
-        <search_component/>
         <list_book_panel/>
     </div>
 </template>
 
-<style>
+<style scoped>
     .main_panel{
         display: flex;
     }

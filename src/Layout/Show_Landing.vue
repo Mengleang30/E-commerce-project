@@ -1,7 +1,7 @@
 <script setup>
 import { useBookStore } from '@/stores';
 
-import { computed, defineProps } from 'vue';
+import { defineProps } from 'vue';
 import { ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 
@@ -232,7 +232,7 @@ defineProps ({
 .showing button {
     background-color: rgb(54, 13, 239);
     color: aliceblue;
-    width: 15rem;
+    width: 14rem;
     height: 3rem;
     border-radius: .6rem;
     border: 1px solid rgb(213, 208, 208);
@@ -310,10 +310,12 @@ defineProps ({
     gap: 1%;
     padding: 5px 10px;
     align-self: flex-end;
-    /* background-color: #1912ca; */
+    /* align-items: center;
+    justify-content: center;
+    background-color: #1912ca; */
 }
 .wrap_quick_link button{
-    width: 9.5rem;
+    width: 9rem;
     align-self: center;
     height: 2rem;
     background-color: rgb(255, 255, 255);
