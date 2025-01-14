@@ -17,6 +17,7 @@ export default {
 
 <style scoped>
 h2{
+    font-family: 'Courier New', Courier, monospace;
     text-align: center;
     margin-top: 30px;
 }

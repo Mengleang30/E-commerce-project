@@ -11,6 +11,7 @@ const pay = ref(false);
 
 const handleToPay = () => {
   pay.value = true;
+  window.scrollTo(0,0);
 }
 const increaseQuantity = (id) => {
   userStore.increaseQuantity(id)
@@ -19,6 +20,12 @@ const decreaseQuantity = (id) => {
   userStore.decreaseQuantity(id)
 }
 
+const handleCloseBtn = () => {
+  pay.value = false;-
+  userStore.clearInvoive();
+ 
+
+}
 
 const CartBooks = computed(() => {
   if (!userStore.loggedInUser) {
@@ -46,6 +53,11 @@ const totalPrice = computed(() => {
     return sum + Carted.qualities * Carted.price * (1 - Carted.discount / 100);
   }, 0)
 })
+const SubQuantity = computed(() => {
+  return CartBooks.value.reduce((sum, Carted) => {
+    return sum + Carted.qualities;
+  }, 0)
+})
 const handleRemove = (id) => {
   userStore.removeCarted(id)("decrement");
 }
@@ -60,16 +72,13 @@ const updateQuantity = (id, newQuantity) => {
   <div>
 
     <div class="Card">
+      <div v-if="pay" class="modal-overlay" >
+            <div class="paymentContainer" @click.stop>
+              <payments :total="totalPrice" :click_close="handleCloseBtn"/>
+            </div>
+        </div>
       <h2>
         <div class="book-list">
-
-
-          <div v-if="pay" class="modal-overlay" @click="pay = false">
-            <div class="paymentContainer" @click.stop>
-              <payments :total="totalPrice" />
-            </div>
-          </div>
-
 
           <div v-if="CartBooks.length > 0">
             <div v-for="Carted in CartBooks" :key="Carted.id">
@@ -111,10 +120,11 @@ const updateQuantity = (id, newQuantity) => {
             </div>
           </div>
 
-          <div v-else>
-            <h3>No cart yet</h3>
+          <div v-else class="No_cart">
+            <div>
+            <h3>Empty Book Yet</h3>
           </div>
-
+</div>
         </div>
 
       </h2>
@@ -126,35 +136,41 @@ const updateQuantity = (id, newQuantity) => {
     <div class="cart_Totals">
       <dev class="Totals">
         <h2>Cart Totals
-          _______________________________________________________
-
+         <hr>
         </h2>
         <div class="end">
           
           <p>Shipping: $ 0.00</p>
           <p>Total: $ {{ totalPrice.toFixed(2) }}</p>
+          <p>SubQuantity: {{ SubQuantity }}</p>
 
           <div class="paybtn">
+          
             <div class="book-price">
               <h2> Total :
                 ${{ totalPrice.toFixed(2) }}
               </h2>
             </div>
+            
             <div class="Topay">
               <button @click="handleToPay">To Pay</button>
             </div>
+            
           </div>
+         
         </div>
-      </dev>
+       
+      </dev> <hr>
 
     </div>
   </div>
 
 </template>
 
+
 <style scoped>
 .Card {
-  max-width: 800px;
+  max-width: 1500px;
   margin: 20px auto;
   padding: 20px;
   background: #f3eded;
@@ -170,6 +186,10 @@ const updateQuantity = (id, newQuantity) => {
   padding-right: 15px;
   scrollbar-width: 40px;
   scrollbar-color: #636161 #dee2e1;
+  scroll-behavior: smooth;
+}
+hr{
+  width: 99%;
 }
 
 
@@ -274,6 +294,8 @@ const updateQuantity = (id, newQuantity) => {
   background-color: #0f0c0cc4;
   color: white;
   width: 8rem;
+  
+  height: 2rem;;
   border: none;
   border-radius: .4rem;
   transition: all 0.2s;
@@ -293,11 +315,11 @@ const updateQuantity = (id, newQuantity) => {
 }
 
 .modal-overlay {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
@@ -305,6 +327,12 @@ const updateQuantity = (id, newQuantity) => {
   z-index: 1000;
 }
 
+.paymentContainer{
+  background-color: #1b1a1a;
+  padding: 5px;
+  top: 0;
+  position: absolute;
+}
 
 .coupon {
   display: flex;
@@ -351,7 +379,7 @@ const updateQuantity = (id, newQuantity) => {
 }
 
 .cart_Totals {
-  max-width: 800px;
+  max-width: 1500px;
   margin: 20px auto;
   padding: 20px;
   gap: 10px;
@@ -363,7 +391,7 @@ const updateQuantity = (id, newQuantity) => {
 
 .Totals {
   margin: 20px;
-  max-height: 900px;
+  
   overflow-y: auto;
   padding-left: 15px;
   scrollbar-width: 40px;
@@ -374,25 +402,24 @@ const updateQuantity = (id, newQuantity) => {
   display: flex;
   align-items: center;
   
-  margin: 40px;
   width: 40%;
-
   gap: 10px;
 }
 
 .quantity-controls {
   display: flex;
   align-items: end;
- 
   gap: 10px;
   border-radius: 20px;
-  padding: 5px 15px;
-  background-color: #f5f1f1ea;
+  padding: 45px 10px;
+
+ 
 }
 
 .quantity-controls button {
-  background: #f5f1f1ea;
+  background-color: #d6d2d2f6;
   border: none;
+  color: rgb(24, 22, 22);
   font-size: 16px;
   /* Slightly larger size */
   font-weight: bold;
@@ -402,6 +429,7 @@ const updateQuantity = (id, newQuantity) => {
   align-items: center;
   width: 1.8rem;
   height: 1.8rem;
+
 }
 
 .quantity-controls input {
@@ -411,8 +439,9 @@ const updateQuantity = (id, newQuantity) => {
   font-size: 15px;
 }
 
+
 .remove-button button {
-  background-color: #e70e0e;
+  background-color: #f70707;
   color: rgb(250, 245, 245);
   border: none;
   float: inline-end;
@@ -433,6 +462,7 @@ const updateQuantity = (id, newQuantity) => {
   
 }
 
+
 .end {
   padding: 15px;
   margin: 2px;
@@ -451,5 +481,14 @@ const updateQuantity = (id, newQuantity) => {
     margin-left: 0;
     margin-top: 10px;
   }
+}
+.No_cart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 20px;
+  color: #141414b2;
+  font-weight: bold;
 }
 </style>

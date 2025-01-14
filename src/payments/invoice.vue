@@ -4,12 +4,14 @@ import { useBookStore } from '@/stores';
 import { useUserStore } from '@/stores/userBookStore';
 import jsPDF from 'jspdf';
 
+
 const userStore = useUserStore();
 const bookDate = useBookStore();
 
 const purchase = userStore.handleBuy();
 
 const ListBookInvoice = userStore.loggedInUser.bought;
+
 
 
 

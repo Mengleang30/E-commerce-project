@@ -287,6 +287,24 @@ defineProps({
 
 
 <style scoped>
+.invoice-container {
+      margin: 0 auto;
+      background: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      padding: 5px;
+     
+}#invoice{
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+}
+.invoice-container hr{
+  border: .4px groove rgb(104, 184, 193);
+}
+
 
 .payment{
     padding: 5px;

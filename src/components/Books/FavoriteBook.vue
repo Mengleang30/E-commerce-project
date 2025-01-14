@@ -105,7 +105,7 @@ console.log(favoriteBooks.value);
 <style scoped>
 
 .favorites {
-    max-width: 800px;
+    max-width: 1500px;
     margin: 20px auto;
     padding: 20px;
     background: #f3eded;
@@ -162,6 +162,7 @@ h2 {
     margin-right: 10px;
 }
 .button-image {
+    
     height: 20px;
     border-radius: 5px;
     margin: center;
@@ -207,6 +208,7 @@ h2 {
     display: flex;
     flex-direction: column;
     gap: 15px; 
+    
 }
 
 button {
