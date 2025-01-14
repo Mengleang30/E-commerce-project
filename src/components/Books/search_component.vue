@@ -126,6 +126,7 @@
         align-self: center;
     }
     .search_main_panel{
+        height: 100%;
         margin: 30px;
         width: 30%;
         display: flex;
