@@ -31,26 +31,25 @@ const ListBookHistory = computed(() => {
 
 const getBookTitle = (bookId) => {
   const book = bookDate.getProductId(bookId);
-  return book.title.substring(0, 30) + (book.title.length > 10 ? '...' : ',') || 'No Title';
+  return book.title.substring(0, 30) + (book.title.length > 10 ? '...' : ',')  || 'No Title';
 };
+
 
 
 </script>
 
 <template>
-  <div class="historycontainer" >
-    <div v-if="ListBookHistory.length > 0" >
+  <div class="historycontainer"> 
+    <div v-if="ListBookHistory.length > 0"> 
       <h1 class="h2">History</h1>
+    
       <div class="history-container">
-        <hr />
-        <div
-          class="history-card"
-          v-for="(book, index) in ListBookHistory"
-          :key="book.id || index"
-        >
-          <div  >
+        
+        <hr>
+        <div class="history-card" v-for="(book, index) in ListBookHistory" :key="book.id || index">
+          
             <div class="history-header" @click="handleAvatarClick(book)">
-              <div class="avatar">&#128100;</div>
+              <div class="avatar" >&#128100;</div>
               <div>
                 <div class="history-title">
                   <p><strong>Payment Method: </strong></p>
@@ -60,26 +59,28 @@ const getBookTitle = (bookId) => {
                 <p class="history-details">Customer Name: {{ userStore.loggedInUser.username }}</p>
               </div>
             </div>
-          </div>
+          
           <div class="card-content">
             <span
               class="name"
               v-for="(invoice, index) in book.item"
-              :key="invoice.bookId || index">
+              :key="invoice.bookId  ,index"
+            >
               <p>{{ getBookTitle(invoice.bookId) }}</p>
             </span>
           </div>
         </div>
+        </hr>
       </div>
-    </div>
-
-    
    
-    <his_invoice v-if="ShowInvoice"
+
+   <div class="payments">
+   <his_invoice v-if="ShowInvoice"
     :purchase="selectedPurchase" 
     :closeBtn="hanldeShowInvoice" />
+   </div> 
    
-  </div>
+  </div></div>
 </template>
 
 
@@ -88,11 +89,17 @@ const getBookTitle = (bookId) => {
 .historycontainer{
   position: relative;
 }
+hr{
+  margin-top: 10px;
+  width: 100%;
+}
+
    .h2 {
   text-align: center;
   margin-bottom: 30px;
   margin-top: 30px;
   color: #333;
+  position: relative;
   font-family: 'Courier New', Courier, monospace;
 }
    .history-container {
@@ -133,7 +140,6 @@ const getBookTitle = (bookId) => {
     display: flex;
     overflow-y: auto;
     padding-right: 15px;
-    cursor: pointer;
     
     
   }
@@ -167,8 +173,6 @@ const getBookTitle = (bookId) => {
             color: #333;
             margin: 0;
         }
-
-
         .history-details {
             font-size: 14px;
             color: #777;
@@ -189,8 +193,32 @@ const getBookTitle = (bookId) => {
             margin-right: 10px;
             margin-bottom: 10px;
         }
-      
 
-        
+        .payment{
+    padding: 5px;
+    text-align: center;
+    z-index: 1001;
+    position: relative;
+    display: flex;
+    height: auto;
+    font-size: 14px;
+}
+.payment .close{
+  width: 2rem;
+  position: absolute;
+  z-index: 2000;
+  right: 1.5%;
+  top: 1.5%;
+  cursor: pointer;
+  transition: all .2s;
+}
+.payment .close:active{
+  transform: scale(1.05);
+}
+.payment .close:hover{
+  background-color: rgb(255, 36, 36);
+  border-radius: 50%;
+}
+
         
 </style>
