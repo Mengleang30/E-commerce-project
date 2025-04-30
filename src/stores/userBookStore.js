@@ -40,6 +40,7 @@ export const useUserStore = defineStore("userStore", {
           message: `Welcome back, ${currentUser.username}!`,
         };
       }
+
       return { success: false, message: "Invalid credentials." };
     },
 
@@ -90,41 +91,41 @@ export const useUserStore = defineStore("userStore", {
       if (!this.loggedInUser) return;
       const cartItem = this.loggedInUser.cart.find((item) => item.bookId === bookId);
       if (cartItem) {
-        cartItem.quantity += 1; 
+        cartItem.quantity += 1;
       }
     },
-    
+
     decreaseQuantity(bookId) {
       if (!this.loggedInUser) return;
       const cartItem = this.loggedInUser.cart.find((item) => item.bookId === bookId);
       if (cartItem.quantity > 0) {
-        cartItem.quantity -= 1; 
-      // } else if (cartItem) {
-      //   // Optionally remove item if quantity reaches 0
-      //   this.loggedInUser.cart = this.loggedInUser.cart.filter((item) => item.bookId !== bookId);
-      // }
+        cartItem.quantity -= 1;
+        // } else if (cartItem) {
+        //   // Optionally remove item if quantity reaches 0
+        //   this.loggedInUser.cart = this.loggedInUser.cart.filter((item) => item.bookId !== bookId);
+        // }
       }
     },
 
     updateCartQuantity(bookId, newQuantity) {
       if (!this.loggedInUser) return;
-  
+
       const cartItem = this.loggedInUser.cart.find(item => item.bookId === bookId);
       if (cartItem) {
         cartItem.quantity = newQuantity;
       }
     },
 
-    removeCarted(Id){
+    removeCarted(Id) {
       this.loggedInUser.cart = this.loggedInUser.cart.filter((item) => item.bookId !== Id);
 
     },
-  
-    handleBuy () {
+
+    handleBuy() {
       if (!this.loggedInUser || this.loggedInUser.cart.length === 0) {
         return { success: false, message: "No items in the cart to purchase." };
       }
-    
+
       // Combine books by bookId for the purchase
       const purchaseSummary = this.loggedInUser.cart.reduce((summary, item) => {
         const existingItem = summary.find((entry) => entry.bookId === item.bookId);
@@ -135,60 +136,56 @@ export const useUserStore = defineStore("userStore", {
           // Add new entry if the book is not in the summary
           summary.push(
             {
-            bookId: item.bookId,
-            quantity: item.quantity,
-            purchaseId: this.nextPurchaseId++, // Unique purchase ID
-            purchaseDate: new Date().toLocaleString(),
-          }
-        );
+              bookId: item.bookId,
+              quantity: item.quantity,
+              purchaseId: this.nextPurchaseId++, // Unique purchase ID
+              purchaseDate: new Date().toLocaleString(),
+            }
+          );
         }
         return summary;
       }, []);
-    
+
       // Add combined purchases to the bought list
       this.loggedInUser.bought.push(...purchaseSummary);
-    
+
       // Clear the cart after purchase
       this.loggedInUser.cart = [];
-    
+
       return {
         success: true,
         message: "Purchase successful!",
       };
-     
-    },
-
-    addInvoiceToHistory (){
 
     },
-    clearInvoive(){
-     
-      if(!this.loggedInUser || this.loggedInUser.bought.length ===0){
-        return {success : false, message : "No invoice to clear"};
+
+    addInvoiceToHistory() {
+
+    },
+    clearInvoive() {
+
+      if (!this.loggedInUser || this.loggedInUser.bought.length === 0) {
+        return { success: false, message: "No invoice to clear" };
 
       }
 
 
 
       const EachHistory = {
-        id : this.purchaseId++,
-        item : [...this.loggedInUser.bought]
+        id: this.purchaseId++,
+        item: [...this.loggedInUser.bought]
       }
       this.loggedInUser.history.push(EachHistory);
       // const EachHistory = {
       //   ...this.loggedInUser.bought,
       // }
-      console.log("History ",this.loggedInUser.bought)
+      console.log("History ", this.loggedInUser.bought)
       this.loggedInUser.bought = [];
       return { success: true, message: "Invoices cleared and added to history." };
     },
     clearCart() {
       this.loggedInUser.cart = []
     }
-    
+
   },
-
- 
-
- 
 });

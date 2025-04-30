@@ -5,6 +5,7 @@ import Footer from "./Layout/Footer.vue";
 import Header from "./Layout/Header.vue";
 import { RouterView, useRoute } from "vue-router";
 import Show_Landing from "./Layout/Show_Landing.vue";
+import Admin_Dashboard from "./components/Admin/Admin-Dashboard.vue";
 
 const route = useRoute();
 const isLoading = ref(false);
@@ -13,14 +14,14 @@ const scrollToCard = () => {
   const viewportHeight = window.innerHeight * 1.2;
   window.scrollTo({
     top: viewportHeight,
-    behavior: "smooth", 
+    behavior: "smooth",
   });
 };
 const scrollToCardToTop = () => {
   const viewportHeight = 0;
   window.scrollTo({
     top: viewportHeight,
-    behavior: "smooth", 
+    behavior: "smooth",
   });
 };
 
@@ -34,9 +35,7 @@ watch(
     setTimeout(() => {
       isLoading.value = false;
     }, 500);
-   
   }
-  
 );
 </script>
 
@@ -46,30 +45,40 @@ watch(
     <div v-if="isLoading" class="loading-overlay">
       <div class="spinner"></div>
     </div>
+    <div v-else-if="route.name == 'Admin'">
+      <RouterView name="admin" class="admin-dashboard">
+        <Admin_Dashboard />
+      </RouterView>
+    </div>
     <div v-else>
-      <Show_Landing v-if="route.name=='Landing'" :-scroll="scrollToCard" :-scroll-to-top="scrollToCardToTop"/>
+      <Show_Landing
+        v-if="route.name == 'Landing'"
+        :-scroll="scrollToCard"
+        :-scroll-to-top="scrollToCardToTop"
+      />
       <div class="wrap_card" id="Card">
         <Card_book
-          v-if="route.name !== 'DetailBook' && route.name !== 'Login' && route.name!=='SignUp'"
+          v-if="
+            route.name !== 'DetailBook' &&
+            route.name !== 'Login' &&
+            route.name !== 'SignUp'
+          "
         />
       </div>
-      <RouterView > 
-
-      </RouterView > 
-        <!-- v-slot="{ Component }" -->
-        <!-- <KeepAlive exclude="Detail_book" >
+      <RouterView> </RouterView>
+      <!-- v-slot="{ Component }" -->
+      <!-- <KeepAlive exclude="Detail_book" >
           <component :is="Component" />
         </KeepAlive> -->
-     
     </div>
   </main>
   <Footer />
 </template>
 
 <style scoped>
- html {
-        scroll-behavior: smooth;
-    }
+html {
+  scroll-behavior: smooth;
+}
 .Main_page {
   min-height: 55vh;
   padding: 2px;

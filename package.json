@@ -4,6 +4,7 @@
   "description": "This template should help get you started developing with Vue 3 in Vite.",
   "main": "vite.config.js",
   "scripts": {
+    "start": "vite",
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview"
@@ -13,10 +14,9 @@
   "license": "ISC",
   "dependencies": {
     "date-fns": "^4.1.0",
-    "e-commerce-project": "file:",
     "file-save": "^0.2.0",
     "file-saver": "^2.0.5",
-    "jspdf": "^2.5.2",
+    "jspdf": "^3.0.1",
     "pinia": "^2.2.6",
     "vue": "^3.5.12",
     "vue-loading-overlay": "^6.0.6",

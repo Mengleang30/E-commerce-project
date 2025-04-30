@@ -14,15 +14,12 @@ export default {
 
     const show_signUp_help = ref(true);
 
-
-    const handleShowSignUpHelp = ()=>{
-      show_signUp_help.value =  true
-    }
-    const handleShowHelpLogin = () => {
-     
-      show_signUp_help.value =  false;
+    const handleShowSignUpHelp = () => {
+      show_signUp_help.value = true;
     };
-
+    const handleShowHelpLogin = () => {
+      show_signUp_help.value = false;
+    };
 
     const show_help = ref(false);
 
@@ -88,17 +85,21 @@ export default {
       sign_in_message.value = login.message;
       if (login.success) {
         messageSuccessful.value = login.message;
+        const isAdmin = email.value === "navin@gmail.com";
+        if (isAdmin) {
+          router.push("/admin");
+        } else {
+          router.push("/");
+        }
         email.value = "";
         password.value = "";
-        router.push("/");
+        // router.push("/");
       }
     };
 
     const ToSignUp = () => {
       show_signUp.value = !show_signUp.value;
     };
-    
-
 
     return {
       email,
@@ -115,7 +116,6 @@ export default {
       show_signUp_help,
       handleShowHelpLogin,
       handleShowSignUpHelp,
-      
     };
   },
 };
@@ -165,23 +165,30 @@ export default {
     <div class="help" v-if="show_help">
       <div class="title">
         <div class="pick_help">
-          <h3 @click="handleShowSignUpHelp" :class="show_signUp_help ? 'noFocusOn': 'focusOn'">How to Sign In ?</h3>
+          <h3
+            @click="handleShowSignUpHelp"
+            :class="show_signUp_help ? 'noFocusOn' : 'focusOn'"
+          >
+            How to Sign In ?
+          </h3>
         </div>
         <div class="pick_help">
-          <h3 @click="handleShowHelpLogin" :class="show_signUp_help ? 'focusOn': 'noFocusOn'">How to Create Account ?</h3>
+          <h3
+            @click="handleShowHelpLogin"
+            :class="show_signUp_help ? 'focusOn' : 'noFocusOn'"
+          >
+            How to Create Account ?
+          </h3>
         </div>
-        
       </div>
       <img
-            class="close"
-            @click="handleClickHelp"
-            src="https://img.icons8.com/?size=100&id=13903&format=png&color=000000"
-            alt=""
+        class="close"
+        @click="handleClickHelp"
+        src="https://img.icons8.com/?size=100&id=13903&format=png&color=000000"
+        alt=""
       />
       <div v-if="show_signUp_help">
-        
-        <div class="help_top"> 
-        </div>
+        <div class="help_top"></div>
         <div
           class="describe"
           v-for="(describe, index) in help_login"
@@ -194,10 +201,8 @@ export default {
         </div>
       </div>
       <div v-else>
-       
         <div>
-          <div class="help_top">
-          </div>
+          <div class="help_top"></div>
           <div
             class="describe"
             v-for="(describe, index) in help_SignUP"
@@ -359,26 +364,25 @@ export default {
   padding: 5px;
   border-radius: 0.4rem;
 }
-.title{
+.title {
   background-color: aliceblue;
   display: flex;
   justify-content: center;
 
-  height :2rem;
+  height: 2rem;
   align-items: center;
   color: rgb(255, 255, 255);
   gap: 2px;
 }
-.title h3{
+.title h3 {
   padding: 5px 10px;
   cursor: pointer;
-  border-radius: .4rem;
-  transition: all .4s;
+  border-radius: 0.4rem;
+  transition: all 0.4s;
 }
 
-.title h3:hover{
+.title h3:hover {
   background-color: rgb(15, 20, 24);
- 
 }
 
 .focusOn {
@@ -386,41 +390,36 @@ export default {
 }
 
 .noFocusOn {
-
   font-weight: bold;
-  background-color: rgb(27, 34, 39) ;
+  background-color: rgb(27, 34, 39);
   color: rgb(250, 250, 247);
 }
 
-.BorderRed{
+.BorderRed {
   border: 2px solid red;
 }
 
-@media screen and (max-width : 560px){
- 
-  
-  .title h3{
+@media screen and (max-width: 560px) {
+  .title h3 {
     font-size: 12px;
     height: 2rem;
     display: flex;
     align-items: center;
   }
 
-  .describe{
-    font-size: 12px;  
+  .describe {
+    font-size: 12px;
     line-height: 1.2rem;
   }
 
-  .sign_in_page .img_shop{
+  .sign_in_page .img_shop {
     display: none;
   }
   .sign_in_page {
     font-size: 14px;
   }
-  .login_page{
+  .login_page {
     width: 100%;
   }
-
-
-    }
+}
 </style>

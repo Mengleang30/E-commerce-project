@@ -9,6 +9,7 @@ import History from '@/views/History.vue'
 import { useUserStore } from '@/stores/userBookStore'
 import Search from '@/views/Search.vue'
 import SignUp from '@/components/Users/SignUp.vue'
+import Admin from '@/components/Admin/Admin-Dashboard.vue'
 
 const authGuard = (to, from, next) => {
   const authStore = useUserStore();
@@ -31,7 +32,7 @@ const routes = [
     path: '/detail/:id',
     name: 'DetailBook',
     component: DetailBook,
-    
+
   },
   {
     path: '/list-book',
@@ -42,13 +43,13 @@ const routes = [
     path: '/favorite',
     name: 'Favorite',
     component: Favorite,
-    beforeEnter : authGuard,
+    beforeEnter: authGuard,
   },
   {
     path: '/cart',
     name: 'Cart',
     component: Cart,
-    beforeEnter : authGuard,
+    beforeEnter: authGuard,
   },
   {
     path: '/login',
@@ -61,16 +62,20 @@ const routes = [
     component: SignUp,
   },
   {
-    path : "/history",
-    name : "History",
-    component : History,
-    beforeEnter : authGuard,
+    path: "/history",
+    name: "History",
+    component: History,
+    beforeEnter: authGuard,
   },
   {
     path: '/search',
     component: Search,
-   
   },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: Admin,
+  }
 ]
 
 const router = createRouter({
