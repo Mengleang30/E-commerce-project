@@ -87,7 +87,7 @@ export default {
         messageSuccessful.value = login.message;
         const isAdmin = email.value === "navin@gmail.com";
         if (isAdmin) {
-          router.push("/admin");
+          router.push("/admin-dashboard");
         } else {
           router.push("/");
         }

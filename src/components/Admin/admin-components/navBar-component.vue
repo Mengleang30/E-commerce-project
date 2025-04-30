@@ -4,7 +4,7 @@
     <div class="role-admin-div">
       <span>System Administrator</span>
       <img
-        src="../../../public/profile-admin.png"
+        src="/profile-admin.png"
         alt="admin-profile"
         class="admin-profile"
         width="5px"

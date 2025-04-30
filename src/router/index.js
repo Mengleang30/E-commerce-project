@@ -72,7 +72,7 @@ const routes = [
     component: Search,
   },
   {
-    path: '/admin',
+    path: '/admin-dashboard',
     name: 'Admin',
     component: Admin,
   }

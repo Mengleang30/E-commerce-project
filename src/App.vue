@@ -76,12 +76,24 @@ watch(
 </template>
 
 <style scoped>
-html {
+html,
+body {
   scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
 }
 .Main_page {
-  min-height: 55vh;
+  /* min-height: 55vh; */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   padding: 2px;
+  flex: 1;
 }
 .wrap_card {
   display: flex;

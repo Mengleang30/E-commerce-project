@@ -6,7 +6,7 @@ export const useUserStore = defineStore("userStore", {
   state: () => ({
     users: [],
     nextIdUser: 1,
-    loggedInUser: null,
+    loggedInUser: JSON.parse(localStorage.getItem('loggedInUser')) || null,
     nextPurchaseId: 100,
   }),
 
@@ -35,6 +35,9 @@ export const useUserStore = defineStore("userStore", {
         (user) => user.email === email && user.password === password);
       if (currentUser) {
         this.loggedInUser = currentUser;
+
+        // Store user info in localStorage
+        localStorage.setItem('loggedInUser', JSON.stringify(currentUser));
         return {
           success: true,
           message: `Welcome back, ${currentUser.username}!`,
