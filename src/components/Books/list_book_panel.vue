@@ -126,9 +126,9 @@ export default {
         name="price"
         v-model="princeSortValues"
         @change="SortByPrice"
-        id="prince"
+        id="price"
       >
-        <option value="0" selected>Prince</option>
+        <option value="0" selected>Price</option>
         <option value="1">Low-High</option>
         <option value="2">High-Low</option>
       </select>
