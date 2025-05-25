@@ -1,125 +1,94 @@
-<script>
-import { useUserStore } from "@/stores/userBookStore";
+<script setup>
 import { ref } from "vue";
-import { RouterLink } from "vue-router";
-
 import { useRouter } from "vue-router";
+import { useAuthentication } from "@/stores/authentication";
+import { useUserStore } from "@/stores/userBookStore";
 
-export default {
-  name: "Login",
-  setup() {
-    const user = useUserStore();
-    const show_signUp = ref(false);
-    const router = useRouter();
+const user = useUserStore();
+const router = useRouter();
+const Auth = useAuthentication();
 
-    const show_signUp_help = ref(true);
+const show_signUp = ref(false);
+const show_signUp_help = ref(true);
+const show_help = ref(false);
 
+const email = ref("");
+const password = ref("");
+const message = ref("");
+const loginSuccess = ref(false);
+const sign_in_message = ref("");
+const messageSuccessful = ref("");
 
-    const handleShowSignUpHelp = ()=>{
-      show_signUp_help.value =  true
-    }
-    const handleShowHelpLogin = () => {
-     
-      show_signUp_help.value =  false;
-    };
-
-
-    const show_help = ref(false);
-
-    const handleClickHelp = () => {
-      show_help.value = !show_help.value;
-    };
-
-    const help_login = [
-      {
-        topic: "Navigate to the Login Page",
-        describe: `Open the application and go to the login page by clicking on the "Login" button in the navigation menu or homepage.`,
-      },
-      {
-        topic: "Enter Your Email",
-        describe: `In the first input field, type the email address associated with your account. Ensure it's a valid email format (e.g., example@domain.com).`,
-      },
-      {
-        topic: "Enter Your Password",
-        describe: `In the second input field, type the password for your account. Ensure you enter the correct password to avoid errors.`,
-      },
-      {
-        topic: "Click the Login Button",
-        describe: `Press the "Login" button to submit your credentials.`,
-      },
-      {
-        topic: "Successful Login",
-        describe: `If your credentials are correct, you will see a success message and be redirected to the homepage. If your credentials are incorrect, an error message will be displayed asking you to check your email and password.`,
-      },
-    ];
-
-    const help_SignUP = [
-      {
-        topic: "Navigate to the Sign-Up Page",
-        describe: `On the login page, click the "Register Now" link under the "Don't have an account?" section to open the sign-up page.`,
-      },
-      {
-        topic: "Fill in Your Details",
-        describe: `Enter a valid email address in the email field. Choose a secure password and type it in the password field. Provide any other necessary details (like name, email, or other fields, as required).`,
-      },
-      {
-        topic: "Submit the Form",
-        describe: `Click the "Sign Up" button to create your account.`,
-      },
-      {
-        topic: "Successful Registration",
-        describe: `If the registration is successful, you will see a confirmation message and may be redirected to the login page to access your new account. If there are any issues (e.g., missing required fields or invalid email), error messages will guide you to correct them.`,
-      },
-    ];
-
-    const email = ref("");
-    const password = ref("");
-    const sign_in_message = ref("");
-    const messageSuccessful = ref("");
-    const handleLogin = (e) => {
-      e.preventDefault();
-
-      if (!email.value.trim() || !password.value.trim()) {
-        sign_in_message.value = "Please enter email and password !";
-        invalidPassword.value = true;
-        return;
-      }
-      const login = user.signIn(email.value, password.value);
-      sign_in_message.value = login.message;
-      if (login.success) {
-        messageSuccessful.value = login.message;
-        email.value = "";
-        password.value = "";
-        router.push("/");
-      }
-    };
-
-    const ToSignUp = () => {
-      show_signUp.value = !show_signUp.value;
-    };
-    
-
-
-    return {
-      email,
-      password,
-      handleLogin,
-      sign_in_message,
-      show_signUp,
-      messageSuccessful,
-      ToSignUp,
-      help_login,
-      show_help,
-      handleClickHelp,
-      help_SignUP,
-      show_signUp_help,
-      handleShowHelpLogin,
-      handleShowSignUpHelp,
-      
-    };
+const help_login = [
+  {
+    topic: "Navigate to the Login Page",
+    describe: `Open the application and go to the login page by clicking on the "Login" button in the navigation menu or homepage.`,
   },
-};
+  {
+    topic: "Enter Your Email",
+    describe: `In the first input field, type the email address associated with your account. Ensure it's a valid email format (e.g., example@domain.com).`,
+  },
+  {
+    topic: "Enter Your Password",
+    describe: `In the second input field, type the password for your account. Ensure you enter the correct password to avoid errors.`,
+  },
+  {
+    topic: "Click the Login Button",
+    describe: `Press the "Login" button to submit your credentials.`,
+  },
+  {
+    topic: "Successful Login",
+    describe: `If your credentials are correct, you will see a success message and be redirected to the homepage. If your credentials are incorrect, an error message will be displayed asking you to check your email and password.`,
+  },
+];
+
+const help_SignUP = [
+  {
+    topic: "Navigate to the Sign-Up Page",
+    describe: `On the login page, click the "Register Now" link under the "Don't have an account?" section to open the sign-up page.`,
+  },
+  {
+    topic: "Fill in Your Details",
+    describe: `Enter a valid email address in the email field. Choose a secure password and type it in the password field. Provide any other necessary details (like name, email, or other fields, as required).`,
+  },
+  {
+    topic: "Submit the Form",
+    describe: `Click the "Sign Up" button to create your account.`,
+  },
+  {
+    topic: "Successful Registration",
+    describe: `If the registration is successful, you will see a confirmation message and may be redirected to the login page to access your new account. If there are any issues (e.g., missing required fields or invalid email), error messages will guide you to correct them.`,
+  },
+];
+
+function ToSignUp() {
+  show_signUp.value = !show_signUp.value;
+}
+
+function handleShowSignUpHelp() {
+  show_signUp_help.value = true;
+}
+
+function handleShowHelpLogin() {
+  show_signUp_help.value = false;
+}
+
+function handleClickHelp() {
+  show_help.value = !show_help.value;
+}
+async function handleLogin() {
+  const response = await Auth.login(email.value, password.value);
+  loginSuccess.value = response.success;
+  message.value = response.message;
+
+  if (response.success) {
+    // Optional: redirect or do something on successful login
+    router.push("/");
+    messageSuccessful.value = "Login successful!";
+  }
+}
 </script>
+
 
 <template>
   <!-- <h2>Login page</h2> -->
@@ -131,7 +100,7 @@ export default {
           <button>Home</button>
         </RouterLink>
       </div>
-      <form class="sub_login_page">
+      <form class="sub_login_page " @submit.prevent="handleLogin()">
         <h2>Log in your account</h2>
         <input
           placeholder="Email-address"
@@ -151,13 +120,13 @@ export default {
         />
         <p class="message">{{ sign_in_message }}</p>
         <p class="logged_in">{{ messageSuccessful }}</p>
-        <button @click="handleLogin" type="submit" id="login_btn">Login</button>
+        <button type="submit" id="login_btn">Login</button>
         <div class="additional_material">
           <h6>
             Don't have account?
             <RouterLink to="/signUp" class="Register">Register Now</RouterLink>
           </h6>
-          <button @click="handleClickHelp">Help</button>
+          <button>Help</button>
         </div>
       </form>
     </div>

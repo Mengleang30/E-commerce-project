@@ -12,6 +12,7 @@ import books from "@/assets/icons_nav/books.png";
 import logo_bookstore from "@/assets/logo_bookstore.jpg";
 import { useUserStore } from "@/stores/userBookStore";
 import { useBookStore } from "@/stores";
+import { useAuthentication } from "@/stores/authentication";
 
 export default {
   name: "Header",
@@ -23,6 +24,7 @@ export default {
     const isNavbarVisible = ref(false);
     const isRotated = ref(false);
     const navbarRef = ref(null);
+    const Auth = useAuthentication();
 
     const router = useRouter();
 
@@ -70,11 +72,11 @@ export default {
     };
 
     const userName = computed(() => {
-      return userStore.loggedInUser?.username || "Guest";
+      return Auth.loggedInUser?.name || "Guest";
     });
 
     const handleLogout = () => {
-      userStore.logout(); // Call logout method
+      Auth.logout(); // Call logout method
       ShowOptionLogout.value = !ShowOptionLogout.value;
     };
 
@@ -93,6 +95,13 @@ export default {
     };
     onMounted(() => {
       document.addEventListener("click", handleClickOutside);
+
+      if(Auth.token){
+        Auth.fetchLoggedUser();
+        console.log(Auth.fetchLoggedUser)
+      }
+      userName
+
     });
     onUnmounted(() => {
       document.addEventListener("click", handleClickOutside);
@@ -122,6 +131,7 @@ export default {
       textSearch,
       handleSearch,
       check_online,
+      Auth
     };
   },
 
@@ -213,7 +223,7 @@ export default {
           />
           <div class="profile_nav">
             <h4>{{ this.userName }}</h4>
-            <u>{{ userStore.loggedInUser?.email }}</u>
+            <u>{{ Auth.loggedInUser?.email }}</u>
           </div>
         </div>
         <hr />
@@ -282,7 +292,7 @@ export default {
       </RouterLink>
       
 
-      <RouterLink to="/login" class="sign_in" v-if="!userStore.loggedInUser">
+      <RouterLink to="/login" class="sign_in" v-if="!Auth.loggedInUser">
         {{ this.userName }}
        
        <img

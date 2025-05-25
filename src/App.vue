@@ -5,9 +5,16 @@ import Footer from "./Layout/Footer.vue";
 import Header from "./Layout/Header.vue";
 import { RouterView, useRoute } from "vue-router";
 import Show_Landing from "./Layout/Show_Landing.vue";
+import axios from "axios";
+
+import { useAuthentication } from "./stores/authentication";
 
 const route = useRoute();
 const isLoading = ref(false);
+const Auth = useAuthentication();
+
+console.log(Auth.user)
+
 
 const scrollToCard = () => {
   const viewportHeight = window.innerHeight * 1.2;
@@ -36,8 +43,28 @@ watch(
     }, 500);
    
   }
-  
 );
+
+// const testFetch = ref()
+
+// axios.get('http://localhost:8200/api/books')
+//   .then(response => {
+//     testFetch.value = response.data;
+//     console.log('Books:', response.data); // Handle the data
+//   })
+//   .catch(error => {
+//     console.error('Error fetching books:', error);
+//   });
+
+fetch('http://localhost:8200/api/login', {
+  method: 'POST',
+  credentials: 'include', // important for cookies
+    // others if needed
+  // body: JSON.stringify({ email, password })
+})
+
+
+
 </script>
 
 <template>
