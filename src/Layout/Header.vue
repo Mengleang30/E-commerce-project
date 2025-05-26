@@ -33,6 +33,8 @@ export default {
 
     const textSearch = ref('');
 
+    
+
    
 
     const handleSearch = ()=>{
@@ -103,6 +105,7 @@ export default {
       userName
 
     });
+
     onUnmounted(() => {
       document.addEventListener("click", handleClickOutside);
     });
@@ -216,14 +219,20 @@ export default {
       <div v-if="isNavbarVisible" class="wrap_nav">
         <h4>Welcome to Books Shop</h4>
         <div class="Nav_profile">
-          <img
+
+          <img class="picture" v-if="Auth.loggedInUser && Auth.loggedInUser.picture"
+            :src="Auth.loggedInUser.picture"
+            alt=""
+            width="45"
+          />
+          <img v-else
             src="https://img.icons8.com/?size=100&id=1cYVFPowIgtd&format=png&color=000000"
             alt=""
             width="45"
           />
           <div class="profile_nav">
             <h4>{{ this.userName }}</h4>
-            <u>{{ Auth.loggedInUser?.email }}</u>
+            <span>{{ Auth.loggedInUser ? Auth.loggedInUser.email : 'Guest Account' }}</span>
           </div>
         </div>
         <hr />
@@ -667,6 +676,14 @@ nav ul .link.active {
   -webkit-box-orient: vertical;
    overflow: hidden;
 }
+.profile_nav span{
+  font-size: 11px;
+  background-color: #296be0;
+  width: 100%;
+  border-radius: 4px;
+  padding: 2px;
+  color: white;
+}
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -702,7 +719,12 @@ nav ul .link.active {
   font-weight: bold;
 }
 
-@media screen and (max-width : 460px) {
+.picture{
+  border-radius: 50%;
+  width: 40px;
+}
+
+@media screen and (max-width : 560px) {
   .header{
     padding: .5rem;
   }

@@ -15,6 +15,14 @@ const Auth = useAuthentication();
 
 console.log(Auth.user)
 
+const routeName = ref([
+  "Landing",
+  "DetailBook",
+  "Login",
+  "SignUp",
+  "ResetPassword",
+  'EnterCode'
+]);
 
 const scrollToCard = () => {
   const viewportHeight = window.innerHeight * 1.2;
@@ -77,7 +85,7 @@ fetch('http://localhost:8200/api/login', {
       <Show_Landing v-if="route.name=='Landing'" :-scroll="scrollToCard" :-scroll-to-top="scrollToCardToTop"/>
       <div class="wrap_card" id="Card">
         <Card_book
-          v-if="route.name !== 'DetailBook' && route.name !== 'Login' && route.name!=='SignUp'"
+          v-if="!routeName.includes(route.name)"
         />
       </div>
       <RouterView > 

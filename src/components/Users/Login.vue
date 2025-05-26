@@ -3,10 +3,13 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthentication } from "@/stores/authentication";
 import { useUserStore } from "@/stores/userBookStore";
-
+import { GoogleLogin } from "vue3-google-login";
+import axios from "axios";
 const user = useUserStore();
 const router = useRouter();
 const Auth = useAuthentication();
+
+
 
 const show_signUp = ref(false);
 const show_signUp_help = ref(true);
@@ -18,6 +21,7 @@ const message = ref("");
 const loginSuccess = ref(false);
 const sign_in_message = ref("");
 const messageSuccessful = ref("");
+
 
 const help_login = [
   {
@@ -86,6 +90,9 @@ async function handleLogin() {
     router.push("/");
     messageSuccessful.value = "Login successful!";
   }
+  else {
+    message.value = response.message 
+  }
 }
 </script>
 
@@ -93,6 +100,7 @@ async function handleLogin() {
 <template>
   <!-- <h2>Login page</h2> -->
   <div class="sign_in_page">
+  
     <img class="img_shop" src="../../assets/IP-Store.png" alt="IP Store" />
     <div class="login_page">
       <div class="button_home">
@@ -118,17 +126,30 @@ async function handleLogin() {
           id=""
           required
         />
-        <p class="message">{{ sign_in_message }}</p>
-        <p class="logged_in">{{ messageSuccessful }}</p>
+        <!-- <p class="message">{{ sign_in_message }}</p> -->
+        <p class="logged_in">{{ sign_in_message }}</p>
         <button type="submit" id="login_btn">Login</button>
+
         <div class="additional_material">
-          <h6>
+
             Don't have account?
             <RouterLink to="/signUp" class="Register">Register Now</RouterLink>
-          </h6>
-          <button>Help</button>
+      
         </div>
       </form>
+      <div class="wrap">
+       <!-- login with google  -->
+      <button >
+        <a href="http://localhost:8200/api/auth/google/redirect">Login with</a>
+        <img src="https://img.icons8.com/?size=100&id=V5cGWnc9R4xj&format=png&color=000000" alt="">
+      </button>
+      <button @click="handleClickHelp">Help</button>
+      </div>
+      <div class="warp_forgot">
+         <span>Forgot Password ?</span>
+         <RouterLink to="/reset-password" class="forgot_password">Reset Password</RouterLink>
+      </div>
+        
     </div>
 
     <div class="help" v-if="show_help">
@@ -139,7 +160,7 @@ async function handleLogin() {
         <div class="pick_help">
           <h3 @click="handleShowHelpLogin" :class="show_signUp_help ? 'focusOn': 'noFocusOn'">How to Create Account ?</h3>
         </div>
-        
+
       </div>
       <img
             class="close"
@@ -148,9 +169,6 @@ async function handleLogin() {
             alt=""
       />
       <div v-if="show_signUp_help">
-        
-        <div class="help_top"> 
-        </div>
         <div
           class="describe"
           v-for="(describe, index) in help_login"
@@ -161,6 +179,7 @@ async function handleLogin() {
             <p>{{ describe.describe }}</p>
           </div>
         </div>
+        
       </div>
       <div v-else>
        
@@ -177,20 +196,89 @@ async function handleLogin() {
               <p>{{ describe.describe }}</p>
             </div>
           </div>
+          
         </div>
+        
       </div>
+      
     </div>
   </div>
+  
 </template>
 
 <style scoped>
 .sign_in_page {
-  display: flex;
   position: relative;
+  display: flex;
   background-color: rgb(255, 255, 255);
   margin: 2px;
   border-radius: 0.5rem;
   box-shadow: 3px 3px 4px rgba(70, 69, 69, 0.8);
+}
+.wrap{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 1rem;
+  
+}
+.additional_material{
+  display: flex;
+  font-size: 16px;
+}
+.wrap button {
+  height: 2.4rem;
+  min-width: 28%;
+  background-color: rgb(249, 242, 159);
+  border: none;
+  border-radius: 6px;
+  padding: 4px;
+  box-shadow: 3px 3px 4px rgba(70, 69, 69, 0.4);
+  cursor: pointer;  
+  text-decoration: none;
+  display: flex;;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
+
+}
+.wrap button a{
+  cursor: pointer;  
+  text-decoration: none;
+  font-weight: 700;
+}
+.wrap button img{
+  width: 20px;
+}
+.wrap button:hover{
+  background-color: antiquewhite;
+}
+.wrap button:nth-child(2) {
+  background-color: rgb(64, 66, 66);
+  color: whitesmoke;
+}
+
+.warp_forgot{
+  text-align: center;
+  /* background-color: antiquewhite; */
+  padding: 10px;
+  gap: 10px;
+  display: flex;
+  justify-content: center;
+}
+.warp_forgot .forgot_password{
+  color: blue;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+.warp_forgot .forgot_password:hover{
+  scale: 1.05;
+}
+.google{
+  margin: 5px;
+  width: 50%;
 }
 .sign_in_page img {
   width: 35%;
@@ -215,7 +303,7 @@ async function handleLogin() {
   font-weight: bold;
 }
 .sub_login_page input {
-  font-size: 24px;
+  font-size: 20px;
   width: 70%;
   padding-left: 5px;
   height: 3.4rem;
@@ -234,7 +322,8 @@ async function handleLogin() {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
+ 
 }
 #login_btn {
   width: 30%;
@@ -250,20 +339,13 @@ async function handleLogin() {
   background-color: red;
 }
 .additional_material {
-  width: 70%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  font-size: 20px;
+  width: 100%;
+  justify-content: center;
+  gap: 1rem;
 }
-.additional_material button {
-  font-size: 20px;
-  color: black;
-  background-color: lightgray;
-  border-radius: 5px;
-  width: 80px;
-  cursor: pointer;
-}
+
 
 .message {
   color: red;
