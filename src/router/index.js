@@ -9,7 +9,7 @@ import History from '@/views/History.vue'
 import { useUserStore } from '@/stores/userBookStore'
 import Search from '@/views/Search.vue'
 import SignUp from '@/components/Users/SignUp.vue'
-import Admin from '@/components/Admin/Admin-Dashboard.vue'
+import Admin_Dashboard from '@/components/Admin/Admin-Dashboard.vue'
 import AdminAddProduct from '@/components/Admin/Admin_Add_Product_Form.vue'
 import Component from 'vue-loading-overlay'
 
@@ -74,9 +74,21 @@ const routes = [
     component: Search,
   },
   {
-    path: '/admin-dashboard',
+    path: '/admin',
     name: 'Admin',
     component: Admin,
+    children: [
+      {
+        path: '/dashboard',
+        name: 'AdminDashboard',
+        component: Admin_Dashboard,
+      },
+      {
+        path: '/add-product',
+        name: 'AdminAddProduct',
+        component: AdminAddProduct,
+      }
+    ]
   },
   {
     path: '/admin-add-product',
