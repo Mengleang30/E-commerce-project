@@ -9,6 +9,7 @@ import Admin_Dashboard from "./components/Admin/Admin-Dashboard.vue";
 
 const route = useRoute();
 const isLoading = ref(false);
+const adminPages = ['Admin_Dashboard', 'Admin_AddProduct']
 
 const scrollToCard = () => {
   const viewportHeight = window.innerHeight * 1.2;
@@ -59,6 +60,7 @@ watch(
       <div class="wrap_card" id="Card">
         <Card_book
           v-if="
+            !adminPages.includes(route.name) &&
             route.name !== 'DetailBook' &&
             route.name !== 'Login' &&
             route.name !== 'SignUp'

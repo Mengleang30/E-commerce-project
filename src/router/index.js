@@ -10,6 +10,8 @@ import { useUserStore } from '@/stores/userBookStore'
 import Search from '@/views/Search.vue'
 import SignUp from '@/components/Users/SignUp.vue'
 import Admin from '@/components/Admin/Admin-Dashboard.vue'
+import AdminAddProduct from '@/components/Admin/Admin_Add_Product_Form.vue'
+import Component from 'vue-loading-overlay'
 
 const authGuard = (to, from, next) => {
   const authStore = useUserStore();
@@ -75,6 +77,11 @@ const routes = [
     path: '/admin-dashboard',
     name: 'Admin',
     component: Admin,
+  },
+  {
+    path: '/admin-add-product',
+    name: 'AddProduct',
+    component: AdminAddProduct,
   }
 ]
 

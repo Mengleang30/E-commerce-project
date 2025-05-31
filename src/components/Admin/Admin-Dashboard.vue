@@ -89,7 +89,7 @@ export default {
         },
         {
           nav_name: "Products",
-          link_admin: "#",
+          link_admin: "/admin-add-product",
           icon: Product,
         },
         {
