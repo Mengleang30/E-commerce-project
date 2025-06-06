@@ -19,6 +19,7 @@ onMounted(async () => {
     const result = await auth.googleLogin(token);
     if (result.success) {
       router.push("/"); // redirect after successful login
+      
     } else {
       router.push("/login"); // redirect if login failed
     }
@@ -26,4 +27,5 @@ onMounted(async () => {
     router.push("/login"); // no token found, redirect to login
   }
 });
+
 </script>

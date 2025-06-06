@@ -1,25 +1,47 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import useBooks from "./books";
+
 
 export const useAuthentication = defineStore("AuthStore", {
   state: () => ({
-    user: null,
-    loggedInUser: null,
+    user: [],
+    loggedInUser: {},
     backendUrl: "http://localhost:8200",
     token: localStorage.getItem("token") || null,
   }),
 
   actions: {
-    
     logout() {
-      this.user = null;
+      this.user = [];
+      window.location.reload();
       localStorage.removeItem("token");
-      this.loggedInUser = null;
+      this.loggedInUser = {};
       this.token = null;
       axios.defaults.headers.common["Authorization"] = "";
       console.log("User logged out successfully.");
     },
 
+    async uploadPicture(picture) {
+      const formData = new FormData();
+      formData.append("picture", picture); // picture is File
+
+      try {
+        await axios.post(
+          `${this.backendUrl}/api/customer/upload_picture`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+              // DO NOT manually set 'Content-Type'
+            },
+          }
+        );
+        console.log("Profile picture uploaded successfully");
+      } catch (e) {
+        console.error("Upload failed:", e.response?.data || e.message);
+      }
+    },
     async fetchLoggedUser() {
       try {
         const token = this.token;
@@ -36,7 +58,7 @@ export const useAuthentication = defineStore("AuthStore", {
           "Failed to fetch user:",
           error.response?.data || error.message
         );
-        this.loggedInUser = null;
+        this.loggedInUser = {};
       }
     },
     async SignUp(name, email, password, password_confirmation, phone) {
@@ -89,8 +111,6 @@ export const useAuthentication = defineStore("AuthStore", {
         };
 
         await this.fetchLoggedUser();
-
-
         return {
           success: true,
           message: `Welcome back, ${email}!`,
@@ -117,40 +137,49 @@ export const useAuthentication = defineStore("AuthStore", {
       }
     },
 
-  async googleLogin(tokenFromCallback){
-    try {
-      localStorage.setItem("token", tokenFromCallback);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${tokenFromCallback}`;
-      this.token = tokenFromCallback
-      await this.fetchLoggedUser();
-      this.user = {
-        email: this.loggedInUser?.email,
-        role: this.loggedInUser?.role,
-        token: tokenFromCallback,
-      };
-    return {
-      success: true,
-      message: `Welcome back, ${this.loggedInUser.name || this.loggedInUser.email}!`,
-    };
-    } catch (error) {
-    console.error("Google login failed:", error);
-    return {
-      success: false,
-      message: "Google login failed. Please try again.",
-    } };
-  },
+    async googleLogin(tokenFromCallback) {
+      try {
+        localStorage.setItem("token", tokenFromCallback);
+        axios.defaults.headers.common["Authorization"] =
+          `Bearer ${tokenFromCallback}`;
+        this.token = tokenFromCallback;
+        await this.fetchLoggedUser();
+        this.user = {
+          email: this.loggedInUser?.email,
+          role: this.loggedInUser?.role,
+          token: tokenFromCallback,
+        };
+        
+        return {
+          success: true,
+          message: `Welcome back, ${this.loggedInUser.name || this.loggedInUser.email}!`,
+        };
+      } catch (error) {
+        console.error("Google login failed:", error);
+        return {
+          success: false,
+          message: "Google login failed. Please try again.",
+        };
+      }
+    },
 
-  async sendCode (email){
-    try {
-        const response = await axios.post(`${this.backendUrl}/api/password/forgot`, {
-         email
-        });
+    async sendCode(email) {
+      try {
+        const response = await axios.post(
+          `${this.backendUrl}/api/password/forgot`,
+          {
+            email,
+          }
+        );
         return {
           success: true,
           message: response.data.message,
         };
       } catch (e) {
-        console.error("Send Code error:", e.response?.data.message || e.message);
+        console.error(
+          "Send Code error:",
+          e.response?.data.message || e.message
+        );
         return {
           success: false,
           message:
@@ -158,12 +187,18 @@ export const useAuthentication = defineStore("AuthStore", {
             "Registration failed. Please try again.",
         };
       }
-  },
-  async resetPassword (email, code, new_password, new_password_confirmation){
-    try {
-        const response = await axios.post(`${this.backendUrl}/api/password/reset`, {
-         email, code, new_password, new_password_confirmation
-        });
+    },
+    async resetPassword(email, code, new_password, new_password_confirmation) {
+      try {
+        const response = await axios.post(
+          `${this.backendUrl}/api/password/reset`,
+          {
+            email,
+            code,
+            new_password,
+            new_password_confirmation,
+          }
+        );
         return {
           success: true,
           message: response.data.message,
@@ -173,21 +208,38 @@ export const useAuthentication = defineStore("AuthStore", {
         return {
           success: false,
           message:
-            e.response?.data?.message ||
-            "Reset failed. Please try again.",
+            e.response?.data?.message || "Reset failed. Please try again.",
         };
       }
-  }
-  
+    },
+
+    async updateInformation (name, phone, description, address){
+      try{
+         await axios.patch(`${this.backendUrl}/api/customer/update_inform`,{
+          name, phone, description, address
+         },{
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+         });
+
+      }
+      catch(e){
+          console.log(e)
+      }
+     
+      
+    }
   },
 
-
-
   getters: {
-    isAuthenticated: (state) => !!state.user,
+    isAuthenticated: (state) => {
+      return !!state.token;
+    },
 
     getUserRole: (state) => {
-      return state.user ? state.user.role : null;
+      return state.user ? state.user.role : {};
     },
   },
 });

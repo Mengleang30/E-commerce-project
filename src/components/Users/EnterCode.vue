@@ -41,7 +41,7 @@ const handleResetPassword = async ()=>{
     <div class="code">
         <span>We have received a request to reset your password. To reset your password, please enter your code  </span>
         <form @submit.prevent="handleResetPassword">
-            <label for="">New Password</label>
+            <label for="">8-digits Number</label>
             <input type="number" v-model="code" placeholder="Enter code here" required>
              <label for="">New Password</label>
              <input type="password" v-model="newPassword" placeholder="Enter new password" required>

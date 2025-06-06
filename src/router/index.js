@@ -6,22 +6,26 @@ import Landing from '@/views/Landing.vue'
 import ListBook from '@/views/List_book.vue'
 import Login from '@/components/Users/Login.vue'
 import History from '@/views/History.vue'
-import { useUserStore } from '@/stores/userBookStore'
+
 import Search from '@/views/Search.vue'
 import SignUp from '@/components/Users/SignUp.vue'
 import GoogleCallBack from '@/components/Users/GoogleCallBack.vue'
 import ResetPassword from '@/components/Users/ResetPassword.vue'
-import EnterCode from '@/components/Users/EnterCode.vue'
-import { useRoute } from 'vue-router'
 
-const route = useRoute();
+
+import CustomerNotification from '@/views/notification/CustomerNotification.vue'
+import useAuthentication from '@/stores/authentication'
+import Profile from '@/views/profile/Profile.vue'
+
+
+
 const authGuard = (to, from, next) => {
-  const authStore = useUserStore();
-  if (authStore.loggedInUser) {
+  const Auth = useAuthentication();
+  if (Auth.isAuthenticated) {
     next(); // Allow access if logged in
   } else {
     // next('/login'); // Redirect to login page if not logged in
-    alert("As Guest cannot access this feature , please sign in")
+    // alert("As Guest cannot access this feature , please sign in")
     next("/login");
   }
 };
@@ -31,6 +35,11 @@ const routes = [
     path: '/',
     name: 'Landing',
     component: Landing,
+  },
+  {
+    path: '/notification',
+    name: 'Notification',
+    component: CustomerNotification,
   },
   {
     path: '/auth/google/callback',
@@ -57,13 +66,13 @@ const routes = [
     path: '/favorite',
     name: 'Favorite',
     component: Favorite,
-    beforeEnter : authGuard,
+    // beforeEnter : authGuard,
   },
   {
     path: '/cart',
     name: 'Cart',
     component: Cart,
-    beforeEnter : authGuard,
+    // beforeEnter : authGuard,
   },
   {
     path: '/login',
@@ -79,12 +88,18 @@ const routes = [
     path : "/history",
     name : "History",
     component : History,
-    beforeEnter : authGuard,
+    // beforeEnter : authGuard,
   },
   {
     path: '/search',
     component: Search,
    
+  },
+    {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
+    beforeEnter: authGuard
   },
 ]
 

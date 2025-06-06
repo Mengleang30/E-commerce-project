@@ -13,11 +13,14 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^1.9.0",
+    "bootstrap": "^5.3.6",
+    "cors": "^2.8.5",
     "date-fns": "^4.1.0",
     "e-commerce-project": "file:",
     "file-save": "^0.2.0",
     "file-saver": "^2.0.5",
-    "jspdf": "^2.5.2",
+    "jspdf": "^3.0.1",
+    "lucide-vue-next": "^0.511.0",
     "pinia": "^2.2.6",
     "vue": "^3.5.12",
     "vue-loading-overlay": "^6.0.6",
@@ -26,8 +29,11 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
     "prettier": "^3.4.2",
     "prettier-plugin-vue": "^1.1.6",
+    "tailwindcss": "^4.1.7",
     "vite": "^6.0.7",
     "vite-plugin-vue-devtools": "^7.7.0"
   }

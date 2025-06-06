@@ -44,6 +44,10 @@ const help_login = [
     topic: "Successful Login",
     describe: `If your credentials are correct, you will see a success message and be redirected to the homepage. If your credentials are incorrect, an error message will be displayed asking you to check your email and password.`,
   },
+  {
+    topic: "Login with Google",
+    describe: `If you prefer to log in using Google, click the "Login with Google" button. This will redirect you to Google's authentication page. After successful authentication, you will be redirected back to the application with your account logged in.`,
+  },
 ];
 
 const help_SignUP = [
@@ -94,6 +98,10 @@ async function handleLogin() {
     message.value = response.message 
   }
 }
+
+const loginWithGoogle = () => {
+  window.location.href = 'http://localhost:8200/api/auth/google/redirect';
+}
 </script>
 
 
@@ -139,8 +147,8 @@ async function handleLogin() {
       </form>
       <div class="wrap">
        <!-- login with google  -->
-      <button >
-        <a href="http://localhost:8200/api/auth/google/redirect">Login with</a>
+      <button @click="loginWithGoogle" class="google">
+         Login with
         <img src="https://img.icons8.com/?size=100&id=V5cGWnc9R4xj&format=png&color=000000" alt="">
       </button>
       <button @click="handleClickHelp">Help</button>
@@ -220,16 +228,18 @@ async function handleLogin() {
   width: 100%;
   justify-content: center;
   gap: 10px;
-  margin-top: 1rem;
+  margin-top: .5rem;
+  align-items: center;
   
 }
+
 .additional_material{
   display: flex;
   font-size: 16px;
 }
 .wrap button {
-  height: 2.4rem;
-  min-width: 28%;
+  height: 2.6rem;
+  min-width: 20%;
   background-color: rgb(249, 242, 159);
   border: none;
   border-radius: 6px;
@@ -243,13 +253,9 @@ async function handleLogin() {
   justify-content: center;
 
 }
-.wrap button a{
-  cursor: pointer;  
-  text-decoration: none;
-  font-weight: 700;
-}
+
 .wrap button img{
-  width: 20px;
+  width: 22px;
 }
 .wrap button:hover{
   background-color: antiquewhite;

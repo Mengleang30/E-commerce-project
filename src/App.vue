@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import Card_book from "./Layout/Card_book.vue";
 import Footer from "./Layout/Footer.vue";
 import Header from "./Layout/Header.vue";
@@ -8,6 +8,11 @@ import Show_Landing from "./Layout/Show_Landing.vue";
 import axios from "axios";
 
 import { useAuthentication } from "./stores/authentication";
+import {useBooks} from "./stores/books";
+import {useCategory} from "./stores/category";
+import useNotification from "./stores/notification";
+
+
 
 const route = useRoute();
 const isLoading = ref(false);
@@ -16,12 +21,13 @@ const Auth = useAuthentication();
 console.log(Auth.user)
 
 const routeName = ref([
-  "Landing",
   "DetailBook",
   "Login",
   "SignUp",
   "ResetPassword",
-  'EnterCode'
+  'EnterCode',
+  'Notification',
+  "Profile"
 ]);
 
 const scrollToCard = () => {
@@ -48,7 +54,7 @@ watch(
     }
     setTimeout(() => {
       isLoading.value = false;
-    }, 500);
+    }, 200);
    
   }
 );
@@ -64,13 +70,27 @@ watch(
 //     console.error('Error fetching books:', error);
 //   });
 
-fetch('http://localhost:8200/api/login', {
-  method: 'POST',
-  credentials: 'include', // important for cookies
-    // others if needed
-  // body: JSON.stringify({ email, password })
+// fetch('http://localhost:8200/api/login', {
+//   method: 'POST',
+//   credentials: 'include', // important for cookies
+//     // others if needed
+//   // body: JSON.stringify({ email, password })
+// })
+
+const useBook = useBooks();
+const category = useCategory();
+const useNotifications = useNotification();
+onMounted(()=>{
+  useBook.fetchBooks();
+  category.fetchCategories();
+  useNotifications.fetchNotifications();
+  useBook.fetchWishList();
+  // useNotifications.fetchNotifications();
+
 })
 
+// console.log(useBook.books)
+// console.log(useNotifications.notifications)
 
 
 </script>
@@ -91,10 +111,6 @@ fetch('http://localhost:8200/api/login', {
       <RouterView > 
 
       </RouterView > 
-        <!-- v-slot="{ Component }" -->
-        <!-- <KeepAlive exclude="Detail_book" >
-          <component :is="Component" />
-        </KeepAlive> -->
      
     </div>
   </main>

@@ -1,12 +1,30 @@
 <script setup> 
  import { useUserStore } from '@/stores/userBookStore';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';//home page
 import { useBookStore } from '@/stores';
 import { BookData } from '@/stores/Data';
+import useBooks from '@/stores/books';
 
 const userStore = useUserStore();
 const BooksData = useBookStore();
+
+
+const useWishlist = useBooks();
+
+
+const listItems = computed(()=>{
+    return useWishlist.wishlist;
+})
+
+  const handleRemoveWishlist = async (bookId) => {
+       await useWishlist.removeWishList(bookId);
+       await useWishlist.fetchWishList();
+    }
+
+onMounted( async ()  =>{
+ await useWishlist.fetchWishList();
+})
 
 
 
@@ -41,19 +59,18 @@ console.log(favoriteBooks.value);
         <h2 >
             <hr>
     <div class="book-list">
-           
-        <div v-for="namebook in favoriteBooks" class="book-card" :key="namebook.id">
-            <img :src="namebook.url_image" alt="book" class="book-image">
-
+        <div v-for="wishlist in listItems" class="book-card" :key="wishlist.id">
+            <img :src="`http://localhost:8200/storage/${wishlist.book.path_image}`" alt="book" class="book-image">
             <div class="book-content" >
+
             
-                <h3 class="book-title">{{ namebook.title }}</h3>
-                <p class="book-price">$ {{ namebook.price }}</p>
-                <RouterLink :to="`/detail/${namebook.id}`" class="description">View Description</RouterLink>
+                <h3 class="book-title">{{ wishlist.book.title }}</h3>
+                <p class="book-price">$ {{ wishlist.book.price }}</p>
+                <RouterLink :to="`/detail/${wishlist.book.id}`" class="description">View Description</RouterLink>
             </div>
             <div class="book-actions">
                 <button 
-                @click="handleRemove(namebook.id)"
+                @click="handleRemoveWishlist(wishlist.id)"
                 class="delete-btn" title="Delete">
                             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKwoPKQU2hidR3sNc12cNjYkuvDIR6p9_QgA&s" alt="Button" class="button-image">
                     
@@ -165,7 +182,7 @@ h2 {
 
 .book-image {
     height: 80px;
-    width: auto;
+    width: 8rem;
     border-radius: 5px;
     margin-right: 10px;
 }

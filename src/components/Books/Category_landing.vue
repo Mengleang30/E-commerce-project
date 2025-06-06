@@ -1,22 +1,24 @@
 <script>
 import Book_landing from "./Book_landing.vue";
 import { useBookStore } from "@/stores";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useUserStore } from "@/stores/userBookStore";
+import useBooks from "@/stores/books";
+import useCategory from "@/stores/category";
 
 export default {
   name: "Category_landing",
   data() {
     return {
       Category_showing: [
-        "Motivational",
-        "Classic",
-        "Romance",
-        "Novel",
-        "Philosophy",
-        "Adventure",
-        "History",
-        "Education",
+        // "Motivational",
+        // "Classic",
+        // "Romance",
+        // "Novel",
+        // "Philosophy",
+        // "Adventure",
+        // "History",
+        // "Education",
       ],
     };
   },
@@ -27,23 +29,47 @@ export default {
   computed: {
     /// Return a function to filter books for a specific category
     FilterBooksByCategory() {
-      return (category) =>
-        this.Book_by_category.BookData.filter((book) =>
-          book.category.some(
-            (bookCategory) =>
-              bookCategory.trim().toLocaleLowerCase() ===
-              category.trim().toLocaleLowerCase()
-          )
-        );
+    return (category) =>
+      this.apiBooks.books.filter((book) => {
+        // Assuming book.category is a string (category name)
+        return book.category.toLowerCase() === category.trim().toLowerCase();
+      });
     },
   },
 
   setup() {
     const Book_by_category = useBookStore();
 
+    const apiBooks = useBooks();
+
     const userStore = useUserStore();
+    const apiCategory = useCategory();
 
 
+    const useBook = useBooks();
+     // mark for books that already in favorite
+   const isInWishlist = ((bookId) =>{
+     return useBook.wishlist.some(item => item.book_id === bookId)}
+  );
+
+  
+    const handleAddWishlist = async (bookId) => {
+       await useBook.addWishList(bookId);
+       await useBook.fetchWishList();
+    }
+    // const handleRemoveWishList = async () =>{
+    //   await useBook.removeWishList(bookId.value);
+    // }
+
+    const handleRemoveWishList = async (bookId) => {
+    const wishlistEntry = useBook.wishlist.find(item => item.book_id === bookId);
+    if (wishlistEntry) {
+      useBook.removeWishList(wishlistEntry.id);
+      
+    } else {
+      console.log("Wishlist entry not found to remove");
+    }
+    };
 
     const checkFavorite = (BookId) => {
       return userStore.loggedInUser && userStore.loggedInUser.favorite.includes(BookId);
@@ -70,13 +96,13 @@ export default {
 
 
     const discountBooks = computed(() => {
-      return Book_by_category.BookData.filter(
-        (books) => books.discount > 19
+      return apiBooks.books.filter(
+        (books) => books.discount > 5
       ).sort((a, b) => b.discount - a.discount);
     });
 
     const filterBooksByCategory = (category) => {
-      return Book_by_category.BookData.filter((book) =>
+      return apiBooks.books.filter((book) =>
         book.category.some(
           (bookCategory) =>
             bookCategory.trim().toLocaleLowerCase() ===
@@ -85,6 +111,10 @@ export default {
       );
     };
 
+    onMounted( async ()=>{
+      await useBook.fetchWishList();
+    })
+
     return {
       Book_by_category,
       discountBooks,
@@ -92,6 +122,12 @@ export default {
       handleAddFavorite,
       checkFavorite,
       fiveStarBooks,
+      apiBooks,
+      apiCategory,
+      isInWishlist,
+      handleAddFavorite,
+      handleRemoveWishList,
+      handleAddWishlist
       
     };
   },
@@ -110,16 +146,19 @@ export default {
         :key="Books.id"
         :Title="Books.title"
         :Author="Books.author"
-        :Year="Books.published"
+        :Year="Books.published_date.split('-')[0]"
         :Url_img="Books.url_image"
+        :Path_image="Books.path_image"
+
         :Book_category="Books.category"
         :Price="Books.price"
         :LinkToDetail="Books.id"
         :HaveDiscount="Books.discount"
         :AfterDiscount="Books.price * (1 - Books.discount / 100)"
         :idBook="Books.id"
-        @addFavorite="handleAddFavorite(Books.id)"
-        :isFavorite="checkFavorite(Books.id)"
+        @addFavorite="handleAddWishlist(Books.id)"
+        :isFavorite="isInWishlist(Books.id)"
+        @removeFavorite="handleRemoveWishList(Books.id)"
       />
     </div>
   </div>
@@ -133,25 +172,9 @@ export default {
     </div>
     <div
       class="contianer_book"
-      v-if="FilterBooksByCategory(category).length > 0"
-    >
-      <Book_landing
-        v-for="Books in FilterBooksByCategory(category).slice(0, 20)"
-        :key="Books.id"
-        :Title="Books.title"
-        :Author="Books.author"
-        :Year="Books.published"
-        :Url_img="Books.url_image"
-        :Book_category="Books.category"
-        :Price="Books.price"
-        :LinkToDetail="Books.id"
-        :HaveDiscount="Books.discount"
-        :AfterDiscount="Books.price * (1 - Books.discount / 100)"
-        :idBook="Books.id"
-        :isFavorite="checkFavorite(Books.id)"
-        @addFavorite="handleAddFavorite(Books.id)"
       
-      />
+    >
+     
     </div>
   </div>
   <div class="category_landing_5star">
@@ -159,21 +182,7 @@ export default {
             <h3 > 5 Stars Books ⭐⭐⭐⭐⭐
             </h3>         
         </div>
-        <div class="contianer_book">
-            <Book_landing  v-for="Books in fiveStarBooks.slice(0,20)" :key="Books.id "
-            :Title="Books.title"
-            :Author="Books.author"
-            :Year="Books.published"
-            :Url_img="Books.url_image"
-            :Book_category="Books.category"
-            :Price="Books.price"
-            :LinkToDetail="Books.id"
-            :HaveDiscount="Books.discount"
-            :AfterDiscount="(Books.price)*(1 - Books.discount/100)"
-             :isFavorite="checkFavorite(Books.id)"
-            @addFavorite="handleAddFavorite(Books.id)"
-            />
-        </div>
+       
     </div>
 </template>
 

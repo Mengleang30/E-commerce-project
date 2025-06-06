@@ -1,5 +1,7 @@
 <script>
 import { useBookStore } from "@/stores";
+import useBooks from "@/stores/books";
+import useCategory from "@/stores/category";
 import { computed, ref } from "vue";
 export default {
   name: "list_book_panel",
@@ -13,40 +15,45 @@ export default {
     const selectedYear = ref(0);
     const selectedGenres = ref([]);
     const showDiscountBook = ref(false);
+    const ListBooks = useBooks();
+    const category = useCategory();
 
     const FilterBooks = computed(() => {
-      let OriginalData = [...UseBookStore.BookData];
+      let OriginalData = [...ListBooks.books];
 
       if (selectedLanguage.value.length > 0) {
-        OriginalData = OriginalData.filter(book =>
-          book.Language.some(language =>
-          selectedLanguage.value.includes(language)
+        OriginalData = OriginalData.filter((book) =>
+          book.Language.join(",").some((language) =>
+            selectedLanguage.value.includes(language)
           )
         );
       }
 
-      if(showDiscountBook.value){
-        OriginalData = OriginalData.filter(books=>books.discount>0)
+      if (showDiscountBook.value) {
+        OriginalData = OriginalData.filter((books) => books.discount > 0);
       }
 
-      if(selectedGenres.value.length>0){
-        OriginalData = OriginalData.filter((books)=>{
-            return books.category.some(genre=>selectedGenres.value.includes(genre))
-        })
+     if (selectedGenres.value.length > 0) {
+        OriginalData = OriginalData.filter((books) =>
+          selectedGenres.value.includes(books.category.name)
+        );
       }
 
-      if(selectedYear.value){
-        OriginalData = OriginalData.filter(books => books.published===Number(selectedYear.value))
+
+      if (selectedYear.value) {
+        OriginalData = OriginalData.filter(
+          (books) => books.published === Number(selectedYear.value)
+        );
       }
 
       if (princeSortValues.value === "1") {
         // Low to High
-        return (UseBookStore.BookData = [...UseBookStore.BookData].sort(
+        return (ListBooks.books = [...ListBooks.books].sort(
           (a, b) => a.price - b.price
         ));
       } else if (princeSortValues.value === "2") {
         // High to Low
-        return (UseBookStore.BookData = [...UseBookStore.BookData].sort(
+        return (ListBooks.books = [...ListBooks.books].sort(
           (a, b) => b.price - a.price
         ));
       } else {
@@ -60,6 +67,7 @@ export default {
       selectedGenres.value = [];
       showDiscountBook.value = false;
     };
+
     return {
       UseBookStore,
       FilterBooks,
@@ -69,6 +77,7 @@ export default {
       selectedYear,
       resetFilters,
       showDiscountBook,
+      category,
     };
   },
 };
@@ -78,24 +87,35 @@ export default {
     <div class="search_genre">
       <h3>Search by Genre</h3>
       <form class="inputs-search">
-      <div class="inp_opt" v-for="genre in ['Classic', 'Fantasy', 'Romance', 'Motivational', 'Mystery']" :key="genre">
-        <input
-          type="checkbox"
-          :value="genre"
-          v-model="selectedGenres"
-        />
-        <label>{{ genre }}</label>
-      </div>
-    </form>
+        <div
+          class="inp_opt"
+          v-for="genre in category.categories"
+          :key="genre"
+        >
+          <input type="checkbox" :value="genre.name" v-model="selectedGenres" />
+          <label>{{ genre.name }}</label>
+        </div>
+      </form>
     </div>
     <hr />
     <div class="search_num">
       <h3>Search by Year</h3>
-      <input type="number" v-model="selectedYear" name="num_year" id="num_input" value="0" />
+      <input
+        type="number"
+        v-model="selectedYear"
+        name="num_year"
+        id="num_input"
+        value="0"
+      />
     </div>
     <div class="search_discount">
       <h3>Discount</h3>
-      <input class="discountBox" :checked="showDiscountBook" type="checkbox" v-model="showDiscountBook">
+      <input
+        class="discountBox"
+        :checked="showDiscountBook"
+        type="checkbox"
+        v-model="showDiscountBook"
+      />
     </div>
     <hr />
     <div class="search_genre">
@@ -134,7 +154,7 @@ export default {
       </select>
     </div>
     <hr />
-    
+
     <button class="reset_btn" @click="resetFilters">Reset Filter</button>
   </div>
 
@@ -145,17 +165,22 @@ export default {
     <div class="render_book" v-for="data in FilterBooks" :key="data.id">
       <div class="each_book">
         <div class="main_title_book">
-          <img height="150" :src="data.url_image" alt="" />
-          <h4 v-if="data.title.length<40">{{ data.title.substring(0,40) }}</h4>
-          <h4 v-else>{{ data.title.substring(0,40) + '...' }}</h4>
+          <img v-if="data.path_image!==null" :src="`http://localhost:8200/storage/${data.path_image}`" alt="Book_image_path" />
+          <img v-else-if="data.url_image !==null" :src="data.url_image" alt="Book_image_url" />
+          <img v-else  src="https://upload.wikimedia.org/wikipedia/commons/2/21/Blank_book_on_a_table.jpg" />
+            <h4 v-if="data.title.length < 40">
+            {{ data.title.substring(0, 40) }}
+          </h4>
+          <h4 v-else>{{ data.title.substring(0, 40) + "..." }}</h4>
         </div>
         <div class="book_inform_container">
           <span style="font-size: small">
-            {{ data.category.join("/") }}
+            {{ data.category.name }}
           </span>
           <span style="font-weight: bold">
             {{ data.author }}
           </span>
+          
           <div>
             <div v-if="data.discount > 0" class="wrap_prince">
               <span class="after_discount"
@@ -163,9 +188,9 @@ export default {
                   (data.price * (1 - data.discount / 100)).toFixed(2)
                 }}</span
               >
-              <span class="prince">${{ data.price.toFixed(2) }}</span>
+              <span class="prince">${{ data.price }}</span>
             </div>
-            <span v-else class="prince">${{ data.price.toFixed(2) }}</span>
+            <span v-else class="prince">${{ data.price }}</span>
           </div>
 
           <RouterLink class="link" :to="`/detail/${data.id}`">
@@ -209,10 +234,10 @@ export default {
 }
 .each_book {
   padding: 10px;
-  height: 25rem;
+  height: 20rem;
   display: flex;
   flex-direction: column;
-    min-width: 14rem;
+  min-width: 14rem;
   border-radius: 10px;
   border: 1px solid;
   background-color: aliceblue;
@@ -223,9 +248,9 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.main_title_book img{
-    width: 8rem;
-    height: 12rem;
+.main_title_book img {
+  width: 6rem;
+  height: 10rem;
 }
 .main_title_book h4 {
   font-weight: 600;
@@ -284,8 +309,8 @@ hr {
   justify-content: space-around;
   align-items: center;
 }
-.search_num select{
-    height: 30px;
+.search_num select {
+  height: 30px;
 }
 .search_genre h3 {
   text-align: center;
@@ -297,22 +322,18 @@ hr {
   display: flex;
   width: 100%;
   gap: 10px;
-
 }
-.inp_opt input{
+.inp_opt input {
   width: 1.6rem;
   margin-top: 2px;
   accent-color: blue;
 }
-.search_discount{
+.search_discount {
   text-align: center;
-
 }
-.search_discount .discountBox{
-
+.search_discount .discountBox {
   height: 1.4rem;
   width: 1.4rem;
-
 }
 #num_input {
   font-size: 1.3rem;

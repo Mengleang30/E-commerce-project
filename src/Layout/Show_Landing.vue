@@ -1,12 +1,20 @@
 <script setup>
 import { useBookStore } from '@/stores';
+import { useBooks } from '@/stores/books';
 
-import { defineProps } from 'vue';
+import { defineProps, onMounted } from 'vue';
 import { ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 
+
 const router = useRouter();
 const useStore = useBookStore();
+
+// const bookData = useBooks();
+
+// onMounted(()=>{
+//     bookData.fetchBooks();
+// })
 
 const textSearch = ref('');
 
