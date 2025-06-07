@@ -16,6 +16,7 @@ import { useBookStore } from "@/stores";
 import { useAuthentication } from "@/stores/authentication";
 import { useNotification } from '@/stores/notification';
 import { Bell, ShoppingCart, User } from 'lucide-vue-next';
+import { Search } from 'lucide-vue-next';
 export default {
 
   name: "Header",
@@ -23,7 +24,8 @@ export default {
     Navbar,
     Bell,
     User,
-    ShoppingCart
+    ShoppingCart,
+    Search
   },
 
   setup() {
@@ -49,23 +51,6 @@ export default {
       }
       return NotificationStore.notifications.filter(noti => noti.read_at === null).length;
     });
-
-
-
-    const handleSearch = () => {
-      if (textSearch.value.trim() === "") {
-        return;
-      }
-
-      useStore.setTextFromSearch(textSearch.value)
-      console.log(textSearch.value)
-      textSearch.value = ""
-      if (router.currentRoute.value.path !== '/search') {
-        router.push('/search');
-      }
-
-    }
-
 
 
 
@@ -142,6 +127,11 @@ export default {
       return { message: "You are offline !", status: false };
     })
 
+    const searchQuery = ref('');
+    const handleSearch = () => {
+      router.push({ path: '/search', query: { query: searchQuery.value } });
+      };
+
     return {
       isNavbarVisible,
       toggleNavbar,
@@ -161,14 +151,15 @@ export default {
       userEmail,
       NotificationStore,
       number_notice,
-      CheckLogin
+      CheckLogin,
+      searchQuery
     };
   },
 
   data() {
     return {
       logo: logo_bookstore,
-
+  
       NavBar_data: [
         {
           nav_name: "Home",
@@ -208,6 +199,7 @@ export default {
       ],
     };
   },
+
 
   computed: {
     NavBar_Data() {
@@ -258,7 +250,7 @@ export default {
         <img
             v-else-if="
             
-              Auth.loggedInUser.google_id !== null"
+              Auth.loggedInUser.google_id !== null && Auth.loggedInUser.picture"
             :src="`http://localhost:8200/storage/${Auth.loggedInUser.picture}`"
             alt="Profile"
             class="picture"
@@ -280,7 +272,7 @@ export default {
           <div class="profile_nav">
             <h4>{{ userName }}</h4>
             <span v-if="Auth.isAuthenticated">{{ userEmail }}</span>
-            <span v-else>'Guest Account'</span>
+            <span v-else>Guest Account</span>
           </div>
         </div>
         <hr />
@@ -303,26 +295,10 @@ export default {
 
 
     <div class="search_form">
-      <input type="text" placeholder="Search..." v-model="textSearch" @keydown.enter="handleSearch" />
+      <input type="text" placeholder="Search..." v-model="searchQuery" @keydown.enter="handleSearch" />
       <div class="search_btn" title="Search Now">
         <RouterLink to="/search">
-          <svg @click="handleSearch" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100"
-            viewBox="0 0 80 80">
-            <path fill="#b6c9d6"
-              d="M6.998,77.5c-1.202,0-2.331-0.468-3.181-1.317c-1.753-1.753-1.753-4.607,0-6.36l36.828-35.11 l4.656,4.661L10.17,76.191C9.329,77.032,8.199,77.5,6.998,77.5z">
-            </path>
-            <path fill="#788b9c"
-              d="M40.636,35.411l3.966,3.97L9.825,75.829C9.069,76.584,8.066,77,6.998,77 c-1.068,0-2.072-0.416-2.827-1.171c-1.559-1.559-1.559-4.095-0.017-5.637L40.636,35.411 M40.654,34.013L3.464,69.469 c-1.952,1.952-1.951,5.116,0,7.068C4.44,77.512,5.719,78,6.998,78c1.279,0,2.558-0.488,3.534-1.464L46,39.366L40.654,34.013 L40.654,34.013z">
-            </path>
-            <g>
-              <path fill="#d1edff"
-                d="M52,53.5c-14.061,0-25.5-11.439-25.5-25.5S37.939,2.5,52,2.5S77.5,13.939,77.5,28 S66.061,53.5,52,53.5z">
-              </path>
-              <path fill="#788b9c"
-                d="M52,3c13.785,0,25,11.215,25,25S65.785,53,52,53S27,41.785,27,28S38.215,3,52,3 M52,2 C37.641,2,26,13.641,26,28s11.641,26,26,26s26-11.641,26-26S66.359,2,52,2L52,2z">
-              </path>
-            </g>
-          </svg>
+           <Search @click="handleSearch"/>
         </RouterLink>
       </div>
 

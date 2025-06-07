@@ -7,7 +7,7 @@ import BackButton from "./Btn_Elements/BackButton.vue";
 import Fovite_icons from "./Fovite_icons.vue";
 import Star from "./Btn_Elements/Star.vue";
 import alert_message from "./Btn_Elements/alert_message.vue";
-import defaultImage from "@/assets/defaultImage/image.png";
+
 import RelatedBooks from "./RelatedBooks.vue";
 import { useUserStore } from "@/stores/userBookStore";
 import axios from "axios";
@@ -26,11 +26,10 @@ export default {
 
 
   setup() {
-    const bookStore = useBookStore();
     const route = useRoute();
     const ShowAlert = ref(false)
     const comments = ref(null)
-
+   
 
     const NotLoginMessage = ref('')
 
@@ -44,7 +43,7 @@ export default {
     try {
       const res = await axios.get(`${backendUrl}/api/books/id/${bookId}`);
       found_book.value = res.data;
-      console.log("Book details:", res.data);
+      // console.log("Book details:", res.data);
     } catch (e) {
       console.log("Error fetching book details:", e);
     }
@@ -53,7 +52,7 @@ export default {
       try {
         const res = await axios.get(`http://localhost:8200/api/books/get_comments/${bookId}`);
         comments.value = res.data;
-        console.log("Comments fetched:", res.data);
+        // console.log("Comments fetched:", res.data);
       } catch (e) {
         console.log("Error fetching comments:", e);
       }
@@ -91,7 +90,7 @@ export default {
           },
       })
       await fetchComments(bookId.value); // Refresh comments after adding
-      TextShow.value = "Comment added successfully!";
+      TextShow.value = "Comment added successfully! ✅";
       commentText.value = ''; // Clear the input field
       NotLogin.value = '';
     }
@@ -102,7 +101,7 @@ export default {
 
 
 
-  console.log("Books", found_book.value)
+  // console.log("Books", found_book.value)
     // call action from userStore for adding cart for each users
     const numberOrder = ref(1);
     const handleAddCart=()=>{
@@ -127,15 +126,9 @@ export default {
 
 
     
+     
 
-    // display related books
-    // const booksRelated = computed (()=> {
-    //   const category = found_book.value.category;
-    //   if (!category) return [];
-    //   return bookStore.BookData.filter((books)=>books.id !== bookId && found_book.value.id !==books.id &&
-    //   books.category.some((cat) => category.includes(cat))
-    // )})
- 
+   
     watch (
       ()=>route.params.id,
       (newId)=>{
@@ -165,14 +158,14 @@ export default {
       }
       console.log("Adding to favorite, Book ID:", BookId);
       const result = userStore.addToFavorite(BookId);
-      console.log(result.message);
-      console.log("Logged In User:", userStore.loggedInUser);
-      console.log("Favorites:", userStore.loggedInUser?.favorite);
+      // console.log(result.message);
+      // console.log("Logged In User:", userStore.loggedInUser);
+      // console.log("Favorites:", userStore.loggedInUser?.favorite);
 
     };
 
 
-    console.log("comments", comments.value)
+    // console.log("comments", comments.value)
     // console.log("comments", bookId.value)
 
     const useBook = useBooks();
@@ -180,6 +173,9 @@ export default {
    const isInWishlist = computed(() =>
     useBook.wishlist.some(item => item.book_id === bookId.value)
   );
+
+
+ 
 
   
     const handleAddWishlist = async () => {
@@ -305,7 +301,7 @@ export default {
             </div>
           </div> -->
           <div class="box_inform">
-            <h4>Language</h4>
+            <h4>Language </h4>
             <p v-if="found_book.languages!==null"> {{ found_book.languages }}</p>
             <p v-else>Don't mention</p>
           </div>
@@ -353,7 +349,7 @@ export default {
       </article>
     </div>
     <div class="comment_container" >
-        <h3>Comment</h3>
+        <h3> 📝 Comment</h3>
         <span class="TextShow">{{ TextShow }}</span>
         <span class="NotLogin">{{ NotLogin }}</span>
          <form @submit.prevent="handleAddComment" class="commentAdd">
@@ -461,7 +457,8 @@ export default {
 }
 
 .TextShow{
-  color:rgb(67, 139, 255);
+  color:rgb(0, 138, 53);
+  font-weight:500;
 }
 
 .book_description {

@@ -24,20 +24,7 @@ export default {
     },
   
     setup (){
-    //     const BooksFav = useBookStore();
-    //     const handleFavoriteBooks = (id)=>{
-    //         if (BooksFav.FavoriteBooks.includes(id)){
-    //             BooksFav.removeFromFavorite(id);
-    //         }
-    //     else{
-    //         BooksFav.addToFavorite(id);
-    //     }
-    //     }
-    //     return {
-    //         handleFavoriteBooks,
-           
-    //     }
-    // },
+   
 
     },
     methods : {
@@ -167,6 +154,9 @@ export default {
     -webkit-box-orient: vertical;
     overflow: hidden;
    
+}
+.wraping img{
+    width: 65%;;
 }
 
 .Category {

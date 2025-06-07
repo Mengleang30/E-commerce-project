@@ -18,7 +18,6 @@ const route = useRoute();
 const isLoading = ref(false);
 const Auth = useAuthentication();
 
-console.log(Auth.user)
 
 const routeName = ref([
   "DetailBook",
@@ -54,7 +53,7 @@ watch(
     }
     setTimeout(() => {
       isLoading.value = false;
-    }, 200);
+    }, 300);
    
   }
 );
@@ -85,11 +84,12 @@ onMounted(()=>{
   category.fetchCategories();
   useNotifications.fetchNotifications();
   useBook.fetchWishList();
+  Auth.fetchLoggedUser();
   // useNotifications.fetchNotifications();
 
 })
 
-// console.log(useBook.books)
+
 // console.log(useNotifications.notifications)
 
 

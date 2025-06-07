@@ -199,6 +199,7 @@ export default {
         </div>
       </div>
     </div>
+    
     <!-- <p><RouterLink :to="`/detail/${data.id}`">{{ data.title }}</RouterLink> </p> -->
   </div>
 </template>
@@ -206,14 +207,15 @@ export default {
 <style scoped>
 .list_book_panel {
   margin: 30px 0px 10px 0px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  /* grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); */
   border: 1px solid;
   border-radius: 10px;
+  justify-content: center;
   background-color: rgb(230, 230, 230);
   gap: 5px;
-  width: 100%;
-  height: auto;
+  width: 90%;
   padding: 5px;
 }
 .prince {
@@ -234,13 +236,18 @@ export default {
 }
 .each_book {
   padding: 10px;
-  height: 20rem;
+  height: 19.6rem;
   display: flex;
   flex-direction: column;
-  min-width: 14rem;
+  min-width: 12rem;
   border-radius: 10px;
   border: 1px solid;
   background-color: aliceblue;
+  transition: all .2s;
+}
+.each_book:hover{
+  scale: 1.01;
+  background-color:lightblue;
 }
 .main_title_book {
   display: flex;
@@ -268,11 +275,11 @@ export default {
 .book_inform_container button {
   background-color: blue;
   color: aliceblue;
-  font-size: 1.5rem;
-  width: 150px;
-  height: 40px;
+  font-size: 1.2rem;
+  width: 5.2rem;
+  height: 32px;
   border: none;
-  border-radius: 10px;
+  border-radius: 6px;
   cursor: pointer;
 }
 .book_inform_container button:hover {

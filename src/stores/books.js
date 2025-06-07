@@ -6,6 +6,9 @@ export const useBooks = defineStore("BookStore", {
     books: [],
     wishlist:[],
     backendUrl: "http://localhost:8200",
+    resultSearched: null,
+
+     Search : "",
     token: localStorage.getItem("token") || null,
   }),
 
@@ -32,7 +35,7 @@ export const useBooks = defineStore("BookStore", {
           },
         });
         this.wishlist = res.data;
-        console.log("wishlist",this.wishlist)
+        // console.log("wishlist",this.wishlist)
       } 
       catch (e){
 
@@ -66,21 +69,32 @@ export const useBooks = defineStore("BookStore", {
   } catch (e) {
     console.log(e);
   }
-}
+},   
 
+   async searchBooksAPI(query) {
+      if (!query || !query.trim()) {
+        this.resultSearched = [];
+        return;
+      }
+      try {
+        const res = await axios.get(`${this.backendUrl}/api/books/search`, {
+          params: { query },
+        });
+        this.resultSearched = res.data;
+        console.log("result", this.resultSearched)
+      } catch (e) {
+        console.error("Search API error:", e);
+        this.resultSearched = [];
+      }
+    },
 
-
-
-   
   },
 
-
-
   getters: {
-    // getBookId: (state)=>(id)=> {
-    //     return state.books.find(book => book.id===id)
-    // }
-   } 
+     getTextFromSearch : (state) => (text)=> {
+        return state.Search = text;
+      }
+  }, 
 
 });
 export default useBooks;

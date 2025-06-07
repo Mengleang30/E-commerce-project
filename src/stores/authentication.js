@@ -5,7 +5,7 @@ import useBooks from "./books";
 
 export const useAuthentication = defineStore("AuthStore", {
   state: () => ({
-    user: [],
+    user: null,
     loggedInUser: {},
     backendUrl: "http://localhost:8200",
     token: localStorage.getItem("token") || null,

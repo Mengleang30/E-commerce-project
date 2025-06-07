@@ -60,7 +60,8 @@ console.log(favoriteBooks.value);
             <hr>
     <div class="book-list">
         <div v-for="wishlist in listItems" class="book-card" :key="wishlist.id">
-            <img :src="`http://localhost:8200/storage/${wishlist.book.path_image}`" alt="book" class="book-image">
+             <img v-if="wishlist.book.url_image==null" :src="`http://localhost:8200/storage/${wishlist.book.path_image}`" alt="book" class="book-image">
+            <img v-else :src="`${wishlist.book.url_image}`" alt="book1" class="book-image">
             <div class="book-content" >
 
             
@@ -72,7 +73,7 @@ console.log(favoriteBooks.value);
                 <button 
                 @click="handleRemoveWishlist(wishlist.id)"
                 class="delete-btn" title="Delete">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKwoPKQU2hidR3sNc12cNjYkuvDIR6p9_QgA&s" alt="Button" class="button-image">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKwoPKQU2hidR3sNc12cNjYkuvDIR6p9_QgA&s" alt="Button" class="button-image">
                     
                         </button>
                         <button 
@@ -181,8 +182,8 @@ h2 {
 }
 
 .book-image {
-    height: 80px;
-    width: 8rem;
+    height: 8rem;
+    width: 6rem;
     border-radius: 5px;
     margin-right: 10px;
 }
