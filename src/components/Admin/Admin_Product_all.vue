@@ -9,7 +9,7 @@
           <img src="../../assets/plus-add.svg" width="20px" alt="" /> Add
           Product
         </button>
-        <button @click="handleAddProduct" class="colored-functioned-btn">
+        <button @click="handleUpdateProduct" class="colored-functioned-btn">
           <img src="../../assets/update-svg.svg" width="20px" alt="" /> Update
           Product
         </button>
@@ -94,9 +94,13 @@ export default {
     const handleAddProduct = () => {
       router.push("/admin/add-product-form");
     };
+    const handleUpdateProduct = () => {
+      router.push("/admin/update-product-form");
+    };
 
     return {
       handleAddProduct,
+      handleUpdateProduct,
     };
   },
   data() {

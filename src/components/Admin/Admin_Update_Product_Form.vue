@@ -7,10 +7,9 @@
         </button>
       </div>
       <div class="title-div">
-        <h1>Add New Product</h1>
+        <h1>Update Product</h1>
       </div>
     </div>
-    <!-- Form -->
     <form @submit.prevent="handleSubmit" class="form-grid">
       <div class="input-div">
         <label for="book-title">Book title</label>
@@ -151,20 +150,20 @@
 
       <!-- Submit Button -->
       <div class="btn-div">
-        <button type="submit" class="colored-functioned-btn">Add Now</button>
+        <button type="submit" class="colored-functioned-btn">Update Now</button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 export default {
   name: "AdminAddProductForm",
   setup() {
     const router = useRouter();
     return {
-      handleGoBack: () => router.push('/admin/all-products'), // Adjust the path as needed
+      handleGoBack: () => router.push("/admin/all-products"), // Adjust the path as needed
     };
   },
   data() {
@@ -217,6 +216,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

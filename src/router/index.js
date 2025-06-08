@@ -11,12 +11,12 @@ import Search from '@/views/Search.vue'
 import SignUp from '@/components/Users/SignUp.vue'
 import GoogleCallBack from '@/components/Users/GoogleCallBack.vue'
 import ResetPassword from '@/components/Users/ResetPassword.vue'
-import EnterCode from '@/components/Users/EnterCode.vue'
 import { useRoute } from 'vue-router'
 import Admin from '@/components/Admin/Admin_component.vue'
 import AdminDashboard from '@/components/Admin/Admin-Dashboard.vue'
 import Admin_Product_all from '@/components/Admin/Admin_Product_all.vue'
 import Admin_Add_Product_Form from '@/components/Admin/Admin_Add_Product_Form.vue'
+import Admin_Update_Product_Form from '@/components/Admin/Admin_Update_Product_Form.vue'
 
 
 const route = useRoute();
@@ -109,6 +109,11 @@ const routes = [
         path: 'add-product-form',
         name: 'AdminAddProductForm',
         component: Admin_Add_Product_Form,
+      },
+      {
+        path: 'update-product-form',
+        name: 'AdminUpdateProduct',
+        component: Admin_Update_Product_Form,
       }
     ]
   },
