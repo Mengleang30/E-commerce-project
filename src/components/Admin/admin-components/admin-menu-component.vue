@@ -37,7 +37,7 @@ export default {
         },
         {
           nav_name: "Products",
-          link_admin: "/admin/add-product",
+          link_admin: "/admin/all-products",
           icon: Product,
         },
         {
@@ -95,6 +95,7 @@ export default {
 }
 .menu-panel span {
   color: aliceblue;
+  font-size: 1.5rem;
 }
 .menu-panel a {
   width: 100%;

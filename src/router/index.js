@@ -15,8 +15,8 @@ import EnterCode from '@/components/Users/EnterCode.vue'
 import { useRoute } from 'vue-router'
 import Admin from '@/components/Admin/Admin_component.vue'
 import AdminDashboard from '@/components/Admin/Admin-Dashboard.vue'
-import AdminAddProduct from '@/components/Admin/Admin_Add_Product_Form.vue'
-import Component from 'vue-loading-overlay'
+import Admin_Product_all from '@/components/Admin/Admin_Product_all.vue'
+import Admin_Add_Product_Form from '@/components/Admin/Admin_Add_Product_Form.vue'
 
 
 const route = useRoute();
@@ -101,9 +101,14 @@ const routes = [
         component: AdminDashboard,
       },
       {
-        path: 'add-product',
-        name: 'AdminAddProduct',
-        component: AdminAddProduct,
+        path: 'all-products',
+        name: 'AdminProductAll',
+        component: Admin_Product_all,
+      },
+      {
+        path: 'add-product-form',
+        name: 'AdminAddProductForm',
+        component: Admin_Add_Product_Form,
       }
     ]
   },

@@ -1,5 +1,5 @@
 <template>
-  <div class="admin-dashboard">
+  <div class="main_container">
       <div class="dashboard-details">
         <h1>Dashboard</h1>
         <div class="expense-tracker-detail">
@@ -98,14 +98,14 @@ export default {
 </script>
 
 <style scoped>
-.admin-dashboard {
+/* .admin-dashboard {
   width: 100%;
   min-height: 100vh;
   background-color: aliceblue;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
+} */
 .dashboard-content {
   display: flex;
   justify-content: space-between;
@@ -170,7 +170,6 @@ h2 {
   grid-template-columns: repeat(3, 1fr); /* 3 columns */
   grid-template-rows: repeat(2, auto);   /* 2 rows */
   gap: 30px;
-  background-color: aqua;
   padding: 10px;
   overflow: hidden; /* prevent scrolling */
   width: 100%;

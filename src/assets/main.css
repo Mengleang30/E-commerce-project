@@ -1,13 +1,144 @@
-@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Parkinsans:wght@300..800&family=Tilt+Warp&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Creepster&family=Parkinsans:wght@300..800&family=Tilt+Warp&display=swap");
 
-
-*{
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-#app{
-font-family: "Parkinsans", sans-serif;
-position: relative;
-background-image: linear-gradient(to right top, #393537, #585257, #78727a, #9894a0, #b7b8c7, #bbc1d0, #bfcad8, #c3d3df, #b1c1c8, #a1afb2, #939d9d, #858b8a);
+#app {
+  font-family: "Parkinsans", sans-serif;
+  position: relative;
+  background-image: linear-gradient(
+    to right top,
+    #393537,
+    #585257,
+    #78727a,
+    #9894a0,
+    #b7b8c7,
+    #bbc1d0,
+    #bfcad8,
+    #c3d3df,
+    #b1c1c8,
+    #a1afb2,
+    #939d9d,
+    #858b8a
+  );
+}
+
+.main_container {
+  background-color: aliceblue;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  width: 100%;
+  min-height: 100vh;
+}
+
+.header_form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  width: 100%;
+}
+h1 {
+  font-size: 2.5rem;
+  color: #333;
+}
+.btn-div {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  min-width: 30%;
+}
+.title-div {
+  display: flex;
+  align-items: center;
+  min-width: 65%;
+}
+
+.back-btn {
+  background-color: #585257;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  width: 120px;
+  font-size: 1.5rem;
+  padding: 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.back-btn:hover {
+  background-color: black;
+}
+
+input,
+textarea {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+input::placeholder,
+textarea::placeholder {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.3rem;
+  text-shadow: none;
+  color: gray;
+}
+input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border: 2px solid #333;
+  border-radius: 5px;
+  margin-right: 5px;
+  cursor: pointer;
+  position: relative;
+}
+
+input[type='checkbox']:checked {
+  background-color: #585257;
+}
+
+input[type='checkbox']:checked::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  width: 4px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+
+label {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.3rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.colored-functioned-btn {
+  background-color: dodgerblue;
+  border: none;
+  border-radius: 10px;
+  min-width: 120px;
+  font-size: 1.5rem;
+  padding: 20px;
+  box-sizing: border-box;
+  cursor: pointer;
+  color: #fff;
+}
+.colored-functioned-btn:hover {
+  background-color: darkblue;
+  color: white;
 }

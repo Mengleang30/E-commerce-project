@@ -45,6 +45,9 @@ export default {
   font-weight: bold;
   font-size: 1rem;
 }
+.navbar span {
+  font-size: 1.5rem;
+}
 
 .role-admin-div {
   display: flex;
@@ -71,7 +74,7 @@ log-out-btn {
   background-color: transparent;
   border: none;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: red;
 }
