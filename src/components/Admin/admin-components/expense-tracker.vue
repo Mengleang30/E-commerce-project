@@ -1,6 +1,6 @@
 <template>
   <div class="expense-item">
-    <p>{{ title }}</p>
+    <h2>{{ title }}</h2>
     <div>
       <img :src="icon_money" alt="" width="20px" />
       <img :src="icon_status" alt="" width="20px" />
@@ -24,7 +24,7 @@ export default {
 
 <style scoped>
 .expense-item {
-  width: 180px;
+  width: 300px;
   height: 100%;
   padding: 20px;
   display: flex;
@@ -35,8 +35,9 @@ export default {
   font-weight: 500;
   box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.3);
 }
-.expense-item p {
-  font-size: 0.7rem;
+.expense-item h2 {
+  font-size: 1rem;
+  font-weight: normal;
   color: #000;
 }
 .expense-item div {
@@ -44,7 +45,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   height: 100%;
-  width: 90%;
+  max-width: 60%;
 }
 .expense-item div p {
   font-size: 1.5rem;

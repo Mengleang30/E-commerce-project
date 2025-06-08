@@ -15,7 +15,7 @@
         <span>{{ amount_status2(info) }} {{ info.status2 }}</span>
       </div>
     </div>
-    <img :src="info.img_block" alt="" width="70px" />
+    <img :src="info.img_block" alt="" width="100px" />
   </div>
 </template>
 
@@ -115,35 +115,29 @@ export default {
 
 <style scoped>
 .info-colored-detail {
-  width: 250px;
-  height: 180px;
+  min-height: 200px;
+  /* min-width: 200px; */
+  background-color: white;
+  border: 1px solid #ccc;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
-  padding: 20px;
   border-radius: 10px;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
-  font-size: 1rem;
 }
 .text-block {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  /* background-color: tomato; */
   height: 140px;
 }
 .title-info {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: bold;
-  /* background-color: aqua; */
   width: 100%;
-  /* height: 100%; */
-}
-.detail-info span {
 }
 .number-big {
   font-size: 3rem;
@@ -159,6 +153,5 @@ export default {
   align-items: center;
   font-size: 1rem;
   color: #555;
-  /* background-color: lightcoral; */
 }
 </style>

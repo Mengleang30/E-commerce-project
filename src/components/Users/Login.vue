@@ -1,129 +1,106 @@
-<script>
-import { useUserStore } from "@/stores/userBookStore";
+<script setup>
 import { ref } from "vue";
-import { RouterLink } from "vue-router";
-
 import { useRouter } from "vue-router";
+import { useAuthentication } from "@/stores/authentication";
+import { useUserStore } from "@/stores/userBookStore";
+import { GoogleLogin } from "vue3-google-login";
+import axios from "axios";
+const user = useUserStore();
+const router = useRouter();
+const Auth = useAuthentication();
 
-export default {
-  name: "Login",
-  setup() {
-    const user = useUserStore();
-    const show_signUp = ref(false);
-    const router = useRouter();
 
-    const show_signUp_help = ref(true);
 
-    const handleShowSignUpHelp = () => {
-      show_signUp_help.value = true;
-    };
-    const handleShowHelpLogin = () => {
-      show_signUp_help.value = false;
-    };
+const show_signUp = ref(false);
+const show_signUp_help = ref(true);
+const show_help = ref(false);
 
-    const show_help = ref(false);
+const email = ref("");
+const password = ref("");
+const message = ref("");
+const loginSuccess = ref(false);
+const sign_in_message = ref("");
+const messageSuccessful = ref("");
 
-    const handleClickHelp = () => {
-      show_help.value = !show_help.value;
-    };
 
-    const help_login = [
-      {
-        topic: "Navigate to the Login Page",
-        describe: `Open the application and go to the login page by clicking on the "Login" button in the navigation menu or homepage.`,
-      },
-      {
-        topic: "Enter Your Email",
-        describe: `In the first input field, type the email address associated with your account. Ensure it's a valid email format (e.g., example@domain.com).`,
-      },
-      {
-        topic: "Enter Your Password",
-        describe: `In the second input field, type the password for your account. Ensure you enter the correct password to avoid errors.`,
-      },
-      {
-        topic: "Click the Login Button",
-        describe: `Press the "Login" button to submit your credentials.`,
-      },
-      {
-        topic: "Successful Login",
-        describe: `If your credentials are correct, you will see a success message and be redirected to the homepage. If your credentials are incorrect, an error message will be displayed asking you to check your email and password.`,
-      },
-    ];
-
-    const help_SignUP = [
-      {
-        topic: "Navigate to the Sign-Up Page",
-        describe: `On the login page, click the "Register Now" link under the "Don't have an account?" section to open the sign-up page.`,
-      },
-      {
-        topic: "Fill in Your Details",
-        describe: `Enter a valid email address in the email field. Choose a secure password and type it in the password field. Provide any other necessary details (like name, email, or other fields, as required).`,
-      },
-      {
-        topic: "Submit the Form",
-        describe: `Click the "Sign Up" button to create your account.`,
-      },
-      {
-        topic: "Successful Registration",
-        describe: `If the registration is successful, you will see a confirmation message and may be redirected to the login page to access your new account. If there are any issues (e.g., missing required fields or invalid email), error messages will guide you to correct them.`,
-      },
-    ];
-
-    const email = ref("");
-    const password = ref("");
-    const sign_in_message = ref("");
-    const messageSuccessful = ref("");
-    const handleLogin = (e) => {
-      e.preventDefault();
-
-      if (!email.value.trim() || !password.value.trim()) {
-        sign_in_message.value = "Please enter email and password !";
-        invalidPassword.value = true;
-        return;
-      }
-      const login = user.signIn(email.value, password.value);
-      sign_in_message.value = login.message;
-      if (login.success) {
-        messageSuccessful.value = login.message;
-        const isAdmin = email.value === "navin@gmail.com";
-        if (isAdmin) {
-          router.push("/admin-dashboard");
-        } else {
-          router.push("/");
-        }
-        email.value = "";
-        password.value = "";
-        // router.push("/");
-      }
-    };
-
-    const ToSignUp = () => {
-      show_signUp.value = !show_signUp.value;
-    };
-
-    return {
-      email,
-      password,
-      handleLogin,
-      sign_in_message,
-      show_signUp,
-      messageSuccessful,
-      ToSignUp,
-      help_login,
-      show_help,
-      handleClickHelp,
-      help_SignUP,
-      show_signUp_help,
-      handleShowHelpLogin,
-      handleShowSignUpHelp,
-    };
+const help_login = [
+  {
+    topic: "Navigate to the Login Page",
+    describe: `Open the application and go to the login page by clicking on the "Login" button in the navigation menu or homepage.`,
   },
-};
+  {
+    topic: "Enter Your Email",
+    describe: `In the first input field, type the email address associated with your account. Ensure it's a valid email format (e.g., example@domain.com).`,
+  },
+  {
+    topic: "Enter Your Password",
+    describe: `In the second input field, type the password for your account. Ensure you enter the correct password to avoid errors.`,
+  },
+  {
+    topic: "Click the Login Button",
+    describe: `Press the "Login" button to submit your credentials.`,
+  },
+  {
+    topic: "Successful Login",
+    describe: `If your credentials are correct, you will see a success message and be redirected to the homepage. If your credentials are incorrect, an error message will be displayed asking you to check your email and password.`,
+  },
+];
+
+const help_SignUP = [
+  {
+    topic: "Navigate to the Sign-Up Page",
+    describe: `On the login page, click the "Register Now" link under the "Don't have an account?" section to open the sign-up page.`,
+  },
+  {
+    topic: "Fill in Your Details",
+    describe: `Enter a valid email address in the email field. Choose a secure password and type it in the password field. Provide any other necessary details (like name, email, or other fields, as required).`,
+  },
+  {
+    topic: "Submit the Form",
+    describe: `Click the "Sign Up" button to create your account.`,
+  },
+  {
+    topic: "Successful Registration",
+    describe: `If the registration is successful, you will see a confirmation message and may be redirected to the login page to access your new account. If there are any issues (e.g., missing required fields or invalid email), error messages will guide you to correct them.`,
+  },
+];
+
+function ToSignUp() {
+  show_signUp.value = !show_signUp.value;
+}
+
+function handleShowSignUpHelp() {
+  show_signUp_help.value = true;
+}
+
+function handleShowHelpLogin() {
+  show_signUp_help.value = false;
+}
+
+function handleClickHelp() {
+  show_help.value = !show_help.value;
+}
+async function handleLogin() {
+  const response = await Auth.login(email.value, password.value);
+  loginSuccess.value = response.success;
+  message.value = response.message;
+
+  if (response.success) {
+    // Optional: redirect or do something on successful login
+    router.push("/");
+    messageSuccessful.value = "Login successful!";
+  }
+  else {
+    message.value = response.message 
+  }
+}
 </script>
+
 
 <template>
   <!-- <h2>Login page</h2> -->
   <div class="sign_in_page">
+  
     <img class="img_shop" src="../../assets/IP-Store.png" alt="IP Store" />
     <div class="login_page">
       <div class="button_home">
@@ -131,7 +108,7 @@ export default {
           <button>Home</button>
         </RouterLink>
       </div>
-      <form class="sub_login_page">
+      <form class="sub_login_page " @submit.prevent="handleLogin()">
         <h2>Log in your account</h2>
         <input
           placeholder="Email-address"
@@ -149,17 +126,30 @@ export default {
           id=""
           required
         />
-        <p class="message">{{ sign_in_message }}</p>
-        <p class="logged_in">{{ messageSuccessful }}</p>
-        <button @click="handleLogin" type="submit" id="login_btn">Login</button>
+        <!-- <p class="message">{{ sign_in_message }}</p> -->
+        <p class="logged_in">{{ sign_in_message }}</p>
+        <button type="submit" id="login_btn">Login</button>
+
         <div class="additional_material">
-          <h6>
+
             Don't have account?
             <RouterLink to="/signUp" class="Register">Register Now</RouterLink>
-          </h6>
-          <button @click="handleClickHelp">Help</button>
+      
         </div>
       </form>
+      <div class="wrap">
+       <!-- login with google  -->
+      <button >
+        <a href="http://localhost:8200/api/auth/google/redirect">Login with</a>
+        <img src="https://img.icons8.com/?size=100&id=V5cGWnc9R4xj&format=png&color=000000" alt="">
+      </button>
+      <button @click="handleClickHelp">Help</button>
+      </div>
+      <div class="warp_forgot">
+         <span>Forgot Password ?</span>
+         <RouterLink to="/reset-password" class="forgot_password">Reset Password</RouterLink>
+      </div>
+        
     </div>
 
     <div class="help" v-if="show_help">
@@ -180,6 +170,7 @@ export default {
             How to Create Account ?
           </h3>
         </div>
+
       </div>
       <img
         class="close"
@@ -188,7 +179,6 @@ export default {
         alt=""
       />
       <div v-if="show_signUp_help">
-        <div class="help_top"></div>
         <div
           class="describe"
           v-for="(describe, index) in help_login"
@@ -199,6 +189,7 @@ export default {
             <p>{{ describe.describe }}</p>
           </div>
         </div>
+        
       </div>
       <div v-else>
         <div>
@@ -213,20 +204,89 @@ export default {
               <p>{{ describe.describe }}</p>
             </div>
           </div>
+          
         </div>
+        
       </div>
+      
     </div>
   </div>
+  
 </template>
 
 <style scoped>
 .sign_in_page {
-  display: flex;
   position: relative;
+  display: flex;
   background-color: rgb(255, 255, 255);
   margin: 2px;
   border-radius: 0.5rem;
   box-shadow: 3px 3px 4px rgba(70, 69, 69, 0.8);
+}
+.wrap{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 1rem;
+  
+}
+.additional_material{
+  display: flex;
+  font-size: 16px;
+}
+.wrap button {
+  height: 2.4rem;
+  min-width: 28%;
+  background-color: rgb(249, 242, 159);
+  border: none;
+  border-radius: 6px;
+  padding: 4px;
+  box-shadow: 3px 3px 4px rgba(70, 69, 69, 0.4);
+  cursor: pointer;  
+  text-decoration: none;
+  display: flex;;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
+
+}
+.wrap button a{
+  cursor: pointer;  
+  text-decoration: none;
+  font-weight: 700;
+}
+.wrap button img{
+  width: 20px;
+}
+.wrap button:hover{
+  background-color: antiquewhite;
+}
+.wrap button:nth-child(2) {
+  background-color: rgb(64, 66, 66);
+  color: whitesmoke;
+}
+
+.warp_forgot{
+  text-align: center;
+  /* background-color: antiquewhite; */
+  padding: 10px;
+  gap: 10px;
+  display: flex;
+  justify-content: center;
+}
+.warp_forgot .forgot_password{
+  color: blue;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+.warp_forgot .forgot_password:hover{
+  scale: 1.05;
+}
+.google{
+  margin: 5px;
+  width: 50%;
 }
 .sign_in_page img {
   width: 35%;
@@ -251,7 +311,7 @@ export default {
   font-weight: bold;
 }
 .sub_login_page input {
-  font-size: 24px;
+  font-size: 20px;
   width: 70%;
   padding-left: 5px;
   height: 3.4rem;
@@ -270,7 +330,8 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
+ 
 }
 #login_btn {
   width: 30%;
@@ -286,20 +347,13 @@ export default {
   background-color: red;
 }
 .additional_material {
-  width: 70%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  font-size: 20px;
+  width: 100%;
+  justify-content: center;
+  gap: 1rem;
 }
-.additional_material button {
-  font-size: 20px;
-  color: black;
-  background-color: lightgray;
-  border-radius: 5px;
-  width: 80px;
-  cursor: pointer;
-}
+
 
 .message {
   color: red;

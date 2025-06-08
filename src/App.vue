@@ -1,15 +1,30 @@
 <script setup>
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import Card_book from "./Layout/Card_book.vue";
 import Footer from "./Layout/Footer.vue";
 import Header from "./Layout/Header.vue";
 import { RouterView, useRoute } from "vue-router";
 import Show_Landing from "./Layout/Show_Landing.vue";
-import Admin_Dashboard from "./components/Admin/Admin-Dashboard.vue";
+
+import { useAuthentication } from "./stores/authentication";
 
 const route = useRoute();
 const isLoading = ref(false);
-const adminPages = ['Admin_Dashboard', 'Admin_AddProduct']
+const isAdmin = computed(() => {
+  return route.path.startsWith("/admin");
+});
+const Auth = useAuthentication();
+
+console.log(Auth.user)
+
+const routeName = ref([
+  "Landing",
+  "DetailBook",
+  "Login",
+  "SignUp",
+  "ResetPassword",
+  'EnterCode'
+]);
 
 const scrollToCard = () => {
   const viewportHeight = window.innerHeight * 1.2;
@@ -38,6 +53,28 @@ watch(
     }, 500);
   }
 );
+
+// const testFetch = ref()
+
+// axios.get('http://localhost:8200/api/books')
+//   .then(response => {
+//     testFetch.value = response.data;
+//     console.log('Books:', response.data); // Handle the data
+//   })
+//   .catch(error => {
+//     console.error('Error fetching books:', error);
+//   });
+
+fetch('http://localhost:8200/api/login', {
+  method: 'POST',
+  credentials: 'include', // important for cookies
+    // others if needed
+  // body: JSON.stringify({ email, password })
+})
+
+
+
+
 </script>
 
 <template>
@@ -46,10 +83,8 @@ watch(
     <div v-if="isLoading" class="loading-overlay">
       <div class="spinner"></div>
     </div>
-    <div v-else-if="route.name == 'Admin'">
-      <RouterView name="admin" class="admin-dashboard">
-        <Admin_Dashboard />
-      </RouterView>
+    <div v-else-if="isAdmin">
+      <RouterView />
     </div>
     <div v-else>
       <Show_Landing
@@ -59,19 +94,10 @@ watch(
       />
       <div class="wrap_card" id="Card">
         <Card_book
-          v-if="
-            !adminPages.includes(route.name) &&
-            route.name !== 'DetailBook' &&
-            route.name !== 'Login' &&
-            route.name !== 'SignUp'
-          "
+          v-if="!routeName.includes(route.name)"
         />
       </div>
       <RouterView> </RouterView>
-      <!-- v-slot="{ Component }" -->
-      <!-- <KeepAlive exclude="Detail_book" >
-          <component :is="Component" />
-        </KeepAlive> -->
     </div>
   </main>
   <Footer />

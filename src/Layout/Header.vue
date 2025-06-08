@@ -12,6 +12,7 @@ import books from "@/assets/icons_nav/books.png";
 import logo_bookstore from "@/assets/logo_bookstore.jpg";
 import { useUserStore } from "@/stores/userBookStore";
 import { useBookStore } from "@/stores";
+import { useAuthentication } from "@/stores/authentication";
 
 export default {
   name: "Header",
@@ -23,6 +24,7 @@ export default {
     const isNavbarVisible = ref(false);
     const isRotated = ref(false);
     const navbarRef = ref(null);
+    const Auth = useAuthentication();
 
     const router = useRouter();
 
@@ -30,6 +32,8 @@ export default {
     const useStore = useBookStore();
 
     const textSearch = ref('');
+
+    
 
    
 
@@ -70,11 +74,11 @@ export default {
     };
 
     const userName = computed(() => {
-      return userStore.loggedInUser?.username || "Guest";
+      return Auth.loggedInUser?.name || "Guest";
     });
 
     const handleLogout = () => {
-      userStore.logout(); // Call logout method
+      Auth.logout(); // Call logout method
       ShowOptionLogout.value = !ShowOptionLogout.value;
     };
 
@@ -93,7 +97,15 @@ export default {
     };
     onMounted(() => {
       document.addEventListener("click", handleClickOutside);
+
+      if(Auth.token){
+        Auth.fetchLoggedUser();
+        console.log(Auth.fetchLoggedUser)
+      }
+      userName
+
     });
+
     onUnmounted(() => {
       document.addEventListener("click", handleClickOutside);
     });
@@ -122,6 +134,7 @@ export default {
       textSearch,
       handleSearch,
       check_online,
+      Auth
     };
   },
 
@@ -206,14 +219,20 @@ export default {
       <div v-if="isNavbarVisible" class="wrap_nav">
         <h4>Welcome to Books Shop</h4>
         <div class="Nav_profile">
-          <img
+
+          <img class="picture" v-if="Auth.loggedInUser && Auth.loggedInUser.picture"
+            :src="Auth.loggedInUser.picture"
+            alt=""
+            width="45"
+          />
+          <img v-else
             src="https://img.icons8.com/?size=100&id=1cYVFPowIgtd&format=png&color=000000"
             alt=""
             width="45"
           />
           <div class="profile_nav">
             <h4>{{ this.userName }}</h4>
-            <u>{{ userStore.loggedInUser?.email }}</u>
+            <span>{{ Auth.loggedInUser ? Auth.loggedInUser.email : 'Guest Account' }}</span>
           </div>
         </div>
         <hr />
@@ -282,7 +301,7 @@ export default {
       </RouterLink>
       
 
-      <RouterLink to="/login" class="sign_in" v-if="!userStore.loggedInUser">
+      <RouterLink to="/login" class="sign_in" v-if="!Auth.loggedInUser">
         {{ this.userName }}
        
        <img
@@ -657,6 +676,14 @@ nav ul .link.active {
   -webkit-box-orient: vertical;
    overflow: hidden;
 }
+.profile_nav span{
+  font-size: 11px;
+  background-color: #296be0;
+  width: 100%;
+  border-radius: 4px;
+  padding: 2px;
+  color: white;
+}
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -692,7 +719,12 @@ nav ul .link.active {
   font-weight: bold;
 }
 
-@media screen and (max-width : 460px) {
+.picture{
+  border-radius: 50%;
+  width: 40px;
+}
+
+@media screen and (max-width : 560px) {
   .header{
     padding: .5rem;
   }
