@@ -11,6 +11,7 @@ import { useAuthentication } from "./stores/authentication";
 import {useBooks} from "./stores/books";
 import {useCategory} from "./stores/category";
 import useNotification from "./stores/notification";
+import useCarts from "./stores/carts";
 
 
 
@@ -79,14 +80,15 @@ watch(
 const useBook = useBooks();
 const category = useCategory();
 const useNotifications = useNotification();
+const useCart = useCarts();
 onMounted(()=>{
   useBook.fetchBooks();
   category.fetchCategories();
   useNotifications.fetchNotifications();
   useBook.fetchWishList();
   Auth.fetchLoggedUser();
-  // useNotifications.fetchNotifications();
-
+  useCart.fetchCarts();
+  
 })
 
 

@@ -1,130 +1,120 @@
-<script setup> 
- import { useUserStore } from '@/stores/userBookStore';
-import { computed, onMounted } from 'vue';
-import { RouterLink } from 'vue-router';//home page
-import { useBookStore } from '@/stores';
-import { BookData } from '@/stores/Data';
-import useBooks from '@/stores/books';
+<script setup>
 
-const userStore = useUserStore();
-const BooksData = useBookStore();
+import { computed, onMounted } from 'vue';
+import { RouterLink, useRouter } from 'vue-router';//home page
+
+import useBooks from '@/stores/books';
+import useCarts from '@/stores/carts';
+
+
 
 
 const useWishlist = useBooks();
 
 
-const listItems = computed(()=>{
+const listItems = computed(() => {
     return useWishlist.wishlist;
 })
 
-  const handleRemoveWishlist = async (bookId) => {
-       await useWishlist.removeWishList(bookId);
-       await useWishlist.fetchWishList();
-    }
-
-onMounted( async ()  =>{
- await useWishlist.fetchWishList();
-})
-
-
-
-const favoriteBooks = computed (()=>{
-    if(!userStore.loggedInUser){
-        return []; 
-    }
-    return BooksData.BookData.filter((books) =>
-        userStore.loggedInUser.favorite.includes(books.id) 
-        
-    );
-}
-)
-
-
-const handleRemove = (id)=>{
-    if(!userStore.loggedInUser){
-        return []; 
-    }
-    userStore.addToFavorite(id)
+const handleRemoveWishlist = async (bookId) => {
+    await useWishlist.removeWishList(bookId);
+    await useWishlist.fetchWishList();
 }
 
-console.log(favoriteBooks.value);
+onMounted(async () => {
+    await useWishlist.fetchWishList();
+});
+
+const cartStore = useCarts();
+const router = useRouter();
+const addCart = async (id) => {
+    await cartStore.addCarts(id, 1);
+    router.push('/cart')
+}
+
 
 </script>
 
 <template>
     <article>
-    
-     <div class="favorites">
-        
-        <h2 >
-            <hr>
-    <div class="book-list">
-        <div v-for="wishlist in listItems" class="book-card" :key="wishlist.id">
-             <img v-if="wishlist.book.url_image==null" :src="`http://localhost:8200/storage/${wishlist.book.path_image}`" alt="book" class="book-image">
-            <img v-else :src="`${wishlist.book.url_image}`" alt="book1" class="book-image">
-            <div class="book-content" >
 
-            
-                <h3 class="book-title">{{ wishlist.book.title }}</h3>
-                <p class="book-price">$ {{ wishlist.book.price }}</p>
-                <RouterLink :to="`/detail/${wishlist.book.id}`" class="description">View Description</RouterLink>
-            </div>
-            <div class="book-actions">
-                <button 
-                @click="handleRemoveWishlist(wishlist.id)"
-                class="delete-btn" title="Delete">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKwoPKQU2hidR3sNc12cNjYkuvDIR6p9_QgA&s" alt="Button" class="button-image">
-                    
-                        </button>
-                        <button 
-                        class="add-btn" title="Add">➕</button>
-            </div>
+        <div class="favorites">
+
+            <h2>
+                <hr>
+                <div class="book-list">
+                    <div v-for="wishlist in listItems" class="book-card" :key="wishlist.id">
+                        <img v-if="wishlist.book.url_image == null"
+                            :src="`http://localhost:8200/storage/${wishlist.book.path_image}`" alt="book"
+                            class="book-image">
+                        <img v-else :src="`${wishlist.book.url_image}`" alt="book1" class="book-image">
+                        <div class="book-content">
+
+
+                            <h3 class="book-title">{{ wishlist.book.title }}</h3>
+                            <p class="book-price">$ {{ wishlist.book.price }}</p>
+                            <RouterLink :to="`/detail/${wishlist.book.id}`" class="description">View Description
+                            </RouterLink>
+                        </div>
+                        <div class="book-actions">
+                            <button @click="handleRemoveWishlist(wishlist.id)" class="delete-btn" title="Delete">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKwoPKQU2hidR3sNc12cNjYkuvDIR6p9_QgA&s"
+                                    alt="Button" class="button-image">
+
+                            </button>
+                           
+                            <button @click="addCart(wishlist.book.id)" class="add-btn" title="Add">➕</button>
+                        </div>
+
+                    </div>
+
+                </div>
+                <RouterLink to="/">
+                    <button class="add-product-btn" title="Add">Add Book</button>
+
+                </RouterLink>
+
+                <div class="social-share">
+                    <span>Share on:</span>
+                    <div class="social-icons">
+
+                        <img src="https://e7.pngegg.com/pngimages/201/462/png-clipart-computer-icons-facebook-facebook-logo-black-and-white-thumbnail.png"
+                            class="share-image">
+
+
+                        <img src="https://cdn3.iconfinder.com/data/icons/transparent-on-dark-grey/500/icon-04-512.png"
+                            class="share-image">
+
+
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC2H6nbsX6BGEcajo-K-St33vlON_E-K7sAw&s"
+                            class="share-image">
+
+
+                        <img src="https://sweetwaternow.nyc3.cdn.digitaloceanspaces.com/wp-content/uploads/2024/01/Depositphotos_676194222_XL-1-scaled.jpg"
+                            class="share-image">
+
+
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjuEnG5nObeDxGDzNOX7d0VKeNx5mL08a2yg&s"
+                            class="share-image">
+
+
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6c_wkx7wDbOuteOhc4LDZF2hPtEw-VzujAw&s"
+                            class="share-image">
+
+
+                    </div>
+                </div>
+                </hr>
+            </h2>
 
         </div>
-            
-            </div>
-           <RouterLink to="/">
-            <button 
 
-            class="add-product-btn" title="Add">Add Book</button>
-        
-           </RouterLink> 
-            
-            <div class="social-share">
-        <span>Share on:</span>
-        <div class="social-icons">
-            
-                <img src="https://e7.pngegg.com/pngimages/201/462/png-clipart-computer-icons-facebook-facebook-logo-black-and-white-thumbnail.png" class="share-image">
-        
-            
-                <img src="https://cdn3.iconfinder.com/data/icons/transparent-on-dark-grey/500/icon-04-512.png" class="share-image">
-        
-    
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC2H6nbsX6BGEcajo-K-St33vlON_E-K7sAw&s" class="share-image">
-            
-            
-                <img src="https://sweetwaternow.nyc3.cdn.digitaloceanspaces.com/wp-content/uploads/2024/01/Depositphotos_676194222_XL-1-scaled.jpg" class="share-image">
-            
-           
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjuEnG5nObeDxGDzNOX7d0VKeNx5mL08a2yg&s" class="share-image">
-            
-            
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6c_wkx7wDbOuteOhc4LDZF2hPtEw-VzujAw&s" class="share-image">
-        
-            
-            </div>
-            </div>
-            </hr>
-        </h2>
-       
-        </div>
-    
     </article>
-    
+
 </template>
 
 <style scoped>
-hr{
+hr {
     width: 100%;
     margin-top: 15px;
     margin-bottom: 15px;
@@ -158,10 +148,12 @@ h2 {
 .book-list::-webkit-scrollbar {
     width: 20px;
 }
+
 .book-list::-webkit-scrollbar-thumb {
     background: #202020;
     border-radius: 50px;
 }
+
 .book-list::-webkit-scrollbar-thumb:hover {
     background: #1b1a1a;
 }
@@ -170,13 +162,16 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px; /* Inside card spacing */
-    margin-bottom: 20px; /* Spacing between cards */
+    padding: 15px;
+    /* Inside card spacing */
+    margin-bottom: 20px;
+    /* Spacing between cards */
     border: 1px solid #d3cdcd;
     border-radius: 8px;
     background: #f3f2f2e1;
     box-shadow: 0 2px 4px rgb(167, 163, 163);
 }
+
 .book-card:last-child {
     border-bottom: none;
 }
@@ -187,8 +182,9 @@ h2 {
     border-radius: 5px;
     margin-right: 10px;
 }
+
 .button-image {
-    
+
     height: 20px;
     border-radius: 5px;
     margin: center;
@@ -214,11 +210,13 @@ h2 {
     font-size: 13px;
     margin: 10px 0;
 }
-.description{
+
+.description {
     font-size: 12px;
     color: #252b68;
 
 }
+
 .book-edition {
     font-size: 12px;
     color: #007BFF;
@@ -233,8 +231,8 @@ h2 {
 .book-actions {
     display: flex;
     flex-direction: column;
-    gap: 15px; 
-    
+    gap: 15px;
+
 }
 
 button {
@@ -270,12 +268,14 @@ button {
     font-size: 14px;
 
 }
+
 .social-share {
     text-align: center;
     margin-top: 60px;
     font-size: 15px;
 }
-.share-image{
+
+.share-image {
     height: 20px;
     border-radius: 1px;
     margin-right: 1px;
@@ -289,8 +289,8 @@ button {
     text-decoration: none;
 
 }
-.social-icons img{
+
+.social-icons img {
     margin: 5px;
 }
-
 </style>

@@ -1,8 +1,9 @@
 <script setup>
-import { computed, devtools, ref } from 'vue';
+import { computed, devtools, onMounted, ref } from 'vue';
 import { useUserStore } from '@/stores/userBookStore';
 import { useBookStore } from '@/stores';
 import payments from '@/payments/payments.vue';
+import useCarts from '@/stores/carts';
 
 const userStore = useUserStore();
 const DataBooks = useBookStore();
@@ -66,32 +67,55 @@ const updateQuantity = (id, newQuantity) => {
   userStore.updateCartQuantity(id, newQuantity);
 }
 
+const cartStore = useCarts();
+
+const listCarts = computed(()=>{
+  return cartStore.carts;
+})
+
+const deleteCart =async (id) => {
+ await cartStore.deleteCart(id);
+ await cartStore.fetchCarts();
+}
+
+const clearCart =async () => {
+ await cartStore.clearCart();
+//  await cartStore.fetchCarts();
+}
+
+onMounted(()=>{
+  cartStore.fetchCarts();
+})
+
+
+
+
 </script>
 
 <template scope>
   <div>
 <hr>
     <div class="Card">
-      <div v-if="pay" class="modal-overlay" >
+      <!-- {{ listCarts.cart_books }} -->
+      <!-- <div v-if="pay" class="modal-overlay" >
             <div class="paymentContainer" @click.stop>
               <payments :total="totalPrice" :click_close="handleCloseBtn"/>
             </div>
-        </div>
-      <h2>
+        </div> -->
         <div class="book-list">
-
-          <div v-if="CartBooks.length > 0">
-            <div v-for="Carted in CartBooks" :key="Carted.id">
+     
+          <div v-if="listCarts.cart_books && listCarts.cart_books.length > 0">
+            <div v-for="Carted in listCarts.cart_books" :key="Carted.book.id">
               <hr>
               <div class="each_cart">
-
-                <img :src="Carted.url_image" alt="CartBooks" class="book-image">
-
+                  <!-- {{ Carted }} -->
+                <img v-if="Carted.book.path_image" :src="`http://localhost:8200/storage/${Carted.book.path_image}`" alt="CartBooks" class="book-image">
+                <img v-else :src="Carted.book.url_image"  alt="CartBooks" class="book-image">
                 <div class="book-content">
 
-                  <h3 class="book-title">{{ Carted.title }}</h3>
-                  <p class="book-quantity">Quantity: {{ Carted.qualities }} </p>
-                  <p class="book-price">Price: $ {{ (Carted.price * (1 - Carted.discount / 100)).toFixed(2) }}</p>
+                  <h3 class="book-title">{{ Carted.book.title }}</h3>
+                  <p class="book-quantity">Quantity: {{ Carted.quantity }} </p>
+                  <p class="book-price">Price: $ {{ (Carted.book.price * (1 - Carted.book.discount / 100)).toFixed(2) }}</p>
 
 
                 </div>
@@ -100,13 +124,13 @@ const updateQuantity = (id, newQuantity) => {
 
                       <div class="quantity-controls">
                         <button @click="decreaseQuantity(Carted.id)">-</button>
-                        <input v-model="Carted.qualities" @input="updateQuantity(Carted.id, Carted.qualities)"
+                        <input v-model="Carted.quantity" @input="updateQuantity(Carted.id, Carted.quantity)"
                           type="number" id="quantity" min="1" max="99" value="1" />
                         <button @click="increaseQuantity(Carted.id)">+</button>
                       </div>
 
                       <div class="remove-button">
-                        <button @click="handleRemove(Carted.id)">Remove</button>
+                        <button @click="deleteCart(Carted.id)">Remove</button>
                       </div>
                     </div>
                   </div>
@@ -115,10 +139,11 @@ const updateQuantity = (id, newQuantity) => {
                 
               </div>
               <div class="sub_totals">
-                SubTotal: $ {{ (Carted.qualities * Carted.price * (1 - Carted.discount / 100)).toFixed(2) }}
+                SubTotal: $ {{ (Carted.quality * Carted.price * (1 - Carted.discount / 100)).toFixed(2) }}
               </div>
 
             </div>
+            <button class="clear_btn">Clear Cart</button>
           </div>
 
           <div v-else class="No_cart">
@@ -128,48 +153,28 @@ const updateQuantity = (id, newQuantity) => {
 </div>
         </div>
 
-      </h2>
+     
     </div>
 
   </div>
-  <div v-if="CartBooks.length>0 ">
-
-    <div class="cart_Totals">
-      <dev class="Totals">
-        <h2>Cart Totals
-         <hr>
-        </h2>
-        <div class="end">
-          
-          <p>Shipping: $ 0.00</p>
-          <p>Total: $ {{ totalPrice.toFixed(2) }}</p>
-          <p>SubQuantity: {{ SubQuantity }}</p>
-
-          <div class="paybtn">
-          
-            <div class="book-price">
-              <h2> Total :
-                ${{ totalPrice.toFixed(2) }}
-              </h2>
-            </div>
-            
-            <div class="Topay">
-              <button @click="handleToPay">To Pay</button>
-            </div>
-            
-          </div>
-         
-        </div>
-       
-      </dev> <hr>
-
-    </div>
-  </div>
-
+  
 </template>
 
 
 <style scoped>
+.clear_btn{
+  background-color: #f70707;
+  color: rgb(250, 245, 245);
+  border: none;
+  border-radius: 10px;
+  align-items: center;
+  padding: 5px 20px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
 hr{
   width: 100%;
   margin-top: 15px;

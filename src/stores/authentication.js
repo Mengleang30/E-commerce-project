@@ -52,7 +52,7 @@ export const useAuthentication = defineStore("AuthStore", {
           },
         });
         this.loggedInUser = response.data;
-        console.log("Fetched user:", this.loggedInUser);
+        // console.log("Fetched user:", this.loggedInUser);
       } catch (error) {
         console.error(
           "Failed to fetch user:",
@@ -70,7 +70,7 @@ export const useAuthentication = defineStore("AuthStore", {
           password_confirmation,
           phone,
         });
-        console.log("User registered successfully:", response.data);
+        // console.log("User registered successfully:", response.data);
         return {
           success: true,
           message: response.data.message,

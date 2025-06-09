@@ -13,6 +13,7 @@ import { useUserStore } from "@/stores/userBookStore";
 import axios from "axios";
 import useAuthentication from "@/stores/authentication";
 import useBooks from "@/stores/books";
+import useCarts from "@/stores/carts";
 
 export default {
   name: "Detail_book",
@@ -90,7 +91,9 @@ export default {
           },
       })
       await fetchComments(bookId.value); // Refresh comments after adding
+
       TextShow.value = "Comment added successfully! ✅";
+      
       commentText.value = ''; // Clear the input field
       NotLogin.value = '';
     }
@@ -147,22 +150,7 @@ export default {
    
 
     // call action add favorite from userStore 
-    const handleAddFavorite = (BookId) => {
-      if (!userStore.loggedInUser) {
-        NotLoginMessage.value = "You must be logged in to add items to the favorite.";
-        setTimeout(() => {
-          NotLoginMessage.value = "";
-        }, 2000);
-        console.log("You must be logged in to add favorites.");
-        return;
-      }
-      console.log("Adding to favorite, Book ID:", BookId);
-      const result = userStore.addToFavorite(BookId);
-      // console.log(result.message);
-      // console.log("Logged In User:", userStore.loggedInUser);
-      // console.log("Favorites:", userStore.loggedInUser?.favorite);
-
-    };
+   
 
 
     // console.log("comments", comments.value)
@@ -196,10 +184,15 @@ export default {
     }
 };
 
-  
+    const CartStore = useCarts()
+    const addingStatus = ref('Add To Cart');
+    const handleAddToCarts = async (bookId)=>{
+        addingStatus.value = "Adding...";
+        await CartStore.addCarts(bookId, numberOrder.value);
+        addingStatus.value = "Add To Cart"
 
+    }
 
-   
     onMounted(() => {
     fetchBookDetails(bookId.value);
     fetchComments(bookId.value)
@@ -208,14 +201,15 @@ export default {
   });
     return {
       found_book,
+      addingStatus,
       handleRemoveWishList,
       useBook,
       ShowAlert,
+      handleAddToCarts,
       handleAddWishlist,
       // booksRelated,
       bookId,
       isInWishlist,
-      handleAddFavorite,
       handleAddCart,
       numberOrder,
       NotLoginMessage,
@@ -282,7 +276,7 @@ export default {
           <div class="subtract" @click="SubNumberOrder">-</div>
           <input type="number" placeholder="1" v-model="numberOrder" />
           <div class="adding" @click="AddNumberOrder">+</div>
-          <button @click="handleAddCart">Add To Cart</button>
+          <button @click="handleAddToCarts(found_book.id)">{{ addingStatus }}</button>
         </div>
 
         <div class="grid_container">
