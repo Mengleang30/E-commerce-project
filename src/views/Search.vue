@@ -42,7 +42,7 @@ watch(
 );
 
 const highLightText = (text, query) => {
-  if (!text) return '';  // guard for undefined/null
+  if (!text) return '';  
 
   const adjustedQuery = query.trim().replace(/\s+/g, "\\s+");
   const regex = new RegExp(`${adjustedQuery}`, "ig"); // Case-insensitive matching
@@ -112,7 +112,8 @@ h3{
   display: flex;
   background-color: rgb(255, 255, 255);
   align-items: center;
-
+  
+  
   gap: 1rem;
   padding: 5px;
   font-size: 0.9rem;

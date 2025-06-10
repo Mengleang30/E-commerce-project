@@ -1,5 +1,9 @@
 <template>
-  <div>Logging you in with Google...</div>
+  <div class="container">
+    <h2>
+       Logging you in with Google...
+    </h2>
+    </div>
 </template>
 
 <script setup>

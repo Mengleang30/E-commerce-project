@@ -80,6 +80,7 @@ export const useCarts = defineStore("CartStore", {
           }
         });
         this.carts = [];
+        await this.fetchCarts();
 
       }
       catch(e){}

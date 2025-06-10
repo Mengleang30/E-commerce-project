@@ -1,5 +1,5 @@
 <script>
-import Book_landing from "./Book_landing.vue";
+import Book_landing from "../components/Books/Book_landing.vue";
 import { useBookStore } from "@/stores";
 import { computed, onMounted, ref } from "vue";
 import { useUserStore } from "@/stores/userBookStore";

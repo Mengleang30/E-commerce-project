@@ -1,5 +1,5 @@
 <script>
-import My_Card_book from '@/components/Books/My_Card_book.vue';
+import My_Card_book from '@/views/My_Card_book.vue';
 export default {
     name : "Cart",
     components: {

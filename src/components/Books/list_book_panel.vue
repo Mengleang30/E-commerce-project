@@ -200,7 +200,6 @@ export default {
       </div>
     </div>
     
-    <!-- <p><RouterLink :to="`/detail/${data.id}`">{{ data.title }}</RouterLink> </p> -->
   </div>
 </template>
 
@@ -209,15 +208,26 @@ export default {
   margin: 30px 0px 10px 0px;
   display: flex;
   flex-wrap: wrap;
-  /* grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); */
-  border: 1px solid;
+  align-items: flex-start;
+  /* display: grid;
+  grid-area: auto;
+
+  
+  
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); */
+  /* border: 1px solid; */
+
+
   border-radius: 10px;
-  justify-content: center;
   background-color: rgb(230, 230, 230);
   gap: 5px;
-  width: 90%;
+  flex-grow: 1;
+  min-height: 20vh;
   padding: 5px;
+  align-content:flex-start;
+  
 }
+
 .prince {
   color: blue;
   font-size: larger;
@@ -236,14 +246,15 @@ export default {
 }
 .each_book {
   padding: 10px;
-  height: 19.6rem;
+  height: 16rem;
   display: flex;
   flex-direction: column;
-  min-width: 12rem;
+  /* max-width: 12rem; */
   border-radius: 10px;
-  border: 1px solid;
+  border: 1px solid rgb(207, 206, 206);
   background-color: aliceblue;
   transition: all .2s;
+  
 }
 .each_book:hover{
   scale: 1.01;
@@ -256,8 +267,8 @@ export default {
   align-items: center;
 }
 .main_title_book img {
-  width: 6rem;
-  height: 10rem;
+  width: 4rem;
+  height: 6rem;
 }
 .main_title_book h4 {
   font-weight: 600;
@@ -298,8 +309,8 @@ hr {
   width: 28%;
   display: flex;
   flex-direction: column;
-  background-image: linear-gradient(to right, #bebebe, #ffffff); /*grey, white*/
-  border: 1px solid;
+  background-image: linear-gradient(to right, #bebebe, #ffffff); 
+  /* border: 1px solid; */
   border-radius: 10px;
 }
 .search_genre {

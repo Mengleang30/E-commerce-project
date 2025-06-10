@@ -4,13 +4,13 @@ import DetailBook from '@/components/Books/Detail_book.vue'
 import Favorite from '@/views/Favorite_page.vue'
 import Landing from '@/views/Landing.vue'
 import ListBook from '@/views/List_book.vue'
-import Login from '@/components/Users/Login.vue'
+import Login from '@/authentication/Login.vue'
 import History from '@/views/History.vue'
 
 import Search from '@/views/Search.vue'
-import SignUp from '@/components/Users/SignUp.vue'
-import GoogleCallBack from '@/components/Users/GoogleCallBack.vue'
-import ResetPassword from '@/components/Users/ResetPassword.vue'
+import SignUp from '@/authentication/SignUp.vue'
+import GoogleCallBack from '@/authentication/GoogleCallBack.vue'
+import ResetPassword from '@/authentication/ResetPassword.vue'
 
 
 import CustomerNotification from '@/views/notification/CustomerNotification.vue'
@@ -92,6 +92,7 @@ const routes = [
   },
   {
     path: '/search',
+    name: "Search",
     component: Search,
    
   },

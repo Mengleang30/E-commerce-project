@@ -21,13 +21,9 @@ const Auth = useAuthentication();
 
 
 const routeName = ref([
-  "DetailBook",
-  "Login",
-  "SignUp",
-  "ResetPassword",
-  'EnterCode',
-  'Notification',
-  "Profile"
+  "Landing",
+  'Search',
+  "ListBook"
 ]);
 
 const scrollToCard = () => {
@@ -46,17 +42,17 @@ const scrollToCardToTop = () => {
 };
 
 watch(
-  () => route.name,
-  (newRoute, oldRoute) => {
-    if (newRoute != oldRoute) {
-      isLoading.value = true;
-      window.scrollTo(0, 0);
-    }
-    setTimeout(() => {
-      isLoading.value = false;
-    }, 300);
+  // () => route.name,
+  // (newRoute, oldRoute) => {
+  //   if (newRoute != oldRoute) {
+  //     isLoading.value = true;
+  //     window.scrollTo(0, 0);
+  //   }
+  //   setTimeout(() => {
+  //     isLoading.value = false;
+  //   }, 300);
    
-  }
+  // }
 );
 
 // const testFetch = ref()
@@ -100,14 +96,14 @@ onMounted(()=>{
 <template>
   <Header />
   <main class="Main_page">
-    <div v-if="isLoading" class="loading-overlay">
+    <!-- <div class="loading-overlay">
       <div class="spinner"></div>
-    </div>
-    <div v-else>
+    </div> -->
+    <div >
       <Show_Landing v-if="route.name=='Landing'" :-scroll="scrollToCard" :-scroll-to-top="scrollToCardToTop"/>
       <div class="wrap_card" id="Card">
         <Card_book
-          v-if="!routeName.includes(route.name)"
+          v-if="routeName.includes(route.name)"
         />
       </div>
       <RouterView > 

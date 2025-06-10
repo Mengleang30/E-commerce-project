@@ -17,6 +17,7 @@ import { useAuthentication } from "@/stores/authentication";
 import { useNotification } from '@/stores/notification';
 import { Bell, ShoppingCart, User } from 'lucide-vue-next';
 import { Search } from 'lucide-vue-next';
+import useCarts from "@/stores/carts";
 export default {
 
   name: "Header",
@@ -39,7 +40,7 @@ export default {
     const router = useRouter();
 
     const userStore = useUserStore();
-    const useStore = useBookStore();
+    const useCart = useCarts();
 
     const textSearch = ref('');
 
@@ -52,8 +53,7 @@ export default {
       return NotificationStore.notifications.filter(noti => noti.read_at === null).length;
     });
 
-
-
+   
     const countCart = computed(() => {
       if (!userStore.loggedInUser) {
         return 0;
@@ -110,15 +110,26 @@ export default {
       //   // console.log(Auth.fetchLoggedUser)
       // }
       await Auth.fetchLoggedUser();
+      useCart.fetchCarts();
 
 
     });
+     const numberCart = computed(() => {
+      if (!useCart.carts || !Array.isArray(useCart.carts.cart_books)) {
+        return 0;
+      }
+      return useCart.carts.cart_books.length;
+    })
+
+    //  console.log("Carts :",numberCart.value.length)
+      //  console.log("Carts1 :",useCart.carts)
+
 
     onUnmounted(() => {
       document.addEventListener("click", handleClickOutside);
     });
 
-    console.log("Header mounted", Auth.isAuthenticated);
+    // console.log("Header mounted", Auth.isAuthenticated);
     const check_online = computed(() => {
 
       if (navigator.onLine) {
@@ -152,7 +163,8 @@ export default {
       NotificationStore,
       number_notice,
       CheckLogin,
-      searchQuery
+      searchQuery,
+      numberCart
     };
   },
 
@@ -308,7 +320,7 @@ export default {
 
     <div class="cart_sign_in">
       <RouterLink to="/cart" class="header_cart">
-        <div class="number_cart">{{ countCart }}</div>
+        <div class="number_cart">{{ numberCart }}</div>
         <ShoppingCart />
       </RouterLink>
 

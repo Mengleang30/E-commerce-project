@@ -49,19 +49,6 @@ const CartBooks = computed(() => {
 
 })
 
-const totalPrice = computed(() => {
-  return CartBooks.value.reduce((sum, Carted) => {
-    return sum + Carted.qualities * Carted.price * (1 - Carted.discount / 100);
-  }, 0)
-})
-const SubQuantity = computed(() => {
-  return CartBooks.value.reduce((sum, Carted) => {
-    return sum + Carted.qualities;
-  }, 0)
-})
-const handleRemove = (id) => {
-  userStore.removeCarted(id)("decrement");
-}
 
 const updateQuantity = (id, newQuantity) => {
   userStore.updateCartQuantity(id, newQuantity);
@@ -78,8 +65,12 @@ const deleteCart =async (id) => {
  await cartStore.fetchCarts();
 }
 
+const clearing = ref('Clear Carts')
+
 const clearCart =async () => {
+  clearing.value='Clear...' 
  await cartStore.clearCart();
+ clearing.value="Clear Carts"
 //  await cartStore.fetchCarts();
 }
 
@@ -87,7 +78,14 @@ onMounted(()=>{
   cartStore.fetchCarts();
 })
 
+const showOption = ref(false);
 
+function clearCartOption(){
+  showOption.value=true
+}
+function cancelCartOption(){
+  showOption.value=false
+}
 
 
 </script>
@@ -115,9 +113,10 @@ onMounted(()=>{
 
                   <h3 class="book-title">{{ Carted.book.title }}</h3>
                   <p class="book-quantity">Quantity: {{ Carted.quantity }} </p>
-                  <p class="book-price">Price: $ {{ (Carted.book.price * (1 - Carted.book.discount / 100)).toFixed(2) }}</p>
-
-
+                  <p class="book-price">Price: $ {{ Carted.book.price }}</p>
+                   <p class="book-price">Discount: <strong>{{ Carted.book.discount }}%</strong></p>
+                  <p class="book-price">Final Price: $ {{ (Carted.book.price * (1 - Carted.book.discount / 100)).toFixed(2) }}</p>
+              
                 </div>
                   <div>
                     <div class="quantity-container">
@@ -136,14 +135,23 @@ onMounted(()=>{
                   </div>
 
 
-                
               </div>
-              <div class="sub_totals">
-                SubTotal: $ {{ (Carted.quality * Carted.price * (1 - Carted.discount / 100)).toFixed(2) }}
-              </div>
+              <h3 class="sub_totals">
+                SubTotal: $ {{ Carted.sub_total }}
+              </h3>
 
             </div>
-            <button class="clear_btn">Clear Cart</button>
+           <div class="clear_wrapper">
+        <button class="clear_btn" @click="clearCartOption" v-if="!showOption">Clear All Carts</button>
+        <div class="clear_option" v-else>
+          <p>Do you want to clear?</p>
+          <div>
+            <button class="clear_btn_no" @click="cancelCartOption" >No</button>
+            <button class="clear_btn" @click="clearCart">{{ clearing }}</button>
+          </div>
+        </div>
+      </div>
+            
           </div>
 
           <div v-else class="No_cart">
@@ -162,11 +170,41 @@ onMounted(()=>{
 
 
 <style scoped>
+.clear_option{
+  background-color: rgb(223, 223, 223);
+  border-radius: 6px;
+  
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+
+  width: 12rem;
+  justify-content: center;
+}
+.clear_option .clear_btn ,.clear_btn_no{
+  height: 2rem;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.clear_option .clear_btn {
+  background-color: red;
+}
+
+.clear_btn_no{
+    width: 3rem;
+    background-color: white;
+    border: none
+    ;
+    border-radius: 8px;
+}
 .clear_btn{
-  background-color: #f70707;
+  background-color: #7e7d7d;
+  
   color: rgb(250, 245, 245);
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   align-items: center;
   padding: 5px 20px;
   font-size: 12px;

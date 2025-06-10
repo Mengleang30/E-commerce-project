@@ -40,7 +40,9 @@ const handleSearch = () => {
   router.push({ path: '/search', query: { query: searchQuery.value } });
 };
 
-
+const handleSearchInLanding = (search) => {
+  router.push({ path: '/search', query: { query: search } });
+};
 
 const texts = [
     "Your next adventure awaits in the pages of a book.",
@@ -122,10 +124,10 @@ defineProps ({
                 <h4>Quick Search </h4>
                 <div class="wrap_grid">
                     <div class="container_explore">
-                        <div v-for="list in Category" @click="handleSearchByCategory(list)" class="child">{{ list }}</div>
+                        <div v-for="list in Category" @click="handleSearchInLanding(list)" class="child">{{ list }}</div>
                     </div>
                     <div class="container_explore">
-                        <div v-for="list in Author" @click="handleSearchByCategory(list)" class="child">{{ list }}</div>
+                        <div v-for="list in Author" @click="handleSearchInLanding(list)" class="child">{{ list }}</div>
                     </div>  
                 </div>
             </div>

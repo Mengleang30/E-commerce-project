@@ -4,8 +4,7 @@ import { useRouter } from "vue-router";
 import { useAuthentication } from "@/stores/authentication";
 import { useUserStore } from "@/stores/userBookStore";
 import { GoogleLogin } from "vue3-google-login";
-import axios from "axios";
-const user = useUserStore();
+
 const router = useRouter();
 const Auth = useAuthentication();
 
@@ -109,7 +108,7 @@ const loginWithGoogle = () => {
   <!-- <h2>Login page</h2> -->
   <div class="sign_in_page">
   
-    <img class="img_shop" src="../../assets/IP-Store.png" alt="IP Store" />
+    <img class="img_shop" src="../assets/IP-Store.png" alt="IP Store" />
     <div class="login_page">
       <div class="button_home">
         <RouterLink to="/">

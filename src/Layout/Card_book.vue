@@ -76,8 +76,8 @@ export default {
     display: flex;
     padding: 16px 30px;
     justify-content: space-between;
-    height: 16rem;
-    width: 28rem;
+    height: 14rem;
+    width: 32rem;
     box-shadow: 0px 4px 2px rgb(0, 0, 0, 20%);
     background: linear-gradient(to right,
             rgba(135, 161, 174, 1) 29%,

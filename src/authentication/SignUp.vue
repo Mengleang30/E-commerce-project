@@ -3,7 +3,7 @@
   <div class="container">
     <!-- <img src="./assets/images/store.svg" alt=""> -->
     <div class="left">
-      <img src="../../assets/IP-Store.png" alt="" />
+      <img src="../assets/IP-Store.png" alt="" />
     </div>
     <form class="right" @submit.prevent="handleCreateAccount">
       <h3>Create Account</h3>
@@ -58,7 +58,6 @@
 
 <script>
 import { ref } from "vue";
-import { useUserStore } from "@/stores/userBookStore";
 import { RouterLink, useRouter } from "vue-router";
 import useAuthentication from "@/stores/authentication";
 
