@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview",
-    "start": "serve dist"
+    "preview": "vite preview",
+    "start": "vite preview"
   },
   "keywords": [],
   "author": "",
