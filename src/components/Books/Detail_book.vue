@@ -1,13 +1,11 @@
 <script>
 import { useBookStore } from "@/stores";
-
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import BackButton from "./Btn_Elements/BackButton.vue";
 import Fovite_icons from "./Fovite_icons.vue";
 import Star from "./Btn_Elements/Star.vue";
 import alert_message from "./Btn_Elements/alert_message.vue";
-
 import RelatedBooks from "./RelatedBooks.vue";
 import { useUserStore } from "@/stores/userBookStore";
 import axios from "axios";
@@ -24,163 +22,129 @@ export default {
     alert_message,
     RelatedBooks,
   },
-
-
   setup() {
     const route = useRoute();
-    const ShowAlert = ref(false)
-    const comments = ref(null)
-   
-
-    const NotLoginMessage = ref('')
-
+    const ShowAlert = ref(false);
+    const comments = ref(null);
+    const NotLoginMessage = ref("");
     const userStore = useUserStore();
+    const bookId = ref(parseInt(route.params.id));
+    const found_book = ref(null);
+    const backendUrl = "https://projectip2-book-store-api.up.railway.app";
+    const loading = ref(true); // Add loading state
 
-  const bookId = ref(parseInt(route.params.id));
-  const found_book = ref(null); // Change from computed to ref
-  const backendUrl = "https://projectip2-book-store-api.up.railway.app"; // Or your API base URL
-
-  const fetchBookDetails = async (bookId) => {
-    try {
-      const res = await axios.get(`${backendUrl}/api/books/id/${bookId}`);
-      found_book.value = res.data;
-      // console.log("Book details:", res.data);
-    } catch (e) {
-      console.log("Error fetching book details:", e);
-    }
-  };
-   const fetchComments = async (bookId) => {
+    const fetchBookDetails = async (bookId) => {
       try {
-        const res = await axios.get(`https://projectip2-book-store-api.up.railway.app/api/books/get_comments/${bookId}`);
+        const res = await axios.get(`${backendUrl}/api/books/id/${bookId}`);
+        found_book.value = res.data;
+      } catch (e) {
+        console.log("Error fetching book details:", e);
+      }
+    };
+
+    const fetchComments = async (bookId) => {
+      try {
+        const res = await axios.get(`${backendUrl}/api/books/get_comments/${bookId}`);
         comments.value = res.data;
-        // console.log("Comments fetched:", res.data);
       } catch (e) {
         console.log("Error fetching comments:", e);
       }
-    }
+    };
 
-  const commentText = ref('');  
-
-  const TextShow = ref('');
-  const NotLogin = ref('');
-
-  const Auth = useAuthentication();
-
-
-  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-
-  const handleAddComment = async ()=>{
-    try{
-      if(!Auth.isAuthenticated){
-        NotLogin.value = "You must be logged in to add a comment.";
-        NotLoginMessage.value = "You must be logged in to add a comment.";
-        setTimeout(() => {
-          NotLoginMessage.value = "";
-        }, 2000);
-        console.log("You must be logged in to add a comment.");
-        return;
+    const loadData = async (bookId) => {
+      loading.value = true; // Set loading to true before fetching
+      try {
+        await Promise.all([
+          fetchBookDetails(bookId),
+          fetchComments(bookId),
+        ]);
+      } finally {
+        loading.value = false; // Set loading to false after both requests complete
       }
-      TextShow.value = "Adding comment...";
-      NotLogin.value = '';
-      await axios.post(`${backendUrl}/api/customer/comments/${bookId.value}`, {
-        comment: commentText.value,
-      },{
-        withCredentials: true,
-        headers: {
-            Authorization: `Bearer ${token}`,
-          },
-      })
-      await fetchComments(bookId.value); // Refresh comments after adding
+    };
 
-      TextShow.value = "Comment added successfully! ✅";
-      
-      commentText.value = ''; // Clear the input field
-      NotLogin.value = '';
-    }
-    catch (e){
-      console.log("Error adding comment:", e);
-    }
-  }
+    const commentText = ref("");
+    const TextShow = ref("");
+    const NotLogin = ref("");
+    const Auth = useAuthentication();
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
+    const handleAddComment = async () => {
+      try {
+        if (!Auth.isAuthenticated) {
+          NotLogin.value = "You must be logged in to add a comment.";
+          NotLoginMessage.value = "You must be logged in to add a comment.";
+          setTimeout(() => {
+            NotLoginMessage.value = "";
+          }, 2000);
+          console.log("You must be logged in to add a comment.");
+          return;
+        }
+        TextShow.value = "Adding comment...";
+        NotLogin.value = "";
+        await axios.post(
+          `${backendUrl}/api/customer/comments/${bookId.value}`,
+          { comment: commentText.value },
+          {
+            withCredentials: true,
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        await fetchComments(bookId.value);
+        TextShow.value = "Comment added successfully! ✅";
+        commentText.value = "";
+        NotLogin.value = "";
+      } catch (e) {
+        console.log("Error adding comment:", e);
+      }
+    };
 
-
-  // console.log("Books", found_book.value)
-    // call action from userStore for adding cart for each users
     const numberOrder = ref(1);
- 
-
-
-    
-     
-
-   
-    watch (
-      ()=>route.params.id,
-      (newId)=>{
-        bookId.value = parseInt(newId);
-        fetchBookDetails(bookId.value);
-        fetchComments(bookId.value);
-
-       setTimeout(() => {
-    window.scrollTo(0, 0);
-    }, 300); // Simulated loading delay
-        console.log("New Book ID:", bookId.value);
-      }
-    )
-
-    
-   
-
-    // call action add favorite from userStore 
-   
-
-
-    // console.log("comments", comments.value)
-    // console.log("comments", bookId.value)
-
     const useBook = useBooks();
-     // mark for books that already in favorite
-   const isInWishlist = computed(() =>
-    useBook.wishlist.some(item => item.book_id === bookId.value)
-  );
+    const isInWishlist = computed(() =>
+      useBook.wishlist.some(item => item.book_id === bookId.value)
+    );
 
-
- 
-
-  
     const handleAddWishlist = async () => {
-       await useBook.addWishList(bookId.value);
-       await useBook.fetchWishList();
-    }
-    // const handleRemoveWishList = async () =>{
-    //   await useBook.removeWishList(bookId.value);
-    // }
+      await useBook.addWishList(bookId.value);
+      await useBook.fetchWishList();
+    };
 
     const handleRemoveWishList = async () => {
-    const wishlistEntry = useBook.wishlist.find(item => item.book_id === bookId.value);
-    if (wishlistEntry) {
-      useBook.removeWishList(wishlistEntry.id);
-      
-    } else {
-      console.log("Wishlist entry not found to remove");
-    }
-};
+      const wishlistEntry = useBook.wishlist.find(item => item.book_id === bookId.value);
+      if (wishlistEntry) {
+        await useBook.removeWishList(wishlistEntry.id);
+      } else {
+        console.log("Wishlist entry not found to remove");
+      }
+    };
 
-    const CartStore = useCarts()
-    const addingStatus = ref('Add To Cart');
-    const handleAddToCarts = async (bookId)=>{
-        addingStatus.value = "Adding...";
-        await CartStore.addCarts(bookId, numberOrder.value);
-        addingStatus.value = "Add To Cart"
+    const CartStore = useCarts();
+    const addingStatus = ref("Add To Cart");
+    const handleAddToCarts = async (bookId) => {
+      addingStatus.value = "Adding...";
+      await CartStore.addCarts(bookId, numberOrder.value);
+      addingStatus.value = "Add To Cart";
+    };
 
-    }
+    watch(
+      () => route.params.id,
+      (newId) => {
+        bookId.value = parseInt(newId);
+        loadData(bookId.value); // Fetch data with loading state
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+        }, 300);
+        console.log("New Book ID:", bookId.value);
+      }
+    );
 
     onMounted(() => {
-    fetchBookDetails(bookId.value);
-    fetchComments(bookId.value)
-    useBook.fetchWishList();
-    window.scrollTo(0, 0);
-  });
+      loadData(bookId.value); // Fetch data with loading state
+      useBook.fetchWishList();
+      window.scrollTo(0, 0);
+    });
+
     return {
       found_book,
       addingStatus,
@@ -189,27 +153,21 @@ export default {
       ShowAlert,
       handleAddToCarts,
       handleAddWishlist,
-      // booksRelated,
       bookId,
       isInWishlist,
       numberOrder,
       NotLoginMessage,
-      fetchBookDetails,
       comments,
       commentText,
       handleAddComment,
       TextShow,
-      NotLogin
+      NotLogin,
+      loading, // Expose loading state
     };
-  },
-  mounted() {
-    window.scrollTo(0, 0);
-    
   },
   methods: {
     Back() {
       this.$router.go(-1);
-      // window.history.back();
     },
     AddNumberOrder() {
       this.numberOrder += 1;
@@ -224,15 +182,31 @@ export default {
 </script>
 
 <template>
-  <div v-if="found_book" class="detail_book">
+  <div v-if="loading" class="loading-container">
+    <p>Loading book details...</p>
+    <!-- Optional: Add a spinner -->
+    <div class="spinner"></div>
+  </div>
+  <div v-else-if="found_book" class="detail_book">
     <div class="book_container">
-    <alert_message v-if="ShowAlert"/>
-    <p class="alert_successful">{{ NotLoginMessage }}</p>
+      <alert_message v-if="ShowAlert" />
+      <p class="alert_successful">{{ NotLoginMessage }}</p>
       <BackButton @click="Back" />
       <div class="img_container">
-        <img v-if="found_book.path_image!==null" :src="`http://localhost:8200/storage/${found_book.path_image}`" alt="Book_image_path" />
-        <img v-else-if="found_book.url_image !==null" :src="found_book.url_image" alt="Book_image_url" />
-        <img v-else  src="https://upload.wikimedia.org/wikipedia/commons/2/21/Blank_book_on_a_table.jpg" />
+        <img
+          v-if="found_book.path_image !== null"
+          :src="`http://localhost:8200/storage/${found_book.path_image}`"
+          alt="Book_image_path"
+        />
+        <img
+          v-else-if="found_book.url_image !== null"
+          :src="found_book.url_image"
+          alt="Book_image_url"
+        />
+        <img
+          v-else
+          src="https://upload.wikimedia.org/wikipedia/commons/2/21/Blank_book_on_a_table.jpg"
+        />
         <hr />
         <div class="book_description">
           <h3>Description</h3>
@@ -241,17 +215,16 @@ export default {
       </div>
       <article class="information_container">
         <h2>{{ found_book.title }}</h2>
-        
-        <div class="label_inform" v-if="found_book.discount==0">
-            <p>Price :</p>
+        <div class="label_inform" v-if="found_book.discount == 0">
+          <p>Price :</p>
           <h2 class="price">${{ found_book.price.toFixed(2) }}</h2>
         </div>
         <div class="label_inform" v-else>
-            <div class="wrap_price">
-                <h3 class="price">${{ (found_book.price*(1-found_book.discount/100)).toFixed(2) }}</h3>
-                <p>${{ found_book.price }}</p>
-              <br>
-            </div>
+          <div class="wrap_price">
+            <h3 class="price">${{ (found_book.price * (1 - found_book.discount / 100)).toFixed(2) }}</h3>
+            <p>${{ found_book.price }}</p>
+            <br />
+          </div>
         </div>
         <div class="wrap_cart">
           <div class="subtract" @click="SubNumberOrder">-</div>
@@ -259,7 +232,6 @@ export default {
           <div class="adding" @click="AddNumberOrder">+</div>
           <button @click="handleAddToCarts(found_book.id)">{{ addingStatus }}</button>
         </div>
-
         <div class="grid_container">
           <div class="box_inform">
             <h4>Author</h4>
@@ -269,41 +241,31 @@ export default {
             <h4>Original Price</h4>
             <p class="price">${{ found_book.price }}</p>
           </div>
-          <!-- <div class="box_inform">
-            <h4>Rated</h4>
-            <div class="wrap_star">
-              <Star v-for="i in Math.floor(found_book.rated)" :key="i" />
-            </div>
-          </div> -->
           <div class="box_inform">
-            <h4>Language </h4>
-            <p v-if="found_book.languages!==null"> {{ found_book.languages }}</p>
+            <h4>Language</h4>
+            <p v-if="found_book.languages !== null">{{ found_book.languages }}</p>
             <p v-else>Don't mention</p>
           </div>
-
           <div class="box_inform">
             <h4>Category</h4>
-            <p>{{ found_book.category.name}}</p>
+            <p>{{ found_book.category.name }}</p>
           </div>
-          <!-- <div class="box_inform">
-            <h4>Available Format</h4>
-            <p>{{ found_book.format.join(", ") }}</p>
-          </div> -->
           <div class="box_inform">
-            <h4>Favorite </h4>
+            <h4>Favorite</h4>
             <div class="wrapping_fav">
-            <Fovite_icons  v-if="!isInWishlist"
-            @click="handleAddWishlist"
-             :Clicked_favorite="false"
-            class="Favorite_btn" />
-             <Fovite_icons
-              v-else
-            @click="handleRemoveWishList"
-            :Clicked_favorite="true"
-            class="Favorite_btn" />
-            <!-- <button @click="handleAddWishlist" v-if="!isInWishlist">add</button>
-            <button @click="handleRemoveWishList" v-else>remove</button> -->
-          </div>
+              <Fovite_icons
+                v-if="!isInWishlist"
+                @click="handleAddWishlist"
+                :Clicked_favorite="false"
+                class="Favorite_btn"
+              />
+              <Fovite_icons
+                v-else
+                @click="handleRemoveWishList"
+                :Clicked_favorite="true"
+                class="Favorite_btn"
+              />
+            </div>
           </div>
           <div class="box_inform">
             <h4>Published</h4>
@@ -317,29 +279,28 @@ export default {
             <h4>Code</h4>
             <p>{{ found_book.id }}</p>
           </div>
-        
         </div>
-
         <hr />
       </article>
     </div>
-    <div class="comment_container" >
-        <h3> 📝 Comment</h3>
-        <span class="TextShow">{{ TextShow }}</span>
-        <span class="NotLogin">{{ NotLogin }}</span>
-         <form @submit.prevent="handleAddComment" class="commentAdd">
-            <h4 for="comment">Add Comment</h4>
-            <textarea v-model="commentText"
-              name="comment"
-              id="comment"
-              cols="30"
-              required
-              rows="2"
-              placeholder="Write your comment here..."
-            ></textarea>
-            <button type="submit" >Submit</button>
-          </form>
-        <p v-if="comments == null">No comments yet.</p>
+    <div class="comment_container">
+      <h3>📝 Comment</h3>
+      <span class="TextShow">{{ TextShow }}</span>
+      <span class="NotLogin">{{ NotLogin }}</span>
+      <form @submit.prevent="handleAddComment" class="commentAdd">
+        <h4 for="comment">Add Comment</h4>
+        <textarea
+          v-model="commentText"
+          name="comment"
+          id="comment"
+          cols="30"
+          required
+          rows="2"
+          placeholder="Write your comment here..."
+        ></textarea>
+        <button type="submit">Submit</button>
+      </form>
+      <p v-if="comments == null">No comments yet.</p>
       <article v-else class="each_comment" v-for="comment in comments" :key="comment.id">
         <img
           src="https://img.icons8.com/?size=100&id=mlMB8cHGuy5i&format=png&color=000000"
@@ -348,24 +309,47 @@ export default {
         <div class="warp">
           <div class="box_comment">
             <div class="profile_comment">
-                <span class="name">{{ comment.username}}</span>
-                <div class="date">
-                    <span >{{ new Date(comment.created_at).toLocaleString() }}</span>
-                </div>
+              <span class="name">{{ comment.username }}</span>
+              <div class="date">
+                <span>{{ new Date(comment.created_at).toLocaleString() }}</span>
+              </div>
             </div>
             <div class="comment">{{ comment.comment }}</div>
           </div>
         </div>
       </article>
     </div>
-    
-    <!-- <RelatedBooks :RelatedBooks="booksRelated" 
-    />  -->
   </div>
   <h2 v-else>Book not found</h2>
 </template>
 
+
 <style scoped>
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Existing styles remain unchanged */
 .detail_book {
   width: auto;
   min-height: 80vh;

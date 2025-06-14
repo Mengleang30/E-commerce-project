@@ -11,7 +11,7 @@ export const useCarts = defineStore("CartStore", {
   actions: {
     async fetchCarts(){
        try {
-        const res = await axios.get(`http://localhost:8200/api/customer/carts`,{
+        const res = await axios.get(`${this.backendUrl}/api/customer/carts`,{
           withCredentials: true,
           headers:{
             Authorization: `Bearer ${this.token}`,
