@@ -4,30 +4,27 @@ import Detail_book from '@/components/Books/Detail_book.vue';
 import { useBookStore } from '@/stores';
 
 export default {
-    name: "Landing",
+  name: "Landing",
 
-    components: {
-        Book_Landing,
-        Detail_book,
-        
-    },
+  components: {
+    Book_Landing,
+    Detail_book,
+  },
 
-    setup() {
-        const BookStore = useBookStore();
+  setup() {
+    const BookStore = useBookStore();
 
-        return {
-            BookStore,
-        }
-    }
-}
+    return {
+      BookStore,
+    };
+  },
+};
 </script>
 
 <template>
-    <div class="Landing">
-        <Book_Landing />
-    </div>
+  <div class="Landing">
+    <Book_Landing />
+  </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

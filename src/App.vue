@@ -1,11 +1,10 @@
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import Card_book from "./Layout/Card_book.vue";
 import Footer from "./Layout/Footer.vue";
 import Header from "./Layout/Header.vue";
 import { RouterView, useRoute } from "vue-router";
 import Show_Landing from "./Layout/Show_Landing.vue";
-import axios from "axios";
 
 import { useAuthentication } from "./stores/authentication";
 import {useBooks} from "./stores/books";
@@ -18,6 +17,9 @@ import useOrder from "./stores/order";
 
 const route = useRoute();
 const isLoading = ref(false);
+const isAdmin = computed(() => {
+  return route.path.startsWith("/admin");
+});
 const Auth = useAuthentication();
 
 
@@ -31,14 +33,14 @@ const scrollToCard = () => {
   const viewportHeight = window.innerHeight * 1.2;
   window.scrollTo({
     top: viewportHeight,
-    behavior: "smooth", 
+    behavior: "smooth",
   });
 };
 const scrollToCardToTop = () => {
   const viewportHeight = 0;
   window.scrollTo({
     top: viewportHeight,
-    behavior: "smooth", 
+    behavior: "smooth",
   });
 };
 
@@ -119,12 +121,24 @@ onMounted(()=>{
 </template>
 
 <style scoped>
- html {
-        scroll-behavior: smooth;
-    }
+html,
+body {
+  scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
 .Main_page {
-  min-height: 55vh;
+  /* min-height: 55vh; */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   padding: 2px;
+  flex: 1;
 }
 .wrap_card {
   display: flex;

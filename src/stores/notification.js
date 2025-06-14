@@ -14,7 +14,7 @@ export const useNotification = defineStore("NotificationStore", {
           return;
         }
         try {
-        const res =  await axios.get("http://localhost:8200/api/customer/notifications", {
+        const res =  await axios.get("https://projectip2-book-store-api.up.railway.app/api/customer/notifications", {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${this.token}`,
@@ -32,7 +32,7 @@ export const useNotification = defineStore("NotificationStore", {
     async markNotificationAsRead() {
       try {
         const res = await axios.patch(
-          `http://localhost:8200/api/customer/notifications/mark_all_as_read`,
+          `https://projectip2-book-store-api.up.railway.app/api/customer/notifications/mark_all_as_read`,
           {},
           {
             withCredentials: true,
@@ -50,7 +50,7 @@ export const useNotification = defineStore("NotificationStore", {
      async markNotificationAsReadById(Id) {
       try {
         const res = await axios.patch(
-          `http://localhost:8200/api/customer/notifications/mark_as_read/${Id}`,
+          `https://projectip2-book-store-api.up.railway.app/api/customer/notifications/mark_as_read/${Id}`,
           {},
           {
             withCredentials: true,

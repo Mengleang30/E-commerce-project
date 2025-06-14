@@ -1,13 +1,12 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import useBooks from "./books";
 
 
 export const useAuthentication = defineStore("AuthStore", {
   state: () => ({
     user: null,
     loggedInUser: {},
-    backendUrl: "http://localhost:8200",
+    backendUrl: "https://projectip2-book-store-api.up.railway.app",
     token: localStorage.getItem("token") || null,
   }),
 

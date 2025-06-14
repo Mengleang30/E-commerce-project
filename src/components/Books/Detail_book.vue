@@ -38,7 +38,7 @@ export default {
 
   const bookId = ref(parseInt(route.params.id));
   const found_book = ref(null); // Change from computed to ref
-  const backendUrl = "http://localhost:8200"; // Or your API base URL
+  const backendUrl = "https://projectip2-book-store-api.up.railway.app"; // Or your API base URL
 
   const fetchBookDetails = async (bookId) => {
     try {
@@ -51,7 +51,7 @@ export default {
   };
    const fetchComments = async (bookId) => {
       try {
-        const res = await axios.get(`http://localhost:8200/api/books/get_comments/${bookId}`);
+        const res = await axios.get(`https://projectip2-book-store-api.up.railway.app/api/books/get_comments/${bookId}`);
         comments.value = res.data;
         // console.log("Comments fetched:", res.data);
       } catch (e) {

@@ -5,7 +5,7 @@ export const useOrder = defineStore("OrderStore", {
   state: () => ({
      orders: [],
      token: localStorage.getItem("token") || null,
-     backendUrl: "http://localhost:8200"
+     backendUrl: "https://projectip2-book-store-api.up.railway.app"
   }),
 
   actions: {

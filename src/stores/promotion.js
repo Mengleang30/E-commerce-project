@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const usePromotion = defineStore("PromotionStore", {
   state: () => ({
-    backendUrl: "http://localhost:8200",
+    backendUrl: "https://projectip2-book-store-api.up.railway.app",
     token: localStorage.getItem("token") || null,
   }),
 

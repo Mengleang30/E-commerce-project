@@ -4,7 +4,7 @@ import axios from "axios";
 export const useCategory = defineStore("CategoryStore", {
   state: () => ({
     categories: null,
-    backendUrl: "http://localhost:8200",
+    backendUrl: "https://projectip2-book-store-api.up.railway.app",
   }),
 
   actions: {

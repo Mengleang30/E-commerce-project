@@ -5,7 +5,7 @@ export const useUserStore = defineStore("userStore", {
   state: () => ({
     users: [],
     nextIdUser: 1,
-    loggedInUser: null,
+    loggedInUser: JSON.parse(localStorage.getItem('loggedInUser')) || null,
     nextPurchaseId: 100,
     backendUrl: "http://localhost:8200",
   }),
@@ -64,11 +64,15 @@ export const useUserStore = defineStore("userStore", {
       );
       if (currentUser) {
         this.loggedInUser = currentUser;
+
+        // Store user info in localStorage
+        localStorage.setItem('loggedInUser', JSON.stringify(currentUser));
         return {
           success: true,
           message: `Welcome back, ${currentUser.username}!`,
         };
       }
+
       return { success: false, message: "Invalid credentials." };
     },
 
