@@ -5,7 +5,7 @@ export const useBooks = defineStore("BookStore", {
   state: () => ({
     books: [],
     wishlist:[],
-    backendUrl: "https://projectip2-book-store-api.up.railway.app/",
+    backendUrl: "https://projectip2-book-store-api.up.railway.app",
     resultSearched: null,
 
      Search : "",
