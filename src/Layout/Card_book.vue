@@ -11,7 +11,7 @@ export default {
 
     const fetchCardBooks = async ()=>{
         try{
-            const res = await axios.get("http://localhost:8200/api/books/show_books")
+            const res = await axios.get("https://projectip2-book-store-api.up.railway.app/api/books/show_books")
             showBooks.value = res.data;
             // console.log("tttt",res.data)
         }
@@ -63,7 +63,7 @@ export default {
           <button class="btn">View Now</button>
         </RouterLink>
       </article>
-      <img v-if="book.url_image==null" :src="`http://localhost:8200/storage/${book.path_image}`" alt="Book Cover" />
+      <img v-if="book.url_image==null" :src="`https://projectip2-book-store-api.up.railway.app/storage/${book.path_image}`" alt="Book Cover" />
       <img v-else :src="book.url_image" alt="Book Cover" />
     </div>
   </div>

@@ -96,7 +96,7 @@ const handleUpload = async () => {
             v-if="
               listData.google_id == null && listData.picture
             "
-            :src="`http://localhost:8200/storage/${listData.picture}`"
+            :src="`https://projectip2-book-store-api.up.railway.app/storage/${listData.picture}`"
             alt="Profile"
             class="profile-image"
           />
@@ -104,7 +104,7 @@ const handleUpload = async () => {
             v-else-if="
               listData.google_id !== null
             "
-            :src="`http://localhost:8200/storage/${listData.picture}`"
+            :src="`https://projectip2-book-store-api.up.railway.app/storage/${listData.picture}`"
             alt="Profile"
             class="profile-image"
           />
