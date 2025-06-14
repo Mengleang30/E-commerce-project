@@ -16,6 +16,9 @@ import ResetPassword from '@/authentication/ResetPassword.vue'
 import CustomerNotification from '@/views/notification/CustomerNotification.vue'
 import useAuthentication from '@/stores/authentication'
 import Profile from '@/views/profile/Profile.vue'
+import Order from '@/views/Order.vue'
+import CapturePayment from '@/payments/CapturePayment.vue'
+import ThankYou from '@/payments/ThankYou.vue'
 
 
 
@@ -102,6 +105,22 @@ const routes = [
     component: Profile,
     beforeEnter: authGuard
   },
+   {
+    path: '/order',
+    name: 'Order',
+    component: Order,
+    beforeEnter: authGuard
+  },
+  {
+  path: '/capture-payment',
+  name: 'CapturePayment',
+  component: CapturePayment, // this Vue page should call Laravel to capture payment
+  },
+   {
+  path: '/thank-you',
+  name: 'ThankYou',
+  component: ThankYou, 
+  }
 ]
 
 const router = createRouter({

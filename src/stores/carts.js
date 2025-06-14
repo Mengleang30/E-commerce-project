@@ -85,6 +85,43 @@ export const useCarts = defineStore("CartStore", {
       }
       catch(e){}
     },
+    async updateQuantity(id, quantities){
+      try {
+        await axios.patch(`${this.backendUrl}/api/customer/carts/update/${id}`
+          ,{
+            quantity:quantities
+
+           } ,{
+          withCredentials: true,
+          headers:{
+            Authorization: `Bearer ${this.token}`,
+          }
+        });
+        await this.fetchCarts();
+        console.log("Updated")
+      
+      }
+      catch(e){}
+
+    },
+
+    async checkout(){
+       try {
+        await axios.post(`${this.backendUrl}/api/customer/carts/checkout`
+          ,{},{
+          withCredentials: true,
+          headers:{
+            Authorization: `Bearer ${this.token}`,
+          }
+        });
+        await this.fetchCarts();
+        this.carts=[];
+        console.log("Checkout")
+      
+      }
+      catch(e){}
+
+    },
   },
 
   getters: {

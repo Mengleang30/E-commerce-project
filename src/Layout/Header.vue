@@ -12,11 +12,9 @@ import notification from "@/assets/icons_nav/notifications.png";
 import books from "@/assets/icons_nav/books.png";
 import logo_bookstore from "@/assets/logo_bookstore.jpg";
 import { useUserStore } from "@/stores/userBookStore";
-import { useBookStore } from "@/stores";
 import { useAuthentication } from "@/stores/authentication";
 import { useNotification } from '@/stores/notification';
-import { Bell, ShoppingCart, User } from 'lucide-vue-next';
-import { Search } from 'lucide-vue-next';
+import { Bell, ShoppingCart, User,Search } from 'lucide-vue-next';
 import useCarts from "@/stores/carts";
 export default {
 
@@ -290,7 +288,7 @@ export default {
         <hr />
         <Navbar v-for="NavbarItem in this.NavBar_Data" :Nav_name="NavbarItem.nav_name" :Link="NavbarItem.link"
           :key="NavbarItem.nav_name" :Image="NavbarItem.icon" :isSelectRoute="isSelectRoute(NavbarItem.link)"
-          :NavWithCart="NavbarItem.nav_name" :-number-cart="countCart" :number_notice="number_notice" />
+          :NavWithCart="NavbarItem.nav_name" :-number-cart="numberCart" :number_notice="number_notice" />
         <div>
           <div>
             <p :class="check_online.status ? 'online' : 'offline'">{{ check_online.message }}</p>
@@ -306,15 +304,15 @@ export default {
     </transition>
 
 
-    <div class="search_form">
-      <input type="text" placeholder="Search..." v-model="searchQuery" @keydown.enter="handleSearch" />
+    <form class="search_form" @submit.prevent="handleSearch">
+      <input type="text" required placeholder="Search..." v-model="searchQuery"  />
       <div class="search_btn" title="Search Now">
-        <RouterLink to="/search">
-           <Search @click="handleSearch"/>
+        <RouterLink to="/search" @click="handleSearch">
+           <Search />
         </RouterLink>
       </div>
 
-    </div>
+    </form>
 
 
 

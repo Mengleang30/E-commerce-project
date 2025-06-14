@@ -12,6 +12,7 @@ import {useBooks} from "./stores/books";
 import {useCategory} from "./stores/category";
 import useNotification from "./stores/notification";
 import useCarts from "./stores/carts";
+import useOrder from "./stores/order";
 
 
 
@@ -77,6 +78,7 @@ const useBook = useBooks();
 const category = useCategory();
 const useNotifications = useNotification();
 const useCart = useCarts();
+const useOrders = useOrder();
 onMounted(()=>{
   useBook.fetchBooks();
   category.fetchCategories();
@@ -84,6 +86,7 @@ onMounted(()=>{
   useBook.fetchWishList();
   Auth.fetchLoggedUser();
   useCart.fetchCarts();
+  useOrders.fetchOrder()
   
 })
 

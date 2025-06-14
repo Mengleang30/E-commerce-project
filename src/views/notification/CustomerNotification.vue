@@ -70,12 +70,16 @@ const markAsRead = async (id)=>{
         >
           <div class="notification_header">
             <p class="title">{{ noti.data.title }}</p>
+          
             <div class="actions">
               <button @click="markAsRead(noti.id)">Mark as Read</button>
               <span class="time">{{ formatTime(noti.created_at) }}</span>
             </div>
           </div>
           <p class="message">{{ noti.data.message }}</p>
+           <p class="message" v-if="noti.data.transaction_id"> Order Id : {{ noti.data.order_id }}</p>
+           <p class="message" v-if="noti.data.order_id"> Order Id : {{ noti.data.order_id }}</p>
+     
         </div>
 
         <!-- Read -->
@@ -84,12 +88,14 @@ const markAsRead = async (id)=>{
           v-for="noti in notifications.filter(n => n.read_at !== null)"
           :key="noti.id"
           class="notification_card read"
-        >
+        > 
           <div class="notification_header">
             <p class="title">{{ noti.data.title }}</p>
             <span class="time">{{ formatTime(noti.created_at) }}</span>
           </div>
           <p class="message">{{ noti.data.message }}</p>
+           <p class="message" v-if="noti.data.transaction_id"> Order Id : {{ noti.data.order_id }}</p>
+          <p class="message" v-if="noti.data.order_id"> Order Id : {{ noti.data.order_id }}</p>
         </div>
       </div>
     </div>

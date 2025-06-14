@@ -25,12 +25,12 @@ const fetchBooks = async () => {
     console.error('Fetch error:', err);
   }
 };
-console.log("query",searchQuery.value)
+// console.log("query",searchQuery.value)
 // onMounted(()=>{
 //   fetchBooks();
 // })
 
-console.log('Books', books.value)
+// console.log('Books', books.value)
 
 watch(
   () => route.query.query,

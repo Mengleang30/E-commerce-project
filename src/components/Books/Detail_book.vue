@@ -107,25 +107,7 @@ export default {
   // console.log("Books", found_book.value)
     // call action from userStore for adding cart for each users
     const numberOrder = ref(1);
-    const handleAddCart=()=>{
-      if(!userStore.loggedInUser){
-        NotLoginMessage.value = "You must be logged in to add items to the cart.";
-        setTimeout(() => {
-          NotLoginMessage.value = "";
-        }, 2000);
-        console.log("You must be logged in to add items to the cart.");
-      return;
-      }
-
-      if(numberOrder.value > 0 && found_book.value){
-        const Ordered = userStore.addToCart(found_book.value.id, numberOrder.value);
-        ShowAlert.value = true;
-        setTimeout(() => (ShowAlert.value = false), 3000); // Auto-hide the alert
-        console.log(Ordered.message);
-        console.log(userStore.loggedInUser?.cart)
-      }
-
-    }
+ 
 
 
     
@@ -210,7 +192,6 @@ export default {
       // booksRelated,
       bookId,
       isInWishlist,
-      handleAddCart,
       numberOrder,
       NotLoginMessage,
       fetchBookDetails,
