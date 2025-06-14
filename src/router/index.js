@@ -17,6 +17,14 @@ import AdminDashboard from '@/components/Admin/Admin-Dashboard.vue'
 import Admin_Product_all from '@/components/Admin/Admin_Product_all.vue'
 import Admin_Add_Product_Form from '@/components/Admin/Admin_Add_Product_Form.vue'
 import Admin_Update_Product_Form from '@/components/Admin/Admin_Update_Product_Form.vue'
+import User from '@/components/Admin/User.vue'
+import UserDetail from '@/components/Admin/UserDetail.vue'
+
+
+
+ 
+
+
 
 
 const route = useRoute();
@@ -114,7 +122,21 @@ const routes = [
         path: 'update-product-form',
         name: 'AdminUpdateProduct',
         component: Admin_Update_Product_Form,
-      }
+      },
+      {
+        path: 'all-users',
+        name: 'AdminAllUsers',
+        component: User,
+      },
+      {
+        
+          path: 'user/:id',
+          name: 'UserDetail',
+          component: UserDetail,
+          props: true,
+        
+        
+      },
     ]
   },
 ]
@@ -124,4 +146,4 @@ const router = createRouter({
   routes,
 })
 
-export default router
+export default router;
