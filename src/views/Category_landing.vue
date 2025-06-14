@@ -111,7 +111,7 @@ export default {
     const groupBook = ref([]);
 
     const fetchGroupBooks = async () => {
-      const res = await axios.get(`http://localhost:8200/api/books/list_category_name`);
+      const res = await axios.get(`https://projectip2-book-store-api.up.railway.app/api/books/list_category_name`);
       groupBook.value = res.data
       
     }

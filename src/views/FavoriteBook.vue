@@ -45,7 +45,7 @@ const addCart = async (id) => {
                 <div class="book-list">
                     <div v-for="wishlist in listItems" class="book-card" :key="wishlist.id">
                         <img v-if="wishlist.book.url_image == null"
-                            :src="`http://localhost:8200/storage/${wishlist.book.path_image}`" alt="book"
+                            :src="`https://projectip2-book-store-api.up.railway.app/storage/${wishlist.book.path_image}`" alt="book"
                             class="book-image">
                         <img v-else :src="`${wishlist.book.url_image}`" alt="book1" class="book-image">
                         <div class="book-content">
