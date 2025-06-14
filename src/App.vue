@@ -58,23 +58,7 @@ watch(
   // }
 );
 
-// const testFetch = ref()
 
-// axios.get('http://localhost:8200/api/books')
-//   .then(response => {
-//     testFetch.value = response.data;
-//     console.log('Books:', response.data); // Handle the data
-//   })
-//   .catch(error => {
-//     console.error('Error fetching books:', error);
-//   });
-
-// fetch('http://localhost:8200/api/login', {
-//   method: 'POST',
-//   credentials: 'include', // important for cookies
-//     // others if needed
-//   // body: JSON.stringify({ email, password })
-// })
 
 const useBook = useBooks();
 const category = useCategory();

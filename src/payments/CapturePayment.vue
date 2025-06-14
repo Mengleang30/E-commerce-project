@@ -20,7 +20,7 @@ onMounted(async () => {
 
   try {
     await axios.get(
-      `http://localhost:8200/api/capture-payment?token=${token}`,
+      `https://projectip2-book-store-api.up.railway.app/api/capture-payment?token=${token}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
