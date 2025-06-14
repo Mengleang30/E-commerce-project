@@ -135,7 +135,7 @@ const handleCheckout = async ()=>{
               <hr>
               <div class="each_cart">
                   <!-- {{ Carted }} -->
-                <img v-if="Carted.book.path_image" :src="`https://projectip2-book-store-api.up.railway.app/storage/${Carted.book.path_image}`" alt="CartBooks" class="book-image">
+                <img v-if="Carted.book.path_image" :src="`https://bucket-production-853a.up.railway.app/storage/${Carted.book.path_image}`" alt="CartBooks" class="book-image">
                 <img v-else :src="Carted.book.url_image"  alt="CartBooks" class="book-image">
                 <div class="book-content">
 

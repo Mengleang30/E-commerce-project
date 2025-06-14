@@ -48,7 +48,7 @@ export default {
          />
         <div class="each_book">
             <div class="wraping">
-                <img v-if="Path_image!==null" :src="`http://localhost:8200/storage/${Path_image}`" alt="Book_image_path" />
+                <img v-if="Path_image!==null" :src="`https://bucket-production-853a.up.railway.app/storage/${Path_image}`" alt="Book_image_path" />
                 <img v-else-if="Url_img!==null" :src="Url_img" alt="Book_image_url" />
                 <img v-else  src="https://upload.wikimedia.org/wikipedia/commons/2/21/Blank_book_on_a_table.jpg" />
                 <h4>{{ Title }}

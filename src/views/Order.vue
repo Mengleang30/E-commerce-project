@@ -96,7 +96,7 @@ onMounted(()=>{
           <img
             :src="
               item.book.path_image
-                ? `https://projectip2-book-store-api.up.railway.app/storage/${item.book.path_image}`
+                ? `https://bucket-production-853a.up.railway.app/storage/${item.book.path_image}`
                 : item.book.url_image || '/fallback-book-image.jpg'
             "
             :alt="`Cover of ${item.book.title}`"

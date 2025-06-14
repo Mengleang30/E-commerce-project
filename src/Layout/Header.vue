@@ -253,7 +253,7 @@ export default {
           <RouterLink to="/profile" class="profile_link">
                <img
           v-if="loggedInUser.google_id == null && loggedInUser.picture"
-          :src="`http://localhost:8200/storage/${loggedInUser.picture}`"
+          :src="`https://bucket-production-853a.up.railway.app/storage/${loggedInUser.picture}`"
           alt="Profile"
           class="picture"
         />
@@ -261,7 +261,7 @@ export default {
             v-else-if="
             
               Auth.loggedInUser.google_id !== null && Auth.loggedInUser.picture"
-            :src="`http://localhost:8200/storage/${Auth.loggedInUser.picture}`"
+            :src="`https://bucket-production-853a.up.railway.app/storage/${Auth.loggedInUser.picture}`"
             alt="Profile"
             class="picture"
           />

@@ -61,7 +61,7 @@ const highLightText = (text, query) => {
       <p>Found : {{ books.length }} books</p>
       <div class="findByTitle">
         <div class="listBook" v-for="listBooks in books">
-          <img v-if="listBooks.url_image ==null " :src="`https://projectip2-book-store-api.up.railway.app/storage/${listBooks.path_image}`" alt="Image" />
+          <img v-if="listBooks.url_image ==null " :src="`https://bucket-production-853a.up.railway.app/storage/${listBooks.path_image}`" alt="Image" />
           <img v-else :src="listBooks.url_image" alt="Image" />
           <RouterLink class="Link" :to="`/detail/${listBooks.id}`">
               <span

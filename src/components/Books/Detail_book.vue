@@ -195,7 +195,7 @@ export default {
       <div class="img_container">
         <img
           v-if="found_book.path_image !== null"
-          :src="`https://projectip2-book-store-api.up.railway.app/storage/${found_book.path_image}`"
+          :src="`https://bucket-production-853a.up.railway.app/storage/${found_book.path_image}`"
           alt="Book_image_path"
         />
         <img
