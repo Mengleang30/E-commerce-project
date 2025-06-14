@@ -25,3 +25,10 @@ export default {
     </svg>
 
 </template>
+
+<style scoped>
+svg{
+    color: blue;
+}
+
+</style>

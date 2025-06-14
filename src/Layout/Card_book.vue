@@ -1,5 +1,5 @@
 <script>
-import { useBookStore } from '@/stores';
+import axios from 'axios';
 import { ref } from 'vue';
 import { onMounted, onBeforeUnmount } from 'vue';
 
@@ -7,95 +7,77 @@ export default {
     name: "Card_book",
 
     setup() {
-    const cart_data = useBookStore();
-    const current_Index = ref(0);
-    // const previous_Index = ref(0);
-    const updateIndex = ref(null); 
+    const showBooks = ref(null);
 
-   
+    const fetchCardBooks = async ()=>{
+        try{
+            const res = await axios.get("http://localhost:8200/api/books/show_books")
+            showBooks.value = res.data;
+            // console.log("tttt",res.data)
+        }
+        catch(e){
+
+        }
+       
+    }
+
+    let intervalId = null;
     onMounted(() => {
-      autoUpdateCard();
+        fetchCardBooks();
+        intervalId = setInterval(fetchCardBooks, 4000); 
+        setTimeout(()=>{
+
+            fetchCardBooks();
+        },4000)
+     
     });
 
   
     onBeforeUnmount(() => {
-      if (updateIndex.value) {
-        clearInterval(updateIndex.value);
+      if (intervalId) {
+        clearInterval(intervalId); // clean up the timer
       }
     });
 
-    const autoUpdateCard = () => {
-    
-      if (updateIndex.value) {
-        clearInterval(updateIndex.value);
-      }
-
-      // Start the interval
-      updateIndex.value = setInterval(() => {
-        current_Index.value = Math.floor(Math.random() * cart_data.BookData.length);
-        // console.log("Random Index:", current_Index.value);
-      }, 4000);
-    };
-
-    // const nextCard = () => {
-      
-    //   pauseCard();
-
-    //   current_Index.value = (current_Index.value + 1) % cart_data.BookData.length;
-
-    //   // pause for 5s
-    //   setTimeout(() => {
-    //     autoUpdateCard();
-    //   }, 6000);
-    // };
-
-    // const pauseCard = () => {
-    //   console.log("Pause random");
-    //   if (updateIndex.value) {
-    //     clearInterval(updateIndex.value);
-    //   }
-    // };
-
+   
     return {
-      Card_data: cart_data.BookData,
-      current_Index,
-      // previous_Index,
-      // nextCard,
-      // pauseCard,
-      updateIndex,
-      autoUpdateCard,
+      showBooks,
       
     };
-  }
+  },
 
 
 }
 </script>
 
 <template>
-    <div class="card">
-        <!-- <div class="wrap_arrow">
-            <div @click="pauseCard" class="left">&lt;</div>
-            <div @click="nextCard" class="right">&gt;</div>
-        </div> -->
-        <article class="article">
-            <h4>{{ Card_data[current_Index].title }}</h4>
-            <p>By : <strong>{{ Card_data[current_Index].author }}</strong> .{{ Card_data[current_Index].description }} </p>
-                <RouterLink :to="`/detail/${Card_data[current_Index].id}`">
-                    <button class="btn">View Now</button>
-                </RouterLink>
-        </article>
-        <img :src="Card_data[current_Index].url_image" alt="books">
+  
+    <div v-if="showBooks" class="wrap">
+
+  
+    <div class="card" v-for="book in showBooks" :key="book.id">
+      <article class="article">
+        <h4>{{ book.title }}</h4>
+        <p>By : <strong>{{ book.author }}</strong> - {{ book.description }}</p>
+        <RouterLink :to="`/detail/${book.id}`">
+          <button class="btn">View Now</button>
+        </RouterLink>
+      </article>
+      <img v-if="book.url_image==null" :src="`http://localhost:8200/storage/${book.path_image}`" alt="Book Cover" />
+      <img v-else :src="book.url_image" alt="Book Cover" />
     </div>
+  </div>
+  <div v-else>Loading books...</div>
+
 </template>
 
 <style scoped>
 .card {
     display: flex;
     padding: 16px 30px;
-    justify-content: center;
-    height: 16rem;
-    width: 50rem;
+    justify-content: space-between;
+    height: 14rem;
+    width: 32rem;
     box-shadow: 0px 4px 2px rgb(0, 0, 0, 20%);
     background: linear-gradient(to right,
             rgba(135, 161, 174, 1) 29%,
@@ -105,6 +87,15 @@ export default {
     position: relative;
     z-index: 120;
     transition: 1.8s all; 
+    
+}
+.wrap{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    padding: 5px;
     
 }
 
@@ -118,7 +109,8 @@ export default {
 }
 
 .card img {
-    width: 10rem;
+    width: 6rem;
+    height: 8rem;
     box-shadow: 2px 4px 2px rgb(0, 0, 0, 20%);
 }
 
@@ -197,13 +189,12 @@ export default {
 
 @media screen and (max-width : 460px) {
     .card img {
-    width: 7rem;
+    width: 4rem;
     box-shadow: 2px 4px 2px rgb(0, 0, 0, 20%);
-    height: auto;
 }
-    .card {
+    /* .card {
     height: 70%;
-    }
+    } */
     .card .article{
     font-size: 14px;
     }

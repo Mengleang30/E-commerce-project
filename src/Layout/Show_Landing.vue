@@ -1,34 +1,48 @@
 <script setup>
 import { useBookStore } from '@/stores';
+import { useBooks } from '@/stores/books';
 
-import { defineProps } from 'vue';
+import { defineProps, onMounted } from 'vue';
 import { ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 
+
 const router = useRouter();
 const useStore = useBookStore();
+
+// const bookData = useBooks();
+
+// onMounted(()=>{
+//     bookData.fetchBooks();
+// })
 
 const textSearch = ref('');
 
    
 
-const handleSearch = ()=>{
-  if(textSearch.value.trim()===""){
-    return;
-  }
-  
-  useStore.setTextFromSearch(textSearch.value)
-  console.log(textSearch.value)
-  textSearch.value = ""
-  router.push('/search');
-  
-}
 
-const handleSearchByCategory = (text)=>{
-  useStore.setTextFromSearch(text)
-  router.push('/search');
-  
-}
+const searchQuery = ref('');
+
+
+const useBook = useBooks();
+
+
+
+
+// const handleSearch = ()=>{
+//     useBook.searchBooksAPI(searchQuery.value);
+//     router.push('/search')
+// }
+
+
+
+const handleSearch = () => {
+  router.push({ path: '/search', query: { query: searchQuery.value } });
+};
+
+const handleSearchInLanding = (search) => {
+  router.push({ path: '/search', query: { query: search } });
+};
 
 const texts = [
     "Your next adventure awaits in the pages of a book.",
@@ -97,7 +111,7 @@ defineProps ({
             </div>
             <div class="form">
                 <div class="wrap_form">
-                    <input  @keydown.enter="handleSearch" type="text" placeholder="Search for books ..." v-model="textSearch">
+                    <input  @keydown.enter="handleSearch" type="text" placeholder="Search for books ..." v-model="searchQuery">
                     <button type="submit" @click="handleSearch">
                         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0,0,256,256">
                             <g fill="#ffffff" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(4,4)"><path d="M27,9c-9.925,0 -18,8.075 -18,18c0,9.925 8.075,18 18,18c4.12921,0 7.9263,-1.41263 10.9668,-3.75977l13.08203,13.08203c0.904,0.904 2.36944,0.904 3.27344,0c0.904,-0.904 0.904,-2.36944 0,-3.27344l-13.08203,-13.08203c2.34713,-3.0405 3.75977,-6.83758 3.75977,-10.9668c0,-9.925 -8.075,-18 -18,-18zM27,13c7.719,0 14,6.281 14,14c0,7.719 -6.281,14 -14,14c-7.719,0 -14,-6.281 -14,-14c0,-7.719 6.281,-14 14,-14z"></path></g></g>
@@ -110,10 +124,10 @@ defineProps ({
                 <h4>Quick Search </h4>
                 <div class="wrap_grid">
                     <div class="container_explore">
-                        <div v-for="list in Category" @click="handleSearchByCategory(list)" class="child">{{ list }}</div>
+                        <div v-for="list in Category" @click="handleSearchInLanding(list)" class="child">{{ list }}</div>
                     </div>
                     <div class="container_explore">
-                        <div v-for="list in Author" @click="handleSearchByCategory(list)" class="child">{{ list }}</div>
+                        <div v-for="list in Author" @click="handleSearchInLanding(list)" class="child">{{ list }}</div>
                     </div>  
                 </div>
             </div>

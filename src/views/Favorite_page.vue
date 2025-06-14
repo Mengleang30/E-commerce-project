@@ -1,5 +1,5 @@
 <script>
-import FavoriteBook from '@/components/Books/FavoriteBook.vue';
+import FavoriteBook from '@/views/FavoriteBook.vue';
 import { useBookStore } from '@/stores';
 export default{
     name : "Favorite",

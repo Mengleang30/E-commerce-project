@@ -1,31 +1,36 @@
 <script setup>
-import { computed, devtools, ref } from 'vue';
+import { computed, devtools, onMounted, ref } from 'vue';
 import { useUserStore } from '@/stores/userBookStore';
 import { useBookStore } from '@/stores';
-import payments from '@/payments/payments.vue';
+import useCarts from '@/stores/carts';
+
+import { CirclePlus } from 'lucide-vue-next';
+import { CircleMinus } from 'lucide-vue-next';
+import { useRouter } from 'vue-router';
+import useOrder from '@/stores/order';
 
 const userStore = useUserStore();
 const DataBooks = useBookStore();
 
 const pay = ref(false);
 
-const handleToPay = () => {
-  pay.value = true;
-  window.scrollTo(0,0);
-}
-const increaseQuantity = (id) => {
-  userStore.increaseQuantity(id)
-}
-const decreaseQuantity = (id) => {
-  userStore.decreaseQuantity(id)
-}
+// const handleToPay = () => {
+//   pay.value = true;
+//   window.scrollTo(0,0);
+// }
+// const increaseQuantity = (id) => {
+//   userStore.increaseQuantity(id)
+// }
+// const decreaseQuantity = (id) => {
+//   userStore.decreaseQuantity(id)
+// }
 
-const handleCloseBtn = () => {
-  pay.value = false;-
-  userStore.clearInvoive();
+// const handleCloseBtn = () => {
+//   pay.value = false;-
+//   userStore.clearInvoive();
  
 
-}
+// }
 
 const CartBooks = computed(() => {
   if (!userStore.loggedInUser) {
@@ -48,22 +53,67 @@ const CartBooks = computed(() => {
 
 })
 
-const totalPrice = computed(() => {
-  return CartBooks.value.reduce((sum, Carted) => {
-    return sum + Carted.qualities * Carted.price * (1 - Carted.discount / 100);
-  }, 0)
-})
-const SubQuantity = computed(() => {
-  return CartBooks.value.reduce((sum, Carted) => {
-    return sum + Carted.qualities;
-  }, 0)
-})
-const handleRemove = (id) => {
-  userStore.removeCarted(id)("decrement");
-}
 
 const updateQuantity = (id, newQuantity) => {
   userStore.updateCartQuantity(id, newQuantity);
+}
+
+const cartStore = useCarts();
+
+const listCarts = computed(()=>{
+  return cartStore.carts;
+})
+
+const deleteCart =async (id) => {
+ await cartStore.deleteCart(id);
+ await cartStore.fetchCarts();
+}
+
+const clearing = ref('Clear Carts')
+
+const clearCart =async () => {
+  clearing.value='Clear...' 
+ await cartStore.clearCart();
+ clearing.value="Clear Carts"
+//  await cartStore.fetchCarts();
+}
+
+const bookQuantity = ref();
+
+const handleUpdateQuantity =  (id, qualities) => {
+  if (qualities < 1) return;
+  cartStore.updateQuantity(id, qualities);
+
+}
+
+onMounted(()=>{
+  cartStore.fetchCarts();
+})
+
+
+const showOption = ref(false);
+
+function clearCartOption(){
+  showOption.value=true
+}
+function cancelCartOption(){
+  showOption.value=false
+}
+
+
+
+const router = useRouter();
+const useOrders = useOrder();
+
+const hasPendingOrder = computed(() => {
+  return useOrders.orders.some(order => order.status.toLowerCase() === 'pending');
+});
+
+const handleCheckout = async ()=>{
+
+  await cartStore.checkout();
+  await useOrders.fetchOrder();
+  router.push('/order')
 }
 
 </script>
@@ -72,104 +122,187 @@ const updateQuantity = (id, newQuantity) => {
   <div>
 <hr>
     <div class="Card">
-      <div v-if="pay" class="modal-overlay" >
+      <!-- {{ listCarts.cart_books }} -->
+      <!-- <div v-if="pay" class="modal-overlay" >
             <div class="paymentContainer" @click.stop>
               <payments :total="totalPrice" :click_close="handleCloseBtn"/>
             </div>
-        </div>
-      <h2>
+        </div> -->
         <div class="book-list">
-
-          <div v-if="CartBooks.length > 0">
-            <div v-for="Carted in CartBooks" :key="Carted.id">
+      
+          <div v-if="listCarts.cart_books && listCarts.cart_books.length > 0">
+            <div v-for="Carted in listCarts.cart_books" :key="Carted.book.id">
               <hr>
               <div class="each_cart">
-
-                <img :src="Carted.url_image" alt="CartBooks" class="book-image">
-
+                  <!-- {{ Carted }} -->
+                <img v-if="Carted.book.path_image" :src="`http://localhost:8200/storage/${Carted.book.path_image}`" alt="CartBooks" class="book-image">
+                <img v-else :src="Carted.book.url_image"  alt="CartBooks" class="book-image">
                 <div class="book-content">
 
-                  <h3 class="book-title">{{ Carted.title }}</h3>
-                  <p class="book-quantity">Quantity: {{ Carted.qualities }} </p>
-                  <p class="book-price">Price: $ {{ (Carted.price * (1 - Carted.discount / 100)).toFixed(2) }}</p>
-
-
+                  <h3 class="book-title">{{ Carted.book.title }}</h3>
+                  <p class="book-quantity">Quantity: {{ Carted.quantity }} </p>
+                  <p class="book-price">Price: $ {{ Carted.book.price }}</p>
+                   <p class="book-price">Discount: <strong>{{ Carted.book.discount }}%</strong></p>
+                  <p class="book-price">Final Price: $ {{ (Carted.book.price * (1 - Carted.book.discount / 100)).toFixed(2) }}</p>
+              
                 </div>
                   <div>
                     <div class="quantity-container">
 
                       <div class="quantity-controls">
-                        <button @click="decreaseQuantity(Carted.id)">-</button>
-                        <input v-model="Carted.qualities" @input="updateQuantity(Carted.id, Carted.qualities)"
+                        <button @click="handleUpdateQuantity(Carted.id, Carted.quantity-1)"><CircleMinus class="btn"/></button>
+                        <input v-model="Carted.quantity" @input="handleUpdateQuantity(Carted.id, Carted.quantity)"
                           type="number" id="quantity" min="1" max="99" value="1" />
-                        <button @click="increaseQuantity(Carted.id)">+</button>
+                        <button @click="handleUpdateQuantity(Carted.id, Carted.quantity+1)"><CirclePlus class="btn"/></button>
                       </div>
 
                       <div class="remove-button">
-                        <button @click="handleRemove(Carted.id)">Remove</button>
+                        <button @click="deleteCart(Carted.id)">Remove</button>
                       </div>
                     </div>
                   </div>
 
 
-                
               </div>
-              <div class="sub_totals">
-                SubTotal: $ {{ (Carted.qualities * Carted.price * (1 - Carted.discount / 100)).toFixed(2) }}
-              </div>
+              <h3 class="sub_totals">
+                SubTotal: $ {{ Carted.sub_total }}
+              </h3>
+             
 
             </div>
+           <div class="clear_wrapper">
+        <button class="clear_btn" @click="clearCartOption" v-if="!showOption">Clear All Carts</button>
+        <div class="clear_option" v-else>
+          <p>Do you want to clear?</p>
+          <div>
+            <button class="clear_btn_no" @click="cancelCartOption" >No</button>
+            <button class="clear_btn" @click="clearCart">{{ clearing }}</button>
+          </div>
+        </div>
+        
+        <div class="grand_total">
+          <h3>$ {{ listCarts.grand_total }}</h3>
+        </div>
+        
+
+        <button @click="handleCheckout" class="checkout">Checkout</button>
+      </div>
+     
+            
           </div>
 
-          <div v-else class="No_cart">
+        <div v-else-if="hasPendingOrder" class="">
+            <div class="pending_order">
+              <h4>You're having the pending order </h4>
+              <button @click="router.push('/order')" class="back-btn">Go to Order</button>
+          </div>
+        </div>
+        <div v-else class="No_cart">
             <div class="empty">
             <h3>Empty Book Yet</h3>
           </div>
-</div>
+        </div>
         </div>
 
-      </h2>
+     
     </div>
 
   </div>
-  <div v-if="CartBooks.length>0 ">
-
-    <div class="cart_Totals">
-      <dev class="Totals">
-        <h2>Cart Totals
-         <hr>
-        </h2>
-        <div class="end">
-          
-          <p>Shipping: $ 0.00</p>
-          <p>Total: $ {{ totalPrice.toFixed(2) }}</p>
-          <p>SubQuantity: {{ SubQuantity }}</p>
-
-          <div class="paybtn">
-          
-            <div class="book-price">
-              <h2> Total :
-                ${{ totalPrice.toFixed(2) }}
-              </h2>
-            </div>
-            
-            <div class="Topay">
-              <button @click="handleToPay">To Pay</button>
-            </div>
-            
-          </div>
-         
-        </div>
-       
-      </dev> <hr>
-
-    </div>
-  </div>
-
+  
 </template>
 
 
 <style scoped>
+.grand_total{
+  margin-top: 1rem;
+  background-color: white;
+  color: rgb(6, 129, 237)
+  ;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 5px;
+  display: flex;
+  font-weight: 700;
+  font-size: larger;
+  border-radius: 6px;
+}
+.checkout{
+
+  background-color: rgb(80, 80, 255);
+  border-radius: 8px;
+  width: 6.5rem;
+  height: 2.4rem;
+  border: none;
+  margin: 5px;
+  font-size: large;
+  color: white;
+  float: right;
+  cursor: pointer;
+
+}
+.checkout:hover{
+ scale: 1.01;
+ background-color: rgb(60, 60, 255);
+
+}
+.pending_order{
+  text-align: center;
+  height: 12rem;
+}
+.back-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  margin: 1rem;
+  font-size: 1rem;
+  color:blue;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.8s ease, transform 0.1s;
+}
+.clear_option{
+  background-color: rgb(223, 223, 223);
+  border-radius: 6px;
+  
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+
+  width: 12rem;
+  justify-content: center;
+}
+.clear_option .clear_btn ,.clear_btn_no{
+  height: 2rem;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.clear_option .clear_btn {
+  background-color: red;
+}
+
+.clear_btn_no{
+    width: 3rem;
+    background-color: white;
+    border: none
+    ;
+    border-radius: 8px;
+}
+.clear_btn{
+  background-color: #7e7d7d;
+  
+  color: rgb(250, 245, 245);
+  border: none;
+  border-radius: 8px;
+  align-items: center;
+  padding: 5px 20px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
 hr{
   width: 100%;
   margin-top: 15px;
@@ -361,6 +494,9 @@ hr{
   height: 2rem;
 }
 
+.btn{
+  width: 1.8rem;
+}
 .coupon button {
   background-color: rgb(17, 17, 18);
   color: white;
@@ -429,9 +565,9 @@ hr{
 }
 
 .quantity-controls button {
-  background-color: #d6d2d2f6;
+  background-color: transparent;
   border: none;
-  color: rgb(24, 22, 22);
+  color: rgb(6, 129, 237);
   font-size: 16px;
   /* Slightly larger size */
   font-weight: bold;
@@ -439,10 +575,10 @@ hr{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 1.8rem;
-  height: 1.8rem;
-
+  width: 2rem;
+  height: 2rem;
 }
+
 
 .quantity-controls input {
   width: 40px;
@@ -450,14 +586,14 @@ hr{
   border: none;
   font-size: 15px;
 }
-.quantity-controls button:hover{
-  background-color: rgba(36, 34, 34, 0.493);
+/* .quantity-controls button:hover{
+  background-color: whitesmoke;
   border-radius: 50%;
 }
 .remove-button:hover{
   background-color: rgb(24, 23, 23);
   border-radius: 50%;
-}
+} */
 .remove-button button {
   background-color: #f70707;
   color: rgb(250, 245, 245);

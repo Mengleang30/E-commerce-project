@@ -1,5 +1,4 @@
 <script>
-    import search_component from "../components/Books/search_component.vue";
     import list_book_panel from "../components/Books/list_book_panel.vue";
     export default {
         name: " list_book",

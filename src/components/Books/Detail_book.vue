@@ -1,14 +1,19 @@
 <script>
 import { useBookStore } from "@/stores";
 
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import BackButton from "./Btn_Elements/BackButton.vue";
 import Fovite_icons from "./Fovite_icons.vue";
 import Star from "./Btn_Elements/Star.vue";
 import alert_message from "./Btn_Elements/alert_message.vue";
+
 import RelatedBooks from "./RelatedBooks.vue";
 import { useUserStore } from "@/stores/userBookStore";
+import axios from "axios";
+import useAuthentication from "@/stores/authentication";
+import useBooks from "@/stores/books";
+import useCarts from "@/stores/carts";
 
 export default {
   name: "Detail_book",
@@ -22,58 +27,100 @@ export default {
 
 
   setup() {
-    const bookStore = useBookStore();
     const route = useRoute();
     const ShowAlert = ref(false)
+    const comments = ref(null)
+   
 
     const NotLoginMessage = ref('')
 
     const userStore = useUserStore();
 
-    
-    // find id for books needed to details
-    const bookId = ref(parseInt(route.params.id)); 
-    
-    const found_book = computed(() => {
-      return bookStore.getProductId(bookId.value);
-    });
+  const bookId = ref(parseInt(route.params.id));
+  const found_book = ref(null); // Change from computed to ref
+  const backendUrl = "http://localhost:8200"; // Or your API base URL
 
-   
-    // call action from userStore for adding cart for each users
-    const numberOrder = ref(1);
-    const handleAddCart=()=>{
-      if(!userStore.loggedInUser){
-        NotLoginMessage.value = "You must be logged in to add items to the cart.";
+  const fetchBookDetails = async (bookId) => {
+    try {
+      const res = await axios.get(`${backendUrl}/api/books/id/${bookId}`);
+      found_book.value = res.data;
+      // console.log("Book details:", res.data);
+    } catch (e) {
+      console.log("Error fetching book details:", e);
+    }
+  };
+   const fetchComments = async (bookId) => {
+      try {
+        const res = await axios.get(`http://localhost:8200/api/books/get_comments/${bookId}`);
+        comments.value = res.data;
+        // console.log("Comments fetched:", res.data);
+      } catch (e) {
+        console.log("Error fetching comments:", e);
+      }
+    }
+
+  const commentText = ref('');  
+
+  const TextShow = ref('');
+  const NotLogin = ref('');
+
+  const Auth = useAuthentication();
+
+
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+
+  const handleAddComment = async ()=>{
+    try{
+      if(!Auth.isAuthenticated){
+        NotLogin.value = "You must be logged in to add a comment.";
+        NotLoginMessage.value = "You must be logged in to add a comment.";
         setTimeout(() => {
           NotLoginMessage.value = "";
         }, 2000);
-        console.log("You must be logged in to add items to the cart.");
-      return;
+        console.log("You must be logged in to add a comment.");
+        return;
       }
+      TextShow.value = "Adding comment...";
+      NotLogin.value = '';
+      await axios.post(`${backendUrl}/api/customer/comments/${bookId.value}`, {
+        comment: commentText.value,
+      },{
+        withCredentials: true,
+        headers: {
+            Authorization: `Bearer ${token}`,
+          },
+      })
+      await fetchComments(bookId.value); // Refresh comments after adding
 
-      if(numberOrder.value > 0 && found_book.value){
-        const Ordered = userStore.addToCart(found_book.value.id, numberOrder.value);
-        ShowAlert.value = true;
-        setTimeout(() => (ShowAlert.value = false), 3000); // Auto-hide the alert
-        console.log(Ordered.message);
-        console.log(userStore.loggedInUser?.cart)
-      }
-
+      TextShow.value = "Comment added successfully! ✅";
+      
+      commentText.value = ''; // Clear the input field
+      NotLogin.value = '';
     }
-    
+    catch (e){
+      console.log("Error adding comment:", e);
+    }
+  }
 
-    // display related books
-    const booksRelated = computed (()=> {
-      const category = found_book.value.category;
-      if (!category) return [];
-      return bookStore.BookData.filter((books)=>books.id !== bookId && found_book.value.id !==books.id &&
-      books.category.some((cat) => category.includes(cat))
-    )})
+
+
+  // console.log("Books", found_book.value)
+    // call action from userStore for adding cart for each users
+    const numberOrder = ref(1);
  
+
+
+    
+     
+
+   
     watch (
       ()=>route.params.id,
       (newId)=>{
         bookId.value = parseInt(newId);
+        fetchBookDetails(bookId.value);
+        fetchComments(bookId.value);
+
        setTimeout(() => {
     window.scrollTo(0, 0);
     }, 300); // Simulated loading delay
@@ -82,44 +129,82 @@ export default {
     )
 
     
-    // mark for books that already in favorite
-    const checkFavorite = (BookId) => {
-      return userStore.loggedInUser && userStore.loggedInUser.favorite.includes(BookId);
-    };
+   
 
     // call action add favorite from userStore 
-    const handleAddFavorite = (BookId) => {
-      if (!userStore.loggedInUser) {
-        NotLoginMessage.value = "You must be logged in to add items to the favorite.";
-        setTimeout(() => {
-          NotLoginMessage.value = "";
-        }, 2000);
-        console.log("You must be logged in to add favorites.");
-        return;
-      }
-      console.log("Adding to favorite, Book ID:", BookId);
-      const result = userStore.addToFavorite(BookId);
-      console.log(result.message);
-      console.log("Logged In User:", userStore.loggedInUser);
-      console.log("Favorites:", userStore.loggedInUser?.favorite);
-
-    };
-
    
+
+
+    // console.log("comments", comments.value)
+    // console.log("comments", bookId.value)
+
+    const useBook = useBooks();
+     // mark for books that already in favorite
+   const isInWishlist = computed(() =>
+    useBook.wishlist.some(item => item.book_id === bookId.value)
+  );
+
+
+ 
+
+  
+    const handleAddWishlist = async () => {
+       await useBook.addWishList(bookId.value);
+       await useBook.fetchWishList();
+    }
+    // const handleRemoveWishList = async () =>{
+    //   await useBook.removeWishList(bookId.value);
+    // }
+
+    const handleRemoveWishList = async () => {
+    const wishlistEntry = useBook.wishlist.find(item => item.book_id === bookId.value);
+    if (wishlistEntry) {
+      useBook.removeWishList(wishlistEntry.id);
+      
+    } else {
+      console.log("Wishlist entry not found to remove");
+    }
+};
+
+    const CartStore = useCarts()
+    const addingStatus = ref('Add To Cart');
+    const handleAddToCarts = async (bookId)=>{
+        addingStatus.value = "Adding...";
+        await CartStore.addCarts(bookId, numberOrder.value);
+        addingStatus.value = "Add To Cart"
+
+    }
+
+    onMounted(() => {
+    fetchBookDetails(bookId.value);
+    fetchComments(bookId.value)
+    useBook.fetchWishList();
+    window.scrollTo(0, 0);
+  });
     return {
       found_book,
+      addingStatus,
+      handleRemoveWishList,
+      useBook,
       ShowAlert,
-      booksRelated,
+      handleAddToCarts,
+      handleAddWishlist,
+      // booksRelated,
       bookId,
-      checkFavorite,
-      handleAddFavorite,
-      handleAddCart,
+      isInWishlist,
       numberOrder,
-      NotLoginMessage
+      NotLoginMessage,
+      fetchBookDetails,
+      comments,
+      commentText,
+      handleAddComment,
+      TextShow,
+      NotLogin
     };
   },
   mounted() {
     window.scrollTo(0, 0);
+    
   },
   methods: {
     Back() {
@@ -145,7 +230,9 @@ export default {
     <p class="alert_successful">{{ NotLoginMessage }}</p>
       <BackButton @click="Back" />
       <div class="img_container">
-        <img :src="found_book.url_image" alt="" />
+        <img v-if="found_book.path_image!==null" :src="`http://localhost:8200/storage/${found_book.path_image}`" alt="Book_image_path" />
+        <img v-else-if="found_book.url_image !==null" :src="found_book.url_image" alt="Book_image_url" />
+        <img v-else  src="https://upload.wikimedia.org/wikipedia/commons/2/21/Blank_book_on_a_table.jpg" />
         <hr />
         <div class="book_description">
           <h3>Description</h3>
@@ -154,6 +241,7 @@ export default {
       </div>
       <article class="information_container">
         <h2>{{ found_book.title }}</h2>
+        
         <div class="label_inform" v-if="found_book.discount==0">
             <p>Price :</p>
           <h2 class="price">${{ found_book.price.toFixed(2) }}</h2>
@@ -169,7 +257,7 @@ export default {
           <div class="subtract" @click="SubNumberOrder">-</div>
           <input type="number" placeholder="1" v-model="numberOrder" />
           <div class="adding" @click="AddNumberOrder">+</div>
-          <button @click="handleAddCart">Add To Cart</button>
+          <button @click="handleAddToCarts(found_book.id)">{{ addingStatus }}</button>
         </div>
 
         <div class="grid_container">
@@ -181,38 +269,45 @@ export default {
             <h4>Original Price</h4>
             <p class="price">${{ found_book.price }}</p>
           </div>
-          <div class="box_inform">
+          <!-- <div class="box_inform">
             <h4>Rated</h4>
             <div class="wrap_star">
               <Star v-for="i in Math.floor(found_book.rated)" :key="i" />
             </div>
-          </div>
+          </div> -->
           <div class="box_inform">
-            <h4>Language</h4>
-            <p>{{ found_book.Language.join(", ") }}</p>
+            <h4>Language </h4>
+            <p v-if="found_book.languages!==null"> {{ found_book.languages }}</p>
+            <p v-else>Don't mention</p>
           </div>
 
           <div class="box_inform">
             <h4>Category</h4>
-            <p>{{ found_book.category.join(", ") }}</p>
+            <p>{{ found_book.category.name}}</p>
           </div>
-          <div class="box_inform">
+          <!-- <div class="box_inform">
             <h4>Available Format</h4>
             <p>{{ found_book.format.join(", ") }}</p>
-          </div>
+          </div> -->
           <div class="box_inform">
-            <h4>Favorite</h4>
+            <h4>Favorite </h4>
             <div class="wrapping_fav">
-            <Fovite_icons 
-               :Clicked_favorite="checkFavorite(found_book.id)"
-               @click="handleAddFavorite(found_book.id)"
-            
+            <Fovite_icons  v-if="!isInWishlist"
+            @click="handleAddWishlist"
+             :Clicked_favorite="false"
             class="Favorite_btn" />
+             <Fovite_icons
+              v-else
+            @click="handleRemoveWishList"
+            :Clicked_favorite="true"
+            class="Favorite_btn" />
+            <!-- <button @click="handleAddWishlist" v-if="!isInWishlist">add</button>
+            <button @click="handleRemoveWishList" v-else>remove</button> -->
           </div>
           </div>
           <div class="box_inform">
             <h4>Published</h4>
-            <p>{{ found_book.published }}</p>
+            <p>{{ found_book.published_date }}</p>
           </div>
           <div class="box_inform">
             <h4>Discount</h4>
@@ -220,7 +315,7 @@ export default {
           </div>
           <div class="box_inform">
             <h4>Code</h4>
-            <p>{{ found_book.code }}</p>
+            <p>{{ found_book.id }}</p>
           </div>
         
         </div>
@@ -229,29 +324,43 @@ export default {
       </article>
     </div>
     <div class="comment_container" >
-        <h3>Comment</h3>
-        <p v-if="found_book.user_comment==[]">No comments yet.</p>
-      <article v-else class="each_comment" v-for="userComment in found_book.user_comment" :key="userComment">
+        <h3> 📝 Comment</h3>
+        <span class="TextShow">{{ TextShow }}</span>
+        <span class="NotLogin">{{ NotLogin }}</span>
+         <form @submit.prevent="handleAddComment" class="commentAdd">
+            <h4 for="comment">Add Comment</h4>
+            <textarea v-model="commentText"
+              name="comment"
+              id="comment"
+              cols="30"
+              required
+              rows="2"
+              placeholder="Write your comment here..."
+            ></textarea>
+            <button type="submit" >Submit</button>
+          </form>
+        <p v-if="comments == null">No comments yet.</p>
+      <article v-else class="each_comment" v-for="comment in comments" :key="comment.id">
         <img
           src="https://img.icons8.com/?size=100&id=mlMB8cHGuy5i&format=png&color=000000"
           alt=""
         />
         <div class="warp">
           <div class="box_comment">
-            <div class="profile">
-                <span class="name">{{ userComment.name}}</span>
+            <div class="profile_comment">
+                <span class="name">{{ comment.username}}</span>
                 <div class="date">
-                    <span >{{ userComment.date }}</span>
+                    <span >{{ new Date(comment.created_at).toLocaleString() }}</span>
                 </div>
             </div>
-            <div class="comment">{{ userComment.comment }}</div>
+            <div class="comment">{{ comment.comment }}</div>
           </div>
         </div>
       </article>
     </div>
     
-    <RelatedBooks :RelatedBooks="booksRelated" 
-    /> 
+    <!-- <RelatedBooks :RelatedBooks="booksRelated" 
+    />  -->
   </div>
   <h2 v-else>Book not found</h2>
 </template>
@@ -260,6 +369,39 @@ export default {
 .detail_book {
   width: auto;
   min-height: 80vh;
+}
+
+.commentAdd{
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: .5rem;
+}
+.commentAdd textarea {
+  width: 100%;
+  height: 4rem;
+  border-radius: 0.4rem;
+  font-size: 15px;
+  resize:vertical;
+  padding: 5px;
+}
+.commentAdd button{
+  height: 2rem;
+  min-width: 16%;
+  align-self: center;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color:rgb(67, 139, 255);
+  font-weight: 700;
+  color: white;
+  border: none;
+}
+.commentAdd button:hover{
+  background-color: red;
+}
+.NotLogin{
+  color: red;
 }
 
 .book_container {
@@ -285,6 +427,13 @@ export default {
 .book_container img {
     aspect-ratio: 2/3;
     width: 80%;
+    border: 1px solid black;
+    border-radius: 6px;
+}
+
+.TextShow{
+  color:rgb(0, 138, 53);
+  font-weight:500;
 }
 
 .book_description {
@@ -470,12 +619,12 @@ input[type="number"]::-webkit-inner-spin-button {
     display: flex;
     padding: 5px;
     gap: 2px;
-    flex-grow: 1;
+   
    
 }
 .warp{
     display: flex;
-    min-width: 40%;
+    max-width: 100%;
     border-radius: .4rem;
 }
 
@@ -487,25 +636,27 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .box_comment{
     padding: 5px;
-    
     flex-grow: 1;
 }
 
-.profile {
+.profile_comment {
     display: flex;
     gap: 1rem;
     align-items: center;
+    padding: 3px;
 }
 
 .each_comment .comment{
-    background: linear-gradient(to right bottom, #8e9797, #96a19e, #a1aaa4, #adb3a9, #bcbcaf);
+    /* background: linear-gradient(to right bottom, #8e9797, #96a19e, #a1aaa4, #adb3a9, #bcbcaf); */
     display: block;
     padding: 5px;
     border: 1px solid rgb(159, 156, 156);
     border-radius: .4rem;
+    background-color: rgb(242, 242, 242);
     font-size: small;
     box-shadow: 3px 3px 5px rgb(148, 148, 148);
-    outline: 1px solid rgb(158, 158, 158);
+   
+    /* outline: 1px solid rgb(158, 158, 158); */
 }
 
 

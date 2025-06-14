@@ -1,55 +1,79 @@
 <script setup>
-import { useBookStore } from "@/stores";
-import { computed, watch } from "vue";
 
-const SearchBooks = useBookStore();
-const TextSearch = computed(() => SearchBooks.Search);
-const filterBooks = computed(() => {
-const SearchTerm = TextSearch.value.trim().toLocaleLowerCase();
- 
+import axios from "axios";
+import { computed, onMounted, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
-  if (!SearchTerm) {
-    return [];
-  } else {
-    return SearchBooks.BookData.filter((book) => {
-      const titleMatch = book.title.trim().toLocaleLowerCase().includes(SearchTerm);
-      const authorMatch = book.author.trim().toLocaleLowerCase().includes(SearchTerm);
-      const categoryMatch = book.category.join("").trim().toLocaleLowerCase().includes(SearchTerm)
-      // Return true if any field matches
-      return titleMatch || authorMatch || categoryMatch;
-    });
+
+
+const route = useRoute()
+const searchQuery = ref(route.query.query.toLocaleLowerCase() || '') 
+const books = ref([]);
+
+const fetchBooks = async () => {
+  
+  if (!searchQuery.value) {
+    books.value = [];
+    return;
   }
-});
+
+  try {
+    const res = await axios.get(`http://localhost:8200/api/books/search?query=${searchQuery.value}`);
+    books.value = res.data;
+   
+  } catch (err) {
+    console.error('Fetch error:', err);
+  }
+};
+// console.log("query",searchQuery.value)
+// onMounted(()=>{
+//   fetchBooks();
+// })
+
+// console.log('Books', books.value)
+
+watch(
+  () => route.query.query,
+  (newVal) => {
+    searchQuery.value = newVal;
+    fetchBooks();
+  },
+  { immediate: true }
+);
 
 const highLightText = (text, query) => {
+  if (!text) return '';  
 
   const adjustedQuery = query.trim().replace(/\s+/g, "\\s+");
-
-  const regex = new RegExp(`${adjustedQuery}`, "ig"); //Case-insensitive matching
+  const regex = new RegExp(`${adjustedQuery}`, "ig"); // Case-insensitive matching
   return text.replace(regex, `<mark>${query}</mark>`); // replace by highlight
 };
+
 </script>
 
 
 <template>
   <div class="search_container">
-    <div class="search_page" v-if="filterBooks.length>0">
+    <div class="search_page" v-if="books.length>0">
       <span
-        >The Result of <strong>{{ TextSearch }}</strong></span
+        >The Result of <strong>{{ searchQuery }}</strong></span
       >
-      <p>Found : {{ filterBooks.length }} books</p>
+      <p>Found : {{ books.length }} books</p>
       <div class="findByTitle">
-        <div class="listBook" v-for="books in filterBooks">
-          <img :src="books.url_image" alt="Image" />
-          <RouterLink class="Link" :to="`/detail/${books.id}`">
+        <div class="listBook" v-for="listBooks in books">
+          <img v-if="listBooks.url_image ==null " :src="`http://localhost:8200/storage/${listBooks.path_image}`" alt="Image" />
+          <img v-else :src="listBooks.url_image" alt="Image" />
+          <RouterLink class="Link" :to="`/detail/${listBooks.id}`">
               <span
                 class="title"
-                v-html="highLightText(books.title, TextSearch)"
+                v-html="highLightText(listBooks.title, searchQuery)"
               ></span
               ><br />
-              <span v-html="highLightText(books.author, TextSearch)"></span
+              <span v-html="highLightText(listBooks.author, searchQuery)"></span
               ><br />
-              <span v-html="highLightText(books.category.join(' /'), TextSearch)"></span
+              <span v-html="highLightText(listBooks.category, searchQuery)"></span
+              ><br />
+               <span v-html="highLightText(listBooks.description, searchQuery)"></span
               ><br />
           </RouterLink>
         </div>
@@ -88,7 +112,8 @@ h3{
   display: flex;
   background-color: rgb(255, 255, 255);
   align-items: center;
-
+  
+  
   gap: 1rem;
   padding: 5px;
   font-size: 0.9rem;
@@ -106,9 +131,9 @@ h3{
   min-height: 100vh;
 }
 .search_page .findByTitle {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  display: flex;
   height: auto;
+  flex-wrap: wrap;
   place-items: center;
   row-gap: 5px;
   column-gap: 5px;

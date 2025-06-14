@@ -57,36 +57,6 @@ export const useUserStore = defineStore("userStore", {
       
     },
 
-    async login(email, password) {
-      try {await axios.get(`${this.backendUrl}/sanctum/csrf-cookie`);
-
-      const res = await axios.post(`${this.backendUrl}/api/login`, {
-        email,
-        password,
-      } , {
-        withCredentials: true,
-      });
-      const token = res.data.token;
-      localStorage.setItem("token", token);
-      const role = res.data.role;
-
-      this.loggedInUser = {
-      email,
-      role,
-      token,
-         };
-
-      return {
-        success: true,
-        message: `Welcome back, ${email}!`,
-      }   } catch (error) {
-        console.error("Login error:", error);
-        return {
-          success: false,
-          message: "Login failed. Please check your credentials.",
-        };
-      }
-    }, 
 
     signIn(email, password) {
       const currentUser = this.users.find(

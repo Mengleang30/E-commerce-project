@@ -11,6 +11,7 @@ export default {
     props : {
         Title : String,
         Url_img : String,
+        Path_image: String,
         Price : Number,
         Author : String,
         Year : Number,
@@ -23,24 +24,16 @@ export default {
     },
   
     setup (){
-    //     const BooksFav = useBookStore();
-    //     const handleFavoriteBooks = (id)=>{
-    //         if (BooksFav.FavoriteBooks.includes(id)){
-    //             BooksFav.removeFromFavorite(id);
-    //         }
-    //     else{
-    //         BooksFav.addToFavorite(id);
-    //     }
-    //     }
-    //     return {
-    //         handleFavoriteBooks,
-           
-    //     }
-    // },
+   
+
     },
     methods : {
         onFavoriteClick() {
       this.$emit("addFavorite", this.idBook); // Emit the favorite book ID to the parent
+      
+    },
+      onFavoriteUnClick() {
+      this.$emit("removeFavorite", this.idBook);
     },
     },
     
@@ -49,17 +42,20 @@ export default {
 
 <template>
     <article class="Each_book" v-if="true" >
-        <Favorite_icons :Clicked_favorite="isFavorite" @click="onFavoriteClick"
+        <Favorite_icons v-if="!isFavorite" :Clicked_favorite="false" @click="onFavoriteClick"
+         />
+        <Favorite_icons v-else :Clicked_favorite="isFavorite" @click="onFavoriteUnClick"
          />
         <div class="each_book">
             <div class="wraping">
-                <img :src="Url_img"
-                    alt="book">
+                <img v-if="Path_image!==null" :src="`http://localhost:8200/storage/${Path_image}`" alt="Book_image_path" />
+                <img v-else-if="Url_img!==null" :src="Url_img" alt="Book_image_url" />
+                <img v-else  src="https://upload.wikimedia.org/wikipedia/commons/2/21/Blank_book_on_a_table.jpg" />
                 <h4>{{ Title }}
                 </h4>
                 <span class="author_year">{{ Author }} | {{ Year }}</span>
                 <span class="Category" >
-                    {{ Book_category.join('/') }}
+                    {{ Book_category.name }}
                 </span>
             </div>
             <div class="price_btn">
@@ -67,7 +63,7 @@ export default {
                 <div class="discount_UI" v-else>
                     <h2 class="discount">{{ HaveDiscount }}%</h2>
                     <h2 class="after_discount">${{ AfterDiscount.toFixed(2) }}</h2>
-                    <span class="before_dis">${{ Price.toFixed(2) }}</span>
+                    <span class="before_dis">${{ Price }}</span>
                 </div>
 
                 <!-- Link to each book -->
@@ -89,7 +85,7 @@ export default {
 }
 
 .each_book img {
-   
+   width: 10rem;
     height: 10rem;
 }
 .discount_UI{
@@ -158,6 +154,9 @@ export default {
     -webkit-box-orient: vertical;
     overflow: hidden;
    
+}
+.wraping img{
+    width: 65%;;
 }
 
 .Category {

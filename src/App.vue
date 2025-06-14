@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import Card_book from "./Layout/Card_book.vue";
 import Footer from "./Layout/Footer.vue";
 import Header from "./Layout/Header.vue";
@@ -8,13 +8,24 @@ import Show_Landing from "./Layout/Show_Landing.vue";
 import axios from "axios";
 
 import { useAuthentication } from "./stores/authentication";
+import {useBooks} from "./stores/books";
+import {useCategory} from "./stores/category";
+import useNotification from "./stores/notification";
+import useCarts from "./stores/carts";
+import useOrder from "./stores/order";
+
+
 
 const route = useRoute();
 const isLoading = ref(false);
 const Auth = useAuthentication();
 
-console.log(Auth.user)
 
+const routeName = ref([
+  "Landing",
+  'Search',
+  "ListBook"
+]);
 
 const scrollToCard = () => {
   const viewportHeight = window.innerHeight * 1.2;
@@ -32,17 +43,17 @@ const scrollToCardToTop = () => {
 };
 
 watch(
-  () => route.name,
-  (newRoute, oldRoute) => {
-    if (newRoute != oldRoute) {
-      isLoading.value = true;
-      window.scrollTo(0, 0);
-    }
-    setTimeout(() => {
-      isLoading.value = false;
-    }, 500);
+  // () => route.name,
+  // (newRoute, oldRoute) => {
+  //   if (newRoute != oldRoute) {
+  //     isLoading.value = true;
+  //     window.scrollTo(0, 0);
+  //   }
+  //   setTimeout(() => {
+  //     isLoading.value = false;
+  //   }, 300);
    
-  }
+  // }
 );
 
 // const testFetch = ref()
@@ -56,13 +67,31 @@ watch(
 //     console.error('Error fetching books:', error);
 //   });
 
-fetch('http://localhost:8200/api/login', {
-  method: 'POST',
-  credentials: 'include', // important for cookies
-    // others if needed
-  // body: JSON.stringify({ email, password })
+// fetch('http://localhost:8200/api/login', {
+//   method: 'POST',
+//   credentials: 'include', // important for cookies
+//     // others if needed
+//   // body: JSON.stringify({ email, password })
+// })
+
+const useBook = useBooks();
+const category = useCategory();
+const useNotifications = useNotification();
+const useCart = useCarts();
+const useOrders = useOrder();
+onMounted(()=>{
+  useBook.fetchBooks();
+  category.fetchCategories();
+  useNotifications.fetchNotifications();
+  useBook.fetchWishList();
+  Auth.fetchLoggedUser();
+  useCart.fetchCarts();
+  useOrders.fetchOrder()
+  
 })
 
+
+// console.log(useNotifications.notifications)
 
 
 </script>
@@ -70,23 +99,19 @@ fetch('http://localhost:8200/api/login', {
 <template>
   <Header />
   <main class="Main_page">
-    <div v-if="isLoading" class="loading-overlay">
+    <!-- <div class="loading-overlay">
       <div class="spinner"></div>
-    </div>
-    <div v-else>
+    </div> -->
+    <div >
       <Show_Landing v-if="route.name=='Landing'" :-scroll="scrollToCard" :-scroll-to-top="scrollToCardToTop"/>
       <div class="wrap_card" id="Card">
         <Card_book
-          v-if="route.name !== 'DetailBook' && route.name !== 'Login' && route.name!=='SignUp'"
+          v-if="routeName.includes(route.name)"
         />
       </div>
       <RouterView > 
 
       </RouterView > 
-        <!-- v-slot="{ Component }" -->
-        <!-- <KeepAlive exclude="Detail_book" >
-          <component :is="Component" />
-        </KeepAlive> -->
      
     </div>
   </main>
