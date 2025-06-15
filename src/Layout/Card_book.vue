@@ -21,6 +21,19 @@ export default {
        
     }
 
+    
+    const fetchCoupon = async ()=>{
+        try{
+            const res = await axios.get("https://projectip2-book-store-api.up.railway.app/api/books/show_books")
+            showBooks.value = res.data;
+            // console.log("tttt",res.data)
+        }
+        catch(e){
+
+        }
+       
+    }
+
     let intervalId = null;
     onMounted(() => {
         fetchCardBooks();
@@ -54,6 +67,14 @@ export default {
   
     <div v-if="showBooks" class="wrap">
 
+    <div class="card promo" >
+      <article>
+        <h3>📢 New Promo Code</h3>
+        <p>Use code <strong class="code">BOOKS20</strong> to get 
+        <span>20%</span> off on your first order!</p>
+        <p>Don't miss out on this limited-time offer!</p>
+      </article>
+    </div>
   
     <div class="card" v-for="book in showBooks" :key="book.id">
       <article class="article">
@@ -97,6 +118,20 @@ export default {
     flex-wrap: wrap;
     padding: 5px;
     
+}
+
+.promo {
+    color: rgb(46, 3, 222);
+    text-align: center;
+    line-height: 2rem;
+
+}
+
+
+
+.code{
+    color: rgb(233, 245, 1);
+    font-weight: bold;
 }
 
 .wrap_arrow {

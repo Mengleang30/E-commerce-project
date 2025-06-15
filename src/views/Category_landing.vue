@@ -49,9 +49,6 @@ export default {
       await useBook.addWishList(bookId);
       await useBook.fetchWishList();
     };
-    // const handleRemoveWishList = async () =>{
-    //   await useBook.removeWishList(bookId.value);
-    // }
 
     const handleRemoveWishList = async (bookId) => {
       const wishlistEntry = useBook.wishlist.find(
@@ -73,18 +70,14 @@ export default {
 
     const handleAddFavorite = (BookId) => {
       if (!userStore.loggedInUser) {
-        console.log("You must be logged in to add favorites.");
+        // console.log("You must be logged in to add favorites.");
         return;
       }
-      console.log("Adding to favorite, Book ID:", BookId);
-      const result = userStore.addToFavorite(BookId);
-      console.log(result.message);
-      console.log(userStore.loggedInUser.favorite);
+      // console.log("Adding to favorite, Book ID:", BookId);
+      // const result = userStore.addToFavorite(BookId);
+      // console.log(result.message);
+      // console.log(userStore.loggedInUser.favorite);
     };
-
-    const fiveStarBooks = computed(() => {
-      return Book_by_category.BookData.filter((books) => books.rated == 5);
-    });
 
     const discountBooks = computed(() => {
       return apiBooks.books
@@ -116,6 +109,12 @@ export default {
       
     }
 
+    const computedGroupBooks = computed(()=>{
+      return groupBook.value.filter((item)=>{
+        return item.category_name && item.books && item.books.length > 0;
+      })
+    })
+
     // console.log("List", groupBook)
     onMounted(async () => {
       await useBook.fetchWishList();
@@ -129,7 +128,7 @@ export default {
       filterBooksByCategory,
       handleAddFavorite,
       checkFavorite,
-      fiveStarBooks,
+      computedGroupBooks,
       apiBooks,
       apiCategory,
       isInWishlist,
@@ -183,9 +182,9 @@ export default {
   {{ category.name }}
 </button> -->
 
-  <div class="wraping"  v-for="ListBook in groupBook" :key="ListBook.category_id">
+  <div class="wraping"  v-for="ListBook in computedGroupBooks" :key="ListBook.category_id">
     <div class="listByCategory" >
-       <!-- {{ groupBook }} -->
+       <!-- {{ computedGroupBooks }} -->
     <h4>Best {{ ListBook.category_name	}}</h4>
     <div class="wrap_book">
     <Book_landing

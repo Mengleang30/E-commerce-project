@@ -9,54 +9,6 @@ import { CircleMinus } from 'lucide-vue-next';
 import { useRouter } from 'vue-router';
 import useOrder from '@/stores/order';
 
-const userStore = useUserStore();
-const DataBooks = useBookStore();
-
-const pay = ref(false);
-
-// const handleToPay = () => {
-//   pay.value = true;
-//   window.scrollTo(0,0);
-// }
-// const increaseQuantity = (id) => {
-//   userStore.increaseQuantity(id)
-// }
-// const decreaseQuantity = (id) => {
-//   userStore.decreaseQuantity(id)
-// }
-
-// const handleCloseBtn = () => {
-//   pay.value = false;-
-//   userStore.clearInvoive();
- 
-
-// }
-
-const CartBooks = computed(() => {
-  if (!userStore.loggedInUser) {
-    return [];
-  }
-
-  return userStore.loggedInUser.cart.map((cartItem) => {
-    const book = DataBooks.BookData.find((b) => b.id === cartItem.bookId);
-    if (book) {
-      return {
-        ...book,
-        qualities: cartItem.quantity
-      };
-
-    }
-    return null;
-  })
-
-
-
-})
-
-
-const updateQuantity = (id, newQuantity) => {
-  userStore.updateCartQuantity(id, newQuantity);
-}
 
 const cartStore = useCarts();
 

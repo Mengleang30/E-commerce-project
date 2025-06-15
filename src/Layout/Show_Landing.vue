@@ -337,7 +337,7 @@ defineProps({
     background-color: #1912ca; */
 }
 .wrap_quick_link button {
-  width: 9rem;
+  width: 8rem;
   align-self: center;
   height: 2rem;
   background-color: rgb(255, 255, 255);
@@ -383,7 +383,7 @@ defineProps({
   display: grid;
   grid-template-rows: repeat(2, auto); /* always 2 rows */
   grid-template-columns: 1fr 1fr;       /* two columns (Category + Author) */
-  gap: 20px;
+  gap: 10px;
   width: 100%;
 }
 
@@ -428,11 +428,11 @@ defineProps({
   }
   .wrap_quick_link button {
     font-size: 0.8rem;
-    width: 6rem;
+    width: 5rem;
   }
 }
 
-@media screen and (max-width: 560px) {
+@media screen and (max-width: 760px) {
   .showing h2 {
     font-size: 1.6rem;
   }

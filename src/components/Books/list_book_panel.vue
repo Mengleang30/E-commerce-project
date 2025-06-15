@@ -165,8 +165,8 @@ export default {
     <div class="render_book" v-for="data in FilterBooks" :key="data.id">
       <div class="each_book">
         <div class="main_title_book">
-          <img v-if="data.path_image!==null" :src="`http://localhost:8200/storage/${data.path_image}`" alt="Book_image_path" />
-          <img v-else-if="data.url_image !==null" :src="data.url_image" alt="Book_image_url" />
+          <img v-if="data.path_image!==null" :src="`https://bucket-production-853a.up.railway.app/storage/${data.path_image}`" alt="image" />
+          <img v-else-if="data.url_image !==null" :src="data.url_image" alt="image" />
           <img v-else  src="https://upload.wikimedia.org/wikipedia/commons/2/21/Blank_book_on_a_table.jpg" />
             <h4 v-if="data.title.length < 40">
             {{ data.title.substring(0, 40) }}
@@ -206,15 +206,15 @@ export default {
 <style scoped>
 .list_book_panel {
   margin: 30px 0px 10px 0px;
-  display: flex;
+  /* display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
-  /* display: grid;
+  align-items: flex-start; */
+  display: grid;
   grid-area: auto;
 
   
   
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); */
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   /* border: 1px solid; */
 
 
@@ -246,7 +246,7 @@ export default {
 }
 .each_book {
   padding: 10px;
-  height: 16rem;
+  height: 18rem;
   display: flex;
   flex-direction: column;
   /* max-width: 12rem; */
@@ -269,6 +269,7 @@ export default {
 .main_title_book img {
   width: 4rem;
   height: 6rem;
+  border: 1px solid rgb(207, 206, 206);
 }
 .main_title_book h4 {
   font-weight: 600;
