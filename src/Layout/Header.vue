@@ -232,7 +232,7 @@ export default {
 };
 </script>
 <template>
-  <header ref="navbarRef" v-if="!Auth.isAdmin">
+  <header ref="navbarRef" >
     <div class="option">
       <div class="wrap_logo">
         <svg @click="toggleNavbar" :class="isRotated ? 'rotated' : 'non-rotated'" xmlns="http://www.w3.org/2000/svg"
@@ -316,8 +316,8 @@ export default {
 
 
 
-    <div class="cart_sign_in">
-      <RouterLink to="/cart" class="header_cart">
+    <div class="cart_sign_in" >
+      <RouterLink to="/cart" class="header_cart" v-if="!Auth.isAdmin">
         <div class="number_cart">{{ numberCart }}</div>
         <ShoppingCart />
       </RouterLink>
@@ -783,7 +783,7 @@ nav ul .link.active {
   height: 50px;
 }
 
-@media screen and (max-width : 560px) {
+@media screen and (max-width : 660px) {
   .header {
     padding: .5rem;
   }
@@ -798,14 +798,22 @@ nav ul .link.active {
   }
 
   .search_form .search_btn {
-    top: 3px;
-    right: 3px;
-    width: 1.8rem;
-    height: 1.8rem;
+    top: 35%;
+    right: 8%;
+    width: 1rem;
+    height: 1rem;
   }
 
   .search_form {
-    width: 65%;
+    width: 50%;
+  }
+  .search_form input {
+    width: 100%;
+    height: 1.5rem;
+    padding-left: 0.4rem;
+  }
+  .search_form input::placeholder {
+    font-size: 0.8rem;
   }
 
   .sign_in img {

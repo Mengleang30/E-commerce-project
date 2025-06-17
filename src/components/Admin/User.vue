@@ -54,6 +54,7 @@
 .user-management {
   font-family: sans-serif;
   padding: 20px;
+  line-height: 3rem;
 }
 h1 {
   color: purple;

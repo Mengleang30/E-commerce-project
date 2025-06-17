@@ -5,7 +5,7 @@ import axios from "axios";
 export const useAuthentication = defineStore("AuthStore", {
   state: () => ({
     user: null,
-    loggedInUser: {},
+    loggedInUser: JSON.parse(localStorage.getItem("user")) || null,
     backendUrl: "https://projectip2-book-store-api.up.railway.app",
     token: localStorage.getItem("token") || null,
   }),
@@ -16,6 +16,7 @@ export const useAuthentication = defineStore("AuthStore", {
       window.location.reload();
       localStorage.removeItem("token");
       this.loggedInUser = {};
+      // clear local storage 
       this.token = null;
       axios.defaults.headers.common["Authorization"] = "";
       console.log("User logged out successfully.");
@@ -108,6 +109,7 @@ export const useAuthentication = defineStore("AuthStore", {
           role,
           token,
         };
+      
         // console.log("User logged in:", this.user);
         if (role === "admin") {
           
@@ -244,7 +246,10 @@ export const useAuthentication = defineStore("AuthStore", {
     getUserRole: (state) => {
       return state.user ? state.user.role : {};
     },
-    isAdmin :(state)=>state.loggedInUser?.role === "admin"
+    isAdmin :(state)=>state.loggedInUser?.role === "admin",
+    isCustomer: (state) => {
+      return state.loggedInUser?.role === "customer";
+    },
   },
 });
 export default useAuthentication;

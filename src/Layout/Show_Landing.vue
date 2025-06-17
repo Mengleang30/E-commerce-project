@@ -1,5 +1,6 @@
 <script setup>
 import { useBookStore } from '@/stores';
+import useAuthentication from '@/stores/authentication';
 import { useBooks } from '@/stores/books';
 
 import { defineProps, onMounted } from 'vue';
@@ -8,17 +9,8 @@ import { RouterLink, useRouter } from 'vue-router';
 
 
 const router = useRouter();
-const useStore = useBookStore();
 
-// const bookData = useBooks();
-
-// onMounted(()=>{
-//     bookData.fetchBooks();
-// })
-
-const textSearch = ref('');
-
-   
+const auth = useAuthentication();
 
 
 const searchQuery = ref('');
@@ -94,9 +86,14 @@ defineProps({
                     Huge collection of <strong>best books</strong> 
                 </h1>
                 <h2>Discover the Joy of Real Books</h2>
-                <div class="wrap_btn">
-                    <button @click="Scroll">Start your collection today!</button>
+                <div class="wrap_btn" v-if="!auth.isAdmin">
+                    <button class="btnScroll" @click="Scroll">Start your collection today!</button>
                     <p class="telling_text">{{ texts[index] }}</p>
+                </div>
+                <div class="wrap_btn" v-else>
+                    <RouterLink class="link" to="/admin">
+                        <button class="btnScroll">To Admin Dashboard</button>
+                    </RouterLink>
                 </div>
                 <p>
                     An online book is a resource in book-like form that is only available to read on 
@@ -130,11 +127,12 @@ defineProps({
             <img src="https://img.icons8.com/?size=100&id=80689&format=png&color=000000" alt="Back To Top">
         </div>
     </div>
+     
 </template>
 
 <style scoped>
 .ShowLanding {
-  min-height: 100vh;
+  min-height: 120vh;
   display: flex;
   position: relative;
   background-image: linear-gradient(
@@ -430,11 +428,29 @@ defineProps({
     font-size: 0.8rem;
     width: 5rem;
   }
+  .container_explore {
+    display: flex;
+    flex-direction: column;
+    
+    align-items: center;
+    width: 50%;
+    gap: 2px;
+
+  }
+  .wrap_grid{
+    width: auto;
+    place-items: center;
+  }
+ 
+  .wrap_grid .child{
+    font-size: 10px;
+    width: 5rem;
+  }
 }
 
 @media screen and (max-width: 760px) {
-  .showing h2 {
-    font-size: 1.6rem;
+  .showing h1 {
+    font-size: 1.4rem;
   }
   .left_show .form .wrap_form button {
     font-size: small;
@@ -442,6 +458,18 @@ defineProps({
   .wrap_quick_link button {
     font-size: 0.8rem;
     width: 6rem;
+  }
+  .wrap_btn{ 
+    width: 100%;
+    justify-content: center;
+  }
+  .wrap_btn button {
+    font-size: 10px;
+    width: 4rem;
+  }
+  .wrap_btn .btnScroll{
+    width: 8rem;
+    padding: 0.5rem;
   }
 }
 </style>

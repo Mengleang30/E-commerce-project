@@ -58,6 +58,9 @@
 </template>
 
 <script>
+import useAdminOrder from '@/stores/adminFeature/adminOrder';
+import { computed, onMounted, ref } from 'vue';
+
 export default {
     data() {
         return {
@@ -77,6 +80,28 @@ export default {
             ]
         }
     },
+
+    setup() {
+        const useAdminOrders = useAdminOrder();
+       
+        const listOrders = computed(()=>{
+            return useAdminOrders.order_list;
+        });
+
+        onMounted(() => {
+            useAdminOrders.fetchOrderList();
+        });
+        
+        console.log(listOrders);
+
+        return {
+            listOrders,
+        };
+
+      
+
+    },
+
     computed: {
         filteredOrders() {
             return this.orders.filter(order => {

@@ -43,14 +43,26 @@ const authGuard = (to, from, next) => {
 };
 
 // Admin route guard
-const adminGuard = (to, from, next) => {
+// const adminGuard = (to, from, next) => {
+//   const Auth = useAuthentication();
+//   if (Auth.isAdmin) {
+//     next(); // Allow access if user is admin
+//   } else {
+//     next("/"); // Redirect to home or show error
+//   }
+// };
+
+const customerGuard = (to, from, next) => {
   const Auth = useAuthentication();
-  if (Auth.loggedInUser && Auth.loggedInUser && Auth.loggedInUser.role === "admin") {
-    next(); // Allow access if user is admin
+  if (Auth.loggedInUser && Auth.loggedInUser.role === "customer") {
+    next(); // Allow
   } else {
-    next("/"); // Redirect to home or show error
+    alert("This page is only for customers");
+    next("/admin"); // Or redirect to /admin or 403
   }
 };
+
+
 
 const routes = [
   {
@@ -87,7 +99,7 @@ const routes = [
     path: "/favorite",
     name: "Favorite",
     component: Favorite,
-    beforeEnter: authGuard,
+    // beforeEnter: customerGuard,
     // beforeEnter : authGuard,
   },
   {
@@ -96,6 +108,7 @@ const routes = [
     component: Cart,
     beforeEnter: authGuard,
     // beforeEnter : authGuard,
+    beforeEnter: customerGuard,
   },
   {
     path: "/login",
@@ -111,11 +124,7 @@ const routes = [
     path: "/history",
     name: "History",
     component: History,
-    beforeEnter: authGuard,
-    path: "/history",
-    name: "History",
-    component: History,
-    // beforeEnter : authGuard,
+  
   },
   {
     path: "/search",
@@ -126,7 +135,7 @@ const routes = [
     path: "/admin",
     name: "AdminComponent",
     component: Admin,
-    beforeEnter: adminGuard,
+    // beforeEnter: adminGuard,
     children: [
       {
         path: "",
@@ -176,17 +185,19 @@ const routes = [
     path: "/order",
     name: "Order",
     component: Order,
-    beforeEnter: authGuard,
+    beforeEnter: customerGuard,
   },
   {
     path: "/capture-payment",
     name: "CapturePayment",
     component: CapturePayment, // this Vue page should call Laravel to capture payment
+    beforeEnter: customerGuard,
   },
   {
     path: "/thank-you",
     name: "ThankYou",
     component: ThankYou,
+    beforeEnter: customerGuard,
   },
 ];
 
