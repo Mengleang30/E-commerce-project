@@ -14,6 +14,8 @@ import AdminDashboard from '@/components/Admin/Admin-Dashboard.vue'
 import Admin_Product_all from '@/components/Admin/Admin_Product_all.vue'
 import Admin_Add_Product_Form from '@/components/Admin/Admin_Add_Product_Form.vue'
 import Admin_Update_Product_Form from '@/components/Admin/Admin_Update_Product_Form.vue'
+import Admin_Order_Product from '@/components/Admin/Admin_Order_Product.vue'
+
 import SignUp from '@/authentication/SignUp.vue'
 import Login from '@/authentication/Login.vue'
 import GoogleCallBack from '@/authentication/GoogleCallBack.vue'
@@ -66,7 +68,7 @@ const routes = [
     component: DetailBook,
 
   },
-   {
+  {
     path: '/reset-password',
     name: 'ResetPassword',
     component: ResetPassword,
@@ -139,7 +141,14 @@ const routes = [
         path: 'update-product-form',
         name: 'AdminUpdateProduct',
         component: Admin_Update_Product_Form,
-      }
+      },
+      {
+        path: 'Order-products',
+        name: 'AdminOrderProducts',
+        component: Admin_Order_Product,
+      },
+
+
     ]
   },
     {
