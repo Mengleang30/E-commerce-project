@@ -38,9 +38,17 @@ const authGuard = (to, from, next) => {
   if (Auth.isAuthenticated) {
     next(); // Allow access if logged in
   } else {
-    // next('/login'); // Redirect to login page if not logged in
-    // alert("As Guest cannot access this feature , please sign in")
     next("/login");
+  }
+};
+
+// Admin route guard
+const adminGuard = (to, from, next) => {
+  const Auth = useAuthentication();
+  if (Auth.loggedInUser && Auth.loggedInUser && Auth.loggedInUser.role === "admin") {
+    next(); // Allow access if user is admin
+  } else {
+    next("/"); // Redirect to home or show error
   }
 };
 
@@ -118,6 +126,7 @@ const routes = [
     path: "/admin",
     name: "AdminComponent",
     component: Admin,
+    beforeEnter: adminGuard,
     children: [
       {
         path: "",

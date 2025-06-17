@@ -82,20 +82,26 @@ function handleShowHelpLogin() {
 function handleClickHelp() {
   show_help.value = !show_help.value;
 }
+
 async function handleLogin() {
   const response = await Auth.login(email.value, password.value);
   loginSuccess.value = response.success;
   message.value = response.message;
 
   if (response.success) {
-    // Optional: redirect or do something on successful login
-    router.push("/");
     messageSuccessful.value = "Login successful!";
-  }
-  else {
-    message.value = response.message 
+    
+    // Redirect based on role
+    if (response.role === "admin") {
+      router.push("/admin");
+    } else {
+      router.push("/"); // Or another route for regular users
+    }
+  } else {
+    message.value = response.message;
   }
 }
+
 
 const loginWithGoogle = () => {
   window.location.href = 'https://projectip2-book-store-api.up.railway.app/api/auth/google/redirect';

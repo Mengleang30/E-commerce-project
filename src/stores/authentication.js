@@ -108,11 +108,15 @@ export const useAuthentication = defineStore("AuthStore", {
           role,
           token,
         };
-
+        // console.log("User logged in:", this.user);
+        if (role === "admin") {
+          
+        }
         await this.fetchLoggedUser();
         return {
           success: true,
           message: `Welcome back, ${email}!`,
+          role: res.data.role
         };
       } catch (error) {
         if (error.response) {
@@ -240,6 +244,7 @@ export const useAuthentication = defineStore("AuthStore", {
     getUserRole: (state) => {
       return state.user ? state.user.role : {};
     },
+    isAdmin :(state)=>state.loggedInUser?.role === "admin"
   },
 });
 export default useAuthentication;

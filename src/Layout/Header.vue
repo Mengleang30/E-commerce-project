@@ -232,7 +232,7 @@ export default {
 };
 </script>
 <template>
-  <header ref="navbarRef">
+  <header ref="navbarRef" v-if="!Auth.isAdmin">
     <div class="option">
       <div class="wrap_logo">
         <svg @click="toggleNavbar" :class="isRotated ? 'rotated' : 'non-rotated'" xmlns="http://www.w3.org/2000/svg"
