@@ -38,7 +38,7 @@ export default {
         },
         {
           nav_name: "Users",
-          link_admin: "#",
+          link_admin: "/admin/all-users",
           icon: User,
         },
         {
