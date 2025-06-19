@@ -57,7 +57,7 @@ export default {
         },
         {
           nav_name: "Promotion",
-          link_admin: "#",
+          link_admin: "/admin/promotion",
           icon: Promotion,
         },
         {
@@ -75,6 +75,7 @@ export default {
           link_admin: "#",
           icon: Option,
         },
+      
       ],
     };
   },

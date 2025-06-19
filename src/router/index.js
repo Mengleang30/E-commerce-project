@@ -21,6 +21,7 @@ import User from '@/components/Admin/User.vue'
 import UserDetail from '@/components/Admin/UserDetail.vue'
 
 
+import Promotion from '@/components/Admin/Promotion.vue'
 
  
 
@@ -137,6 +138,12 @@ const routes = [
         
         
       },
+      {
+        path: 'promotion',
+        name: 'Promotion',
+        component: Promotion ,
+
+      }
     ]
   },
 ]
