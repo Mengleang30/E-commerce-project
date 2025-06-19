@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
-export const useAdminOrder = defineStore("AdminOrderStore", {
+export const useAdminPayment = defineStore("AdminPaymentStore", {
   state: () => ({
-     order_list: [],
+     payment_list: [],
      token: localStorage.getItem("token") || null,
      backendUrl: "https://projectip2-book-store-api.up.railway.app"
   }),
@@ -11,13 +11,13 @@ export const useAdminOrder = defineStore("AdminOrderStore", {
   actions: {
     async fetchOrderList() {
         try {
-          const response = await axios.get(`${this.backendUrl}/api/admin/orders`, {
+          const response = await axios.get(`${this.backendUrl}/api/admin/payments`, {
             withCredentials: true,
             headers: {
               Authorization: `Bearer ${this.token}`,
             },
           });
-          this.order_list = response.data.orders;
+          this.payment_list = response.data;
         }
         catch (e) {
           console.error("Error fetching order list:", e);
@@ -26,10 +26,10 @@ export const useAdminOrder = defineStore("AdminOrderStore", {
   },
 
   getters: {
-     countOrders: (state) => {
-        return state.order_list.length;
-     },
+    //  countOrders: (state) => {
+    //     return state.order_list.length;
+    //  },
   }, 
 
 });
-export default useAdminOrder;
+export default useAdminPayment;;

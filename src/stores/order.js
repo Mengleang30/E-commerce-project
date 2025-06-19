@@ -4,6 +4,7 @@ import axios from "axios";
 export const useOrder = defineStore("OrderStore", {
   state: () => ({
      orders: [],
+     payments: [],
      token: localStorage.getItem("token") || null,
      backendUrl: "https://projectip2-book-store-api.up.railway.app"
   }),
@@ -20,6 +21,9 @@ export const useOrder = defineStore("OrderStore", {
           }
         });
         this.orders=res.data.orders
+        // console.log(this.orders)
+        return success = true
+        
          
       }
       catch(e){}
@@ -62,7 +66,24 @@ export const useOrder = defineStore("OrderStore", {
          
       }
       catch(e){}
-    }
+    },
+
+   async fetchPayment(){
+       try {
+        const res = await axios.get(`${this.backendUrl}/api/customer/payments`
+          ,{
+          withCredentials: true,
+          headers:{
+            Authorization: `Bearer ${this.token}`,
+          }
+        });
+        this.payments = res.data;
+         
+      }
+      catch(e){
+        console.error(e);
+      }
+    },
   
   },
 

@@ -30,6 +30,9 @@ import Order from "@/views/Order.vue";
 import CapturePayment from "@/payments/CapturePayment.vue";
 import ThankYou from "@/payments/ThankYou.vue";
 import Search from "@/views/Search.vue";
+import DetailOrder from "@/components/Admin/DetailOrder.vue";
+import AdminNotification from "@/components/Admin/AdminNotification.vue";
+import AdminPayment from "@/components/Admin/AdminPayment.vue";
 
 const route = useRoute();
 
@@ -57,8 +60,9 @@ const customerGuard = (to, from, next) => {
   if (Auth.loggedInUser && Auth.loggedInUser.role === "customer") {
     next(); // Allow
   } else {
-    alert("This page is only for customers");
-    next("/admin"); // Or redirect to /admin or 403
+    // alert("This page is only for customers");
+    // next("/admin"); // Or redirect to /admin or 403
+    next();
   }
 };
 
@@ -74,6 +78,7 @@ const routes = [
     path: "/notification",
     name: "Notification",
     component: CustomerNotification,
+    beforeEnter: customerGuard,
   },
   {
     path: "/auth/google/callback",
@@ -99,14 +104,14 @@ const routes = [
     path: "/favorite",
     name: "Favorite",
     component: Favorite,
-    // beforeEnter: customerGuard,
+    beforeEnter: customerGuard,
     // beforeEnter : authGuard,
   },
   {
     path: "/cart",
     name: "Cart",
     component: Cart,
-    beforeEnter: authGuard,
+    // beforeEnter: authGuard,
     // beforeEnter : authGuard,
     beforeEnter: customerGuard,
   },
@@ -161,18 +166,35 @@ const routes = [
         path: "all-users",
         name: "AdminAllUsers",
         component: User,
+        
       },
       {
-        path: "user/:id",
+        path: "users/:user_id",
         name: "UserDetail",
         component: UserDetail,
-        props: true,
+        
       },
       {
         path: "Order-products",
         name: "AdminOrderProducts",
         component: Admin_Order_Product,
       },
+      {
+        path: 'order-detail/:id',
+        name: 'DetailOrder',
+        props: true,
+        component: DetailOrder
+      },
+       {
+        path: 'notification',
+        name: 'AdminNotification',
+        component: AdminNotification,
+      },
+      {
+        path: 'payment',
+        name: 'AdminPayment',
+        component: AdminPayment,
+      }
     ],
   },
   {

@@ -1,7 +1,7 @@
 <template>
   <!-- {{ listOrders }} -->
   <div class="container">
-    <h2>Orders</h2>
+    <h2>All Payments</h2>
 
 
     <div class="flex flex-wrap mb-4 gap-2">
@@ -17,12 +17,18 @@
         />
       </div>
       <div class="wrap_date">
-  <input type="date" class="border p-2 rounded" v-model="selectedDate" />
+        <label for="input"> Select Date <input type="date" class="border p-2 rounded" v-model="selectedDate" /></label>
+
       <select class="select" v-model="selectedFilter">
         <option value="Filter">Filter</option>
-        <option value="completed">completed</option>
-        <option value="pending">pending</option>
-        <option value="canceled">canceled</option>
+        <option value="bakong">Bakong</option>
+        <option value="paypal">paypal</option>
+        <option value="canceled">Other</option>
+      </select>
+
+      <select class="select" v-model="sortDirection" >
+          <option value="desc">Newest</option>
+          <option value="asc">Oldest</option>
       </select>
       </div>
     
@@ -32,45 +38,50 @@
       <thead>
         <tr class="bg-gray-100">
           <th class="p-2 border">Order ID</th>
-          <th class="p-2 border">Customer Name</th>
           <th class="p-2 border">Customer ID</th>
-          <th class="p-2 border">Order Status</th>
+          <th class="p-2 border">Payment ID</th>
+          <th class="p-2 border">Transaction ID</th>
+          <th class="p-2 border">Payment Status</th>
           <th class="p-2 border">Date</th>
-          <th class="p-2 border">Items</th>
-          <th class="p-2 border">Total Amounts($)</th>
+          <th class="p-2 border">Payment Method</th>
+          <th class="p-2 border">Amounts($)</th>
           <th class="p-2 border">Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(order, index) in filteredOrders" :key="order.id">
-          <td class="p-2 border">{{ order.id }}</td>
-          <td class="p-2 border">{{ order.username }}</td>
-          <td class="p-2 border">{{ order.user_id }}</td>
+        <tr v-for="(payment, index) in filteredPayment" :key="payment.id">
+           <td class="p-2 border">{{ payment.id }}</td>
+        
+          <td class="p-2 border">{{ payment.user_id }}</td>
+           <td class="p-2 border">{{ payment.order_id }}</td>
+            <td class="p-2 border">{{ payment.transaction_id }}</td>
+          
           <td class="p-2 border">
             <div
-              v-if="order.status === 'completed'"
+              v-if="payment.status === 'completed'"
               class="status-badge bg-green-500"
             >
-              {{ order.status }}
+              {{ payment.status }}
             </div>
             <div
-              v-if="order.status === 'pending'"
+              v-if="payment.status === 'pending'"
               class="status-badge bg-yellow-400"
             >
-              {{ order.status }}
+              {{ payment.status }}
             </div>
             <div
-              v-if="order.status === 'canceled'"
+              v-if="payment.status === 'canceled'"
               class="status-badge bg-red-400"
             >
-              {{ order.status }}
+              {{ payment.status }}
             </div>
           </td>
+          
           <td class="p-2 border">
-            {{ formatTimestampToLocal(order.created_at) }}
+            {{ formatTimestampToLocal(payment.created_at) }}
           </td>
-          <td class="p-2 border">{{ order.total_items }}</td>
-          <td class="p-2 border">{{ order.total_price }}</td>
+          <td class="p-2 border">{{ payment.payment_method }}</td>
+          <td class="p-2 border">{{ payment.amount }}</td>
           <td class="p-2 border">
             <button
               class="bg-blue-700 text-white rounded px-3 py-1 cursor-pointer hover:bg-blue-800"
@@ -84,40 +95,49 @@
   </div>
 </template>
 
-<script>
-import useAdminOrder from "@/stores/adminFeature/adminOrder";
+<script setup>
+import useAdminPayment from "@/stores/adminFeature/adminPayment";
 import { computed, onMounted, ref } from "vue";
 
-export default {
-  setup() {
-    const useAdminOrders = useAdminOrder();
 
-    const listOrders = computed(() => {
-      return useAdminOrders.order_list;
+    const useAdminPayments = useAdminPayment();
+
+    const listPayment = computed(() => {
+      return useAdminPayments.payment_list;
     });
 
     const searchQuery = ref("");
     const selectedDate = ref("");
     const selectedFilter = ref("Filter");
+    const sortDirection = ref("desc"); // default to Newest
 
-   const filteredOrders = computed(() => {
-  console.log("Statuses:", listOrders.value.map(o => o.status)); // Debug log
 
-  return listOrders.value.filter(order => {
-    const matchesSearch = order.username.toLowerCase().includes(searchQuery.value.toLowerCase());
+   const filteredPayment = computed(() => {
+  let filtered = listPayment.value.filter(payment => {
+    const matchesSearch = payment.payment_method.toLowerCase().includes(searchQuery.value.toLowerCase());
     const matchesDate = selectedDate.value
-      ? new Date(order.created_at).toISOString().startsWith(selectedDate.value)
+      ? new Date(payment.created_at).toISOString().startsWith(selectedDate.value)
       : true;
     const matchesFilter =
-      selectedFilter.value === "Filter" || order.status === selectedFilter.value;
+      selectedFilter.value === "Filter" || payment.payment_method === selectedFilter.value;
 
     return matchesSearch && matchesDate && matchesFilter;
+  });
+
+  // ✅ Sort payments by date
+  return filtered.sort((a, b) => {
+    const dateA = new Date(a.created_at);
+    const dateB = new Date(b.created_at);
+
+    return sortDirection.value === "asc"
+      ? dateA - dateB
+      : dateB - dateA;
   });
 });
 
 
     onMounted(() => {
-      useAdminOrders.fetchOrderList();
+      useAdminPayments.fetchOrderList();
     });
     function formatTimestampToLocal(isoString) {
       const date = new Date(isoString);
@@ -133,18 +153,6 @@ export default {
       });
     }
 
-    // console.log(listOrders);
-
-    return {
-      listOrders,
-      formatTimestampToLocal,
-      searchQuery,
-      selectedDate,
-      selectedFilter,
-      filteredOrders,
-    };
-  },
-};
 </script>
 
 <style scoped>
@@ -225,4 +233,11 @@ button {
     background-color: #ddd;
     height: 25rem;
 }
+
+.select {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
 </style>

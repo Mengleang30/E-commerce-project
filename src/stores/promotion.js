@@ -11,7 +11,7 @@ export const usePromotion = defineStore("PromotionStore", {
    
    async applyCoupon (order_id, code){
     try{
-      await axios.post(`${this.backendUrl}/api/customer/orders/apply_coupon/${order_id}`,
+      const res = await axios.post(`${this.backendUrl}/api/customer/orders/apply_coupon/${order_id}`,
         {
          coupon_code : code
         },{
@@ -22,8 +22,23 @@ export const usePromotion = defineStore("PromotionStore", {
 
         })
       console.log("Applied")
+      return {
+        success: true,
+        message: res.data.message || "Coupon applied successfully!",
+      };
     }
     catch(e){
+          let message = "Something went wrong while applying the coupon.";
+
+        if (e.response && e.response.data) {
+          message = e.response.data.message || e.response.data.error || message;
+        } else if (e.message) {
+          message = e.message;
+        }
+      return {
+        success: false,
+        message
+      };
 
     }
 

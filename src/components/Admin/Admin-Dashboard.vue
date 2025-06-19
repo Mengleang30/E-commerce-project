@@ -24,8 +24,8 @@
         <div class="product-activity-detail">
           <h2>Product Activity</h2>
           <div class="pro-act-two-col">
-            <stockAlerts />
-            <topSellingProduct />
+            <stockAlerts class="stockAlerts"/>
+            <topSellingProduct class="topSellProduct"/>
           </div>
         </div>
       </div>
@@ -192,5 +192,31 @@ h2 {
   height: 100%;
   padding: 10px;
   /* background-color: yellowgreen; */
+}
+
+@media screen and (max-width: 768px) {
+  .list-info-colored {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    grid-template-rows: repeat(3, auto);   /* 3 rows */
+  }
+  .expense-items {
+    flex-direction: column;
+    align-items: center;
+  }
+  .pro-act-two-col {
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    
+  }
+  .topSellProduct{
+    width: 100%;
+    margin-left: 0;
+  }
+  .stockAlerts{
+    width: 100%;
+    margin-right: 0;
+  }
+  
 }
 </style>

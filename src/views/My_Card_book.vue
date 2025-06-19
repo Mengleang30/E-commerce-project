@@ -30,7 +30,10 @@ const clearCart =async () => {
 //  await cartStore.fetchCarts();
 }
 
-const bookQuantity = ref();
+
+
+const isLoading = ref(true);
+
 
 const handleUpdateQuantity =  (id, qualities) => {
   if (qualities < 1) return;
@@ -38,9 +41,7 @@ const handleUpdateQuantity =  (id, qualities) => {
 
 }
 
-onMounted(()=>{
-  cartStore.fetchCarts();
-})
+
 
 
 const showOption = ref(false);
@@ -65,22 +66,27 @@ const handleCheckout = async ()=>{
 
   await cartStore.checkout();
   await useOrders.fetchOrder();
+  
   router.push('/order')
 }
 
+
+onMounted(()=>{
+  cartStore.fetchCarts();
+  useOrders.fetchOrder();
+  isLoading.value = false
+})
 </script>
 
 <template scope>
-  <div>
-<hr>
+
     <div class="Card">
-      <!-- {{ listCarts.cart_books }} -->
-      <!-- <div v-if="pay" class="modal-overlay" >
-            <div class="paymentContainer" @click.stop>
-              <payments :total="totalPrice" :click_close="handleCloseBtn"/>
-            </div>
-        </div> -->
-        <div class="book-list">
+       
+        <div v-if="isLoading">
+           <h3>Loading...</h3>
+        </div>
+ 
+        <div v-else class="book-list">
       
           <div v-if="listCarts.cart_books && listCarts.cart_books.length > 0">
             <div v-for="Carted in listCarts.cart_books" :key="Carted.book.id">
@@ -159,7 +165,7 @@ const handleCheckout = async ()=>{
      
     </div>
 
-  </div>
+
   
 </template>
 
@@ -199,7 +205,17 @@ const handleCheckout = async ()=>{
 }
 .pending_order{
   text-align: center;
-  height: 12rem;
+  min-height: 10rem;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+.pending_order button{
+  background-color:rgb(6, 129, 237);
+  color: white;
+  min-width: 9rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 .back-btn {
   padding: 0.75rem 1.5rem;

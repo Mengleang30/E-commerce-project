@@ -1,35 +1,34 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
-export const useAdminOrder = defineStore("AdminOrderStore", {
+export const useAdminPromotion = defineStore("AdminPromotionStore", {
   state: () => ({
-     order_list: [],
+     coupons: [],
      token: localStorage.getItem("token") || null,
      backendUrl: "https://projectip2-book-store-api.up.railway.app"
   }),
 
   actions: {
-    async fetchOrderList() {
+    async fetchCoupons() {
         try {
-          const response = await axios.get(`${this.backendUrl}/api/admin/orders`, {
+          const response = await axios.get(`${this.backendUrl}/api/admin/coupons`, {
             withCredentials: true,
             headers: {
               Authorization: `Bearer ${this.token}`,
             },
           });
-          this.order_list = response.data.orders;
+          this.coupons = response.data.coupons;
+        //   console.log("Coupons fetched:", this.coupons);
         }
         catch (e) {
-          console.error("Error fetching order list:", e);
+          console.error("Error coupons:", e);
         }
     }
   },
 
   getters: {
-     countOrders: (state) => {
-        return state.order_list.length;
-     },
+     
   }, 
 
 });
-export default useAdminOrder;
+export default useAdminPromotion;

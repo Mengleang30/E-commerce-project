@@ -13,8 +13,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in stockAlerts" :key="index">
-          <td>{{ item.orderId }}</td>
+        <tr v-for="(item, index) in showBookLowStock" :key="item.id">
+          <td>{{ item.id }}</td>
           <td>{{ item.date }}</td>
           <td>{{ item.quantity }}</td>
           <td>{{ item.alertAmt }}</td>
@@ -26,6 +26,9 @@
 </template>
 
 <script>
+import useBooks from '@/stores/books';
+import { computed, onMounted } from 'vue';
+
 export default {
   name: "StockAlertTable",
   props: {
@@ -35,11 +38,22 @@ export default {
     alertAmt: Number,
     status: String,
   },
-  data() {
-    return {
-      stockAlerts: [
+
+
+  setup(){
+    const useBook = useBooks();
+
+    const showBookLowStock = computed(() => {
+      return useBook.books.filter((book)=> book.quantity < 10);
+    });
+
+    onMounted(() => {
+      useBook.fetchBooks();
+    });
+
+    const stockAlerts = [
         {
-          orderId: "ORD001",
+          bookId: "ORD001",
           date: "2025-04-30",
           quantity: 10,
           alertAmt: 5,
@@ -59,7 +73,18 @@ export default {
           alertAmt: 5,
           status: "Critical",
         },
-      ],
+      ]
+
+   
+      return {
+        
+        showBookLowStock,
+      };
+
+  },
+  data() {
+    return {
+      
     };
   },
 };

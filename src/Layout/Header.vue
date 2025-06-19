@@ -17,7 +17,6 @@ import { useNotification } from '@/stores/notification';
 import { Bell, ShoppingCart, User,Search } from 'lucide-vue-next';
 import useCarts from "@/stores/carts";
 export default {
-
   name: "Header",
   components: {
     Navbar,
@@ -83,8 +82,9 @@ export default {
 
     const handleLogout = () => {
       Auth.logout(); // Call logout method
-      ShowOptionLogout.value = !ShowOptionLogout.value;
       router.push("/"); // Redirect to login page
+      ShowOptionLogout.value = !ShowOptionLogout.value;
+      
     };
 
 

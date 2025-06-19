@@ -1,10 +1,10 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import useCarts from '@/stores/carts';
+
 import useOrder from '@/stores/order';
 import { usePromotion } from '@/stores/promotion';
 
-const cartStore = useCarts();
+
 const orderStore = useOrder();
 const isLoading = ref(true);
 
@@ -56,11 +56,21 @@ const cancelOrder = (id) => {
   }
 };
 
+
+
 const code = ref();
+const message = ref("");
 const useCoupon = usePromotion()
 function handleApplyCoupon(id){
-   useCoupon.applyCoupon(id, code.value);
-   orderStore.fetchOrder();
+   const result = useCoupon.applyCoupon(id, code.value);
+   
+   if(result.success){
+      message.value = result.message;
+   }
+   else {
+    message.value = result.message
+  }
+  
 }
 
 onMounted(()=>{
@@ -119,6 +129,7 @@ onMounted(()=>{
     <input v-model="code" type="text" placeholder="Enter your coupon code" />
     <button @click="handleApplyCoupon(listOrder.id)">Apply</button>
   </div>
+  <span>{{ message }}</span>
 </div>
 
 

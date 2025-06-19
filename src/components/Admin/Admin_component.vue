@@ -1,9 +1,17 @@
 <template>
-  <div class="main_container" v-if="auth.isAdmin && auth.loggedInUser.role==='admin'">
-    <Navbar />
+  <div 
+    class="main_container"
+    v-if="auth.isAdmin && auth.loggedInUser.role === 'admin'"
+  >
+    <Navbar :show-menu="showMenu" @toggle-menu="showMenu = $event"/>
     <div class="router-view">
-      <div class="sidebar"><Admin_menu_component/></div>
-      <main class="main-content">
+      <div class="sidebar">
+        <!-- <button class="toggle-btn">
+          {{ showMenu ? "<" : ">" }}
+        </button> -->
+        <Admin_menu_component v-show="showMenu" />
+      </div>
+      <main class="main-content" @click="showMenu = false">
         <RouterView />
       </main>
     </div>
@@ -25,15 +33,20 @@ export default {
   components: {
     Navbar,
     Admin_menu_component,
+   
   },
   data() {
     return {
+      // showMenu: true,
     };
   },
   computed: {
     NavBar_Data() {
       return this.NavBar_data;
     },
+  },
+  props: {
+
   },
 
   methods: {
@@ -45,6 +58,7 @@ export default {
     const router = useRouter();
     const isAdmin = ref(false);
     const auth = useAuthentication();
+    const showMenu = ref(false);
 
     onMounted(() => {
       // Check if the user is an admin
@@ -56,6 +70,7 @@ export default {
       isAdmin,
       router,
       auth,
+      showMenu,
     };
   },
 };
@@ -67,14 +82,25 @@ export default {
   flex-direction: row;
   width: 100%;
   height: 100vh;
+  position: relative;
 }
-.sidebar {
-  width: 280px;
+.sidebar {  
+  transition: all 0.3s ease-in-out;  
 }
 .main-content {
   flex: 1;
   overflow-y: auto;
+ 
   min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .sidebar{
+     position: absolute;
+     left: 0;
+     z-index: 10;
+     /* top: 50; */
+  }
 }
 
 </style>

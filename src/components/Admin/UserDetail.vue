@@ -1,28 +1,50 @@
 <template>
-  <div class="user-detail">
-    <button @click="$router.back()" class="back-btn">Back</button>
+   <div v-if="isLoading" class="loading">
+      <p>Loading user...</p>
+    </div>
+   <div class="user-detail" v-else-if="detailUser && !isLoading">
+    {{  }}
+    <button @click="$router.push('/admin/all-users')" class="back-btn">Back</button>
 
-    <div class="card">
+    <div class="card" >
       <div class="profile">
-        <img :src="user.avatar" class="avatar" alt="" />
+       <img
+        v-if="detailUser && !detailUser.google_id"
+        :src="`https://bucket-production-853a.up.railway.app/storage/${detailUser.picture}`"
+        class="avatar"
+        alt="Avatar"
+      />
+      <img
+        v-else-if="detailUser && detailUser.google_id"
+        :src="detailUser.picture"
+        class="avatar"
+        alt=""
+      />
+       <img
+        v-else
+        class="avatar"
+        alt="User Avatar"
+      />
+
+        <!-- <img  class="avatar" alt="" /> -->
         <div>
-          <h2>{{ user.name }}</h2>
-          <p>{{ user.email }}</p>
+          <h2>{{ detailUser.name  }}</h2>
+          <p>{{ detailUser.email }}</p>
           <span class="status-badge">1 Day ago</span>
         </div>
       </div>
       <div>
       <div class="info-section">
-        <div><label>Full Name</label><input :value="user.name" readonly /></div>
-        <div><label>Joined Date</label><input value="30/10/2024" readonly /></div>
-        <div><label>User ID</label><input :value="user.id" readonly /></div>
-        <div><label>Role</label><input :value="user.role" readonly /></div>
+        <div><label>Full Name</label><input readonly :value="detailUser.name"/></div>
+        <div><label>Joined Date</label><input :value="detailUser.created_at" readonly /></div>
+        <div><label>User ID</label><input :value="detailUser.id" readonly /></div>
+        <div><label>Role</label><input readonly :value="detailUser.role"/></div>
       </div>
       </div>
       
       <div class="email-info">
-        <h3 class="h">User’s email Address</h3>
-        <p>📧 {{ user.email }}</p>
+        <h3 class="h">User’s Address</h3>
+        <p>📧 {{ detailUser.address }}</p>
         <span class="email-date">1 month ago</span>
       </div>
 
@@ -30,56 +52,61 @@
       <div class="mid">
       <h3>Order History</h3></div>
       <div class="order-history">
-        <div v-for="order in user.orders" :key="order.invoice" class="order-card">
+        <div class="order-card">
           <div>
            
         
 
           <div>
-            <img :src="user.tick" class="#" alt="" />
+            <img  class="#" alt="" />
             ✔️ History Method</div>
-          <p>Invoice No: {{ order.invoice }}</p>
-          <p>{{ order.date }}</p>
-          <p class="book-title">{{ order.bookTitle }}</p>
+          <p>Invoice No: {{  }}</p>
+          <p>{{  }}</p>
+          <p class="book-title">{{  }}</p>
         </div>
       </div>
     </div>
   </div></div>
 </template>
 
-  <script >
-  export default {
-    props: ["id"],
-    data() {
-      return {
-        user: {
-          id: "#2333",
-        name: "RATHA Sothea",
-        email: "sothea@gmail.com",
-        role: "Customer",
-        avatar:("src/assets/profile_user.jpeg"),
-        tick: "src/assets/tick.png",
-        orders: [
-          {
-            invoice: "L77920883",
-            date: "Nov 19, 2024 5:07 PM",
-            bookTitle: "Ikigai: The Japanese, You got this 90+, Good vibes...",
-          },
-          {
-            invoice: "L77920884",
-            date: "Nov 20, 2024 3:15 PM",
-            bookTitle: "Atomic Habits: An Easy & Proven Way to Build Good Habits & Break Bad Ones",
-          },
-          {
-            invoice: "L77920885",
-            date: "Nov 21, 2024 1:30 PM",
-            bookTitle: "The Subtle Art of Not Giving a F*ck: A Counterintuitive Approach to Living a Good Life",
-          }
-        ],
-        }
-      };
+<script setup>
+
+import axios from 'axios'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+
+const isLoading = ref(true)
+const route = useRoute()
+
+const detailUser = ref(null)
+
+const token = localStorage.getItem("token") || null
+const backendUrl = "https://projectip2-book-store-api.up.railway.app/api/admin/users_management"
+
+onMounted(async () => {
+  const userId = route.params.user_id
+
+console.log('userId', userId)
+  try {
+    const response = await axios.get(`${backendUrl}/${userId}`, {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    detailUser.value = response.data
+    // console.log("User Detail:", detailUser.value)
+    isLoading.value = false
+  } catch (e) {
+    console.error("❌ Failed to fetch user:", e)
+    if (e.response) {
+      console.error("Status:", e.response.status)
+      console.error("Data:", e.response.data)
     }
-  };
+  }
+})
+
+
   </script>
   
   <style scoped>
@@ -178,5 +205,9 @@
         height:50px;
         style:border-radius 50%; 
         background-color: aliceblue;
+}
+
+.loading{
+  font-size: larger;
 }
 </style>
