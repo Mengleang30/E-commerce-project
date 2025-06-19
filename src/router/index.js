@@ -33,6 +33,7 @@ import Search from "@/views/Search.vue";
 import DetailOrder from "@/components/Admin/DetailOrder.vue";
 import AdminNotification from "@/components/Admin/AdminNotification.vue";
 import AdminPayment from "@/components/Admin/AdminPayment.vue";
+import Promotion from "@/components/Admin/Promotion.vue";
 
 const route = useRoute();
 
@@ -194,6 +195,12 @@ const routes = [
         path: 'payment',
         name: 'AdminPayment',
         component: AdminPayment,
+      },
+      {
+        path: 'promotion',
+        name: 'Promotion',
+        component: Promotion ,
+
       }
     ],
   },

@@ -45,6 +45,52 @@ export default {
         { nav_name: "Payment", link_admin: "/admin/payment", icon: Accounting },
         { nav_name: "Notifcation", link_admin: "/admin/notification", icon: Notifcation },
         { nav_name: "Options", link_admin: "#", icon: Option },
+        {
+          nav_name: "Dashboard",
+          link_admin: "/admin",
+          icon: Dashboard,
+        },
+        {
+          nav_name: "Products",
+          link_admin: "/admin/all-products",
+          icon: Product,
+        },
+        {
+          nav_name: "Users",
+          link_admin: "/admin/all-users",
+          icon: User,
+        },
+        {
+          nav_name: "Orders",
+          link_admin: "#",
+          icon: Order,
+        },
+        {
+          nav_name: "Pages",
+          link_admin: "#",
+          icon: Page,
+        },
+        {
+          nav_name: "Promotion",
+          link_admin: "/admin/promotion",
+          icon: Promotion,
+        },
+        {
+          nav_name: "Accounting",
+          link_admin: "#",
+          icon: Accounting,
+        },
+        {
+          nav_name: "Notifcation",
+          link_admin: "#",
+          icon: Notifcation,
+        },
+        {
+          nav_name: "Options",
+          link_admin: "#",
+          icon: Option,
+        },
+      
       ],
     };
   },
