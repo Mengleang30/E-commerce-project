@@ -1,9 +1,11 @@
 <template>
   <div class="container">
     <!-- Header -->
-  
+
     <div class="top-bar">
-      <span class="remaining">{{countCouponRemaining}}/{{ countCoupon }}</span>
+      <span class="remaining"
+        >{{ countCouponRemaining }}/{{ countCoupon }}</span
+      >
       <span class="label">Coupons Remaining</span>
       <input
         type="text"
@@ -55,7 +57,9 @@
         </div> -->
         <div class="form-group buttons">
           <button class="btn undo" @click="handleUndo">Undo</button>
-          <button class="btn create" @click="handleCreateNew">Create Coupon</button>
+          <button class="btn create" @click="handleCreateNew">
+            Create Coupon
+          </button>
         </div>
       </div>
     </div>
@@ -64,125 +68,174 @@
     <table class="coupon-table">
       <thead>
         <tr>
-          <th @click="sort('name')">Created at <span class="sort-icon">{{ sortArrow('name') }}</span></th>
-          <th @click="sort('takeDate')">Limit usage <span class="sort-icon">{{ sortArrow('takeDate') }}</span></th>
+          <th @click="sort('name')">
+            Created at <span class="sort-icon">{{ sortArrow("name") }}</span>
+          </th>
+          <th @click="sort('takeDate')">
+            Limit usage
+            <span class="sort-icon">{{ sortArrow("takeDate") }}</span>
+          </th>
           <th>Status</th>
-          
-          <th @click="sort('startDate')">Start time <span class="sort-icon">{{ sortArrow('startDate') }}</span></th>
-          <th @click="sort('endDate')">End time <span class="sort-icon">{{ sortArrow('endDate') }}</span></th>
-          <th @click="sort('code')">Discount <span class="sort-icon">{{ sortArrow('code') }}</span></th>
-          <th @click="sort('code')">Coupon code <span class="sort-icon">{{ sortArrow('code') }}</span></th>
+
+          <th @click="sort('startDate')">
+            Start time
+            <span class="sort-icon">{{ sortArrow("startDate") }}</span>
+          </th>
+          <th @click="sort('endDate')">
+            End time <span class="sort-icon">{{ sortArrow("endDate") }}</span>
+          </th>
+          <th @click="sort('code')">
+            Discount <span class="sort-icon">{{ sortArrow("code") }}</span>
+          </th>
+          <th @click="sort('code')">
+            Coupon code <span class="sort-icon">{{ sortArrow("code") }}</span>
+          </th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in listCoupon" :key="item.id">
+        <tr v-for="(item, index) in filteredData" :key="item.id">
           <td>{{ formatTimestampToLocal(item.created_at) }}</td>
           <td>{{ item.usage_limit }}</td>
-          
+
           <td>
-            <span class="status"  v-if="new Date(item.end_date) < new Date()" >Expired</span>
-            <span class="status coming"  v-else-if="new Date(item.start_date) > new Date()" >Coming</span>
+            <span class="status" v-if="new Date(item.end_date) < new Date()"
+              >Expired</span
+            >
+            <span
+              class="status coming"
+              v-else-if="new Date(item.start_date) > new Date()"
+              >Coming</span
+            >
             <span class="status use" v-else>Available</span>
           </td>
-          
-         
+
           <td>{{ item.start_date }}</td>
-           <td>{{ item.end_date }}</td>
-            <td>{{ item.discount }}</td>
+          <td>{{ item.end_date }}</td>
+          <td>{{ item.discount }}</td>
           <td>{{ item.code }}</td>
           <td>
             <div class="wrapAction">
-    <!-- If active, clicking disables -->
-    <button class="is_active disable"
-            v-if="item.is_active == 1"
-            @click="handleAction(item.id, false)"
-            title="disable">Disable</button>
+              <!-- If active, clicking disables -->
+              <div v-if="!(new Date(item.end_date) < new Date())">
+                <button
+                  class="is_active disable"
+                  v-if="item.is_active == 1"
+                  @click="handleAction(item.id, false)"
+                  title="disable"
+                >
+                  Disable
+                </button>
 
-    <!-- If inactive, clicking enables -->
-    <button class="is_active"
-            v-else
-            @click="handleAction(item.id, true)"
-            title="enable">Enable</button>
+                <!-- If inactive, clicking enables -->
+                <button
+                  class="is_active"
+                  v-else
+                  @click="handleAction(item.id, true)"
+                  title="enable"
+                >
+                  Enable
+                </button>
+              </div>
 
-    <button class="delete" title="delete" @click="deleteCoupon(index)">✕</button>
-  </div>
-            </td>
+              <button
+                class="delete deleteBtn"
+                title="delete"
+                @click="handleDelete(item.id)"
+              >
+                Delete
+              </button>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
 
     <!-- Footer -->
-    <div class="footer">
+    <!-- <div class="footer">
       <span>Showing {{ paginatedData.length }} out of {{ data.length }}.</span>
       <div class="pagination">
-        <button
-          v-for="page in totalPages"
-          :key="page"
-          @click="currentPage = page"
-          :class="{ active: currentPage === page }"
-        >
+        <button v-for="page in totalPages" :key="page" @click="currentPage = page"
+          :class="{ active: currentPage === page }">
           {{ page }}
         </button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import useAdminPromotion from '@/stores/adminFeature/AdminPromotion';
-import { computed, onMounted, ref } from 'vue';
+import useAdminPromotion from "@/stores/adminFeature/AdminPromotion";
+import { computed, onMounted, ref } from "vue";
 
 export default {
   name: "CouponTable",
-  setup(){
-
+  setup() {
     const usePromotion = useAdminPromotion();
 
-    const listCoupon = computed(()=>{
+    const listCoupon = computed(() => {
       return usePromotion.coupons;
-    })
-
-    const countCoupon = computed(()=>{
-        return usePromotion.coupons.length;
-    })
-    const countCouponRemaining = computed(() => {
-      // Count coupons that are still usable (active and not expired)
-      return usePromotion.coupons.filter(i => i.is_active && new Date(i.end_date) >= new Date()).length;
     });
 
-    const code = ref('');
+    const countCoupon = computed(() => {
+      return usePromotion.coupons.length;
+    });
+    const countCouponRemaining = computed(() => {
+      // Count coupons that are still usable (active and not expired)
+      return usePromotion.coupons.filter(
+        (i) => i.is_active && new Date(i.end_date) >= new Date()
+      ).length;
+    });
+
+    const code = ref("");
     const discount = ref(0);
     const startDate = ref();
     const endDate = ref();
     const limitUsage = ref();
 
-    const handleCreateNew = ()=> {
-      usePromotion.createNewCoupon(code.value,discount.value,startDate.value,endDate.value,limitUsage.value);
-    }
+    const handleCreateNew = () => {
+      usePromotion.createNewCoupon(
+        code.value,
+        discount.value,
+        startDate.value,
+        endDate.value,
+        limitUsage.value
+      );
+    };
 
-    const handleUndo = ()=>{
-       code = ref('');
-        discount.value = ref(0);
-       startDate.value = ref();
-        endDate.value = ref();
-        limitUsage.value = ref();
-    }
-   const handleAction = async (id, is_active) => {
+    const handleUndo = () => {
+      code = ref("");
+      discount.value = ref(0);
+      startDate.value = ref();
+      endDate.value = ref();
+      limitUsage.value = ref();
+    };
+    const handleAction = async (id, is_active) => {
       try {
         await usePromotion.actionCoupon(id, is_active);
-        usePromotion.fetchCoupons();
+        await usePromotion.fetchCoupons();
         // alert(`Coupon ${is_active ? 'enabled' : 'disabled'} successfully!`);
       } catch (e) {
-        console.error('Action error:', e.message);
+        console.error("Action error:", e.message);
         // alert(`Error: ${e.message}`);
       }
     };
 
- onMounted(()=>{
+    function handleDelete(id) {
+      try {
+        usePromotion.deleteCoupon(id);
+        usePromotion.fetchCoupons();
+        // alert(`Coupon ${is_active ? 'enabled' : 'disabled'} successfully!`);
+      } catch (e) {
+        console.error("Action error:", e.message);
+        // alert(`Error: ${e.message}`);
+      }
+    }
+
+    onMounted(() => {
       usePromotion.fetchCoupons();
-    })
- function formatTimestampToLocal(isoString) {
+    });
+    function formatTimestampToLocal(isoString) {
       const date = new Date(isoString);
       return date.toLocaleString("en-US", {
         timeZone: "Asia/Phnom_Penh", // Cambodia time
@@ -208,9 +261,9 @@ export default {
       countCouponRemaining,
       handleCreateNew,
       handleUndo,
-      handleAction
-    }
-
+      handleAction,
+      handleDelete,
+    };
   },
   data() {
     return {
@@ -221,7 +274,6 @@ export default {
         startDate: "",
         endDate: "",
         couponType: "string",
-        discount: null, // Added for discount percentage
       },
       data: [
         {
@@ -328,98 +380,107 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .container {
   background: #fff;
-  padding: 24px;
+  padding: 1.5rem; /* Use rem for scalable padding */
   font-family: "Segoe UI", sans-serif;
+  max-width: 1200px; /* Limit max width for large screens */
+  margin: 0 auto; /* Center the container */
 }
 
 .top-bar {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
   flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem; /* Scalable gap */
+  margin-bottom: 1.5rem;
 }
 
 .search-input {
-  margin-left: auto;
   flex-grow: 1;
-  max-width: 250px;
-  padding: 8px;
+  max-width: 300px; /* Increased max-width for better usability */
+  padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 1rem; /* Scalable font size */
 }
 
 .remaining {
   background: #f44336;
   color: white;
-  padding: 4px 10px;
+  padding: 0.3rem 0.8rem;
   border-radius: 5px;
   font-weight: bold;
+  font-size: 0.9rem;
 }
 
 .label {
   font-weight: 500;
+  font-size: 0.9rem;
 }
 
 .coupon-bar {
-  padding: 15px;
+  padding: 1rem;
   border: 1px solid #c6e1c6;
   border-radius: 6px;
   background-color: #f9fff9;
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
 }
 
 .dat {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 0.75rem; /* Smaller gap for better spacing */
+  align-items: flex-start;
 }
 
-.buttons {
+.form-group {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
+  flex-direction: column; /* Stack labels and inputs vertically for clarity */
+  gap: 0.3rem;
+  flex: 1; /* Allow form groups to grow */
+  min-width: 120px; /* Minimum width for inputs */
 }
 
 .form-group.buttons {
   flex-direction: row;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .input {
-  padding: 8px 10px;
+  padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 6px;
-  min-width: 120px;
+  font-size: 1rem;
+  width: 100%; /* Full width for inputs */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
 }
 
 .input.put {
-  max-width: 300px;
+  max-width: 100%; /* Allow inputs to take full width on smaller screens */
 }
 
 .input.small {
-  width: 60px;
+  max-width: 80px; /* Slightly larger for touch targets */
 }
 
 .select {
   background: white;
   cursor: pointer;
+  padding: 0.5rem;
 }
 
 .btn {
-  padding: 8px 12px;
+  padding: 0.5rem 1rem;
   border: 1px solid #ccc;
   border-radius: 6px;
   background: #f5f5f5;
   cursor: pointer;
   font-weight: bold;
+  font-size: 0.9rem;
+  transition: background-color 0.2s; /* Smooth hover effect */
 }
 
 .btn.undo {
@@ -432,23 +493,27 @@ export default {
   border: none;
 }
 
+.btn:hover {
+  opacity: 0.9; /* Subtle hover effect */
+}
+
 .coupon-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  
+  margin-top: 1.5rem;
 }
 
 .coupon-table th,
 .coupon-table td {
   border-bottom: 1px solid #eee;
-  padding: 10px;
+  padding: 0.75rem;
   text-align: left;
-  font-size: 14px;
+  font-size: 0.9rem;
 }
 
 .coupon-table th {
   cursor: pointer;
+  background-color: #f9f9f9; /* Light background for headers */
 }
 
 .sort-icon {
@@ -460,78 +525,145 @@ export default {
   font-weight: bold;
 }
 
-.delete {
-  width: 20px;
-  height: 20px;
-  background-color: #f2f2f2;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 10px;
-  text-align: center;
-}
-
-.footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-}
-
-.pagination button {
-  margin-left: 4px;
-  border: 1px solid #ccc;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background: white;
-  cursor: pointer;
-}
-
-.pagination button.active {
-  background: #28a745;
-  color: white;
-  border: none;
-}
-.wrapAction{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.wrapAction button{
-  font-size: 1.1rem;
-}
-
-.is_active{
-  background-color: royalblue;
-  padding: 2px;
-  color: white;
-  font-size: smaller;
-  cursor: pointer;
-  border: none;
-  border-radius: 6px;
-  width: 4rem;
-}
-.disable{
-  background-color: rgb(244, 14, 41);
-}
-
-.use{
+.use {
   color: #28a745;
 }
-.coming{
+
+.coming {
   color: cornflowerblue;
 }
 
+.wrapAction {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.is_active,
+.deleteBtn {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  width: 4.5rem; /* Slightly larger for touch targets */
+  text-align: center;
+}
+
+.is_active {
+  background-color: royalblue;
+  color: white;
+}
+
+.disable {
+  background-color: #333;
+}
+
+.deleteBtn {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Responsive Table for Small Screens */
 @media (max-width: 768px) {
-  .top-bar,
-  .dat {
-    flex-direction: column;
-    align-items: flex-start;
+  .coupon-table {
+    display: block; /* Convert table to block for mobile */
   }
 
-  .search-input,
-  .input.put {
+  .coupon-table thead {
+    display: none; /* Hide table headers on mobile */
+  }
+
+  .coupon-table tbody,
+  .coupon-table tr {
+    display: block;
+  }
+
+  .coupon-table tr {
+    margin-bottom: 1rem;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 0.5rem;
+    background-color: #fafafa;
+  }
+
+  .coupon-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+    border: none;
+    font-size: 0.85rem;
+  }
+
+  .coupon-table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    flex: 1;
+  }
+
+  .coupon-table td wrapAction {
+    justify-content: flex-end;
+  }
+}
+
+/* Media Queries for Different Screen Sizes */
+@media (max-width: 1024px) {
+  .dat {
+    flex-direction: column; /* Stack form inputs vertically */
+  }
+
+  .form-group {
+    width: 100%; /* Full width for form groups */
+  }
+
+  .input,
+  .input.put,
+  .input.small {
+    max-width: 100%; /* Full width inputs */
+  }
+
+  .search-input {
     max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem; /* Reduce padding on small screens */
+  }
+
+  .top-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .remaining {
+    font-size: 0.85rem;
+  }
+
+  .btn,
+  .is_active,
+  .deleteBtn {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem; /* Smaller buttons for mobile */
+  }
+
+  .coupon-table td {
+    font-size: 0.8rem; /* Smaller text for mobile */
+  }
+}
+
+@media (min-width: 1200px) {
+  .coupon-table th,
+  .coupon-table td {
+    padding: 1rem; /* More padding on larger screens */
+    font-size: 1rem;
+  }
+
+  .btn,
+  .is_active,
+  .deleteBtn {
+    font-size: 1rem;
   }
 }
 </style>

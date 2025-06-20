@@ -64,6 +64,27 @@ export const useAdminPromotion = defineStore("AdminPromotionStore", {
           await this.fetchCoupons();
           // this.coupons.push(response.data);
         //   console.log("Coupons fetched:", this.coupons);
+        console.log("Calling action on:", coupon_id, "active?", Is_active);
+
+        }
+        catch (e) {
+          console.error("Error coupons:", e);
+        }
+    },
+     async deleteCoupon(coupon_id) {
+        try {
+         
+          await axios.delete(`${this.backendUrl}/api/admin/coupons/delete/${coupon_id}`,
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          });
+          await this.fetchCoupons();
+          // this.coupons.push(response.data);
+        //   console.log("Coupons fetched:", this.coupons);
+        // console.log("Calling action on:", coupon_id, "active?", Is_active);
         }
         catch (e) {
           console.error("Error coupons:", e);
