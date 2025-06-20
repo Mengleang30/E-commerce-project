@@ -101,7 +101,7 @@ export default {
     const selectedFilter = ref("Filter");
 
    const filteredOrders = computed(() => {
-  console.log("Statuses:", listOrders.value.map(o => o.status)); // Debug log
+  // console.log("Statuses:", listOrders.value.map(o => o.status)); // Debug log
 
   return listOrders.value.filter(order => {
     const matchesSearch = order.username.toLowerCase().includes(searchQuery.value.toLowerCase());

@@ -27,11 +27,11 @@
           <input v-model="form.price" type="number" placeholder="Price $" step="0.01" required id="book-price"
             name="book-price" />
         </div>
-        <div class="input-div">
+        <!-- <div class="input-div">
           <label for="book-quantity">Book Quantity</label>
           <input v-model="form.quantity" type="number" placeholder="Quantity" required id="book-quantity"
             name="book-quantity" />
-        </div>
+        </div> -->
       </div>
 
       <div class="input-div-2col">
@@ -75,8 +75,8 @@
       </div>
 
       <div class="input-div">
-        <label for="image-url">Book Image URL</label>
-        <input v-model="form.url_image" type="text" placeholder="Images URL" :disabled="!form.useUrl" id="image-url"
+        <label for="image-url">Book Image URL(Optional)</label>
+        <input v-model="form.url_image" type="text" placeholder="Images URL" id="image-url"
           name="image-url" />
       </div>
 
@@ -111,7 +111,6 @@ export default {
       title: "",
       author: "",
       price: "",
-      quantity: "",
       language: "",
       category_id: "",
       published_date: "",
@@ -160,7 +159,7 @@ export default {
     formData.append("title", form.value.title);
     formData.append("author", form.value.author);
     formData.append("price", form.value.price);
-    formData.append("quantity", form.value.quantity);
+   
     formData.append("language", form.value.language);
     formData.append("category_id", form.value.category_id);
     formData.append("published_date", form.value.published_date);

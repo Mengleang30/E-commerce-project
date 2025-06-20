@@ -118,7 +118,7 @@ export default {
       />
     </div>
     <hr />
-    <div class="search_genre">
+    <!-- <div class="search_genre">
       <h3>Search by Language</h3>
       <form class="inputs-search">
         <div
@@ -138,7 +138,7 @@ export default {
           <label>{{ lang }}</label>
         </div>
       </form>
-    </div>
+    </div> -->
     <hr />
     <div class="search_num">
       <h3>Sort by Price</h3>
