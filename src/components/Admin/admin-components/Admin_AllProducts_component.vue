@@ -1,4 +1,10 @@
 <template>
+  <div class="all_products">
+
+ 
+   <div class="filterForm">
+      <input type="text" placeholder="search book" v-model="search">
+    </div>
   <table class="product_table">
     <thead>
       <tr>
@@ -12,7 +18,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(product) in listBooks" :key="product.id" :style="{ backgroundColor: product.bgColor }">
+      <tr v-for="(product) in filterSearchBooks" :key="product.id" :style="{ backgroundColor: product.bgColor }">
         <td>{{ product.id }}</td>
         <td>{{ product.title.length > 30 ? product.title.substring(0, 30) + '...' : product.title }}</td>
         <td>{{formatTimestampToLocal(product.created_at) }}</td>
@@ -33,31 +39,59 @@
              <!-- <button class="action-button delete">
               <CircleX/>
             </button> -->
+            <button @click="showReStock = product.id" class="action-button update">
+              <CirclePlus/>
+            </button>
+            <div v-if="showReStock === product.id" class="wrap_reStock">
+              <input type="number" v-model="quantity" required>
+              <button @click="handleAddStock(product.id)">{{ loading }}</button>
+            </div>
+           
           </div>
         </td>
       </tr>
     </tbody>
   </table>
+   </div>
 </template>
 
 <script>
 import useBooks from '@/stores/books';
-import { computed, onMounted } from 'vue';
-import { SquarePen,CircleX } from 'lucide-vue-next';
+import { computed, onMounted, ref } from 'vue';
+import { SquarePen,CircleX,CirclePlus } from 'lucide-vue-next';
+import useAdminBooks from '@/stores/adminFeature/adminBook';
 
 export default {
   name: "Admin_AllProducts_component",
   components:{
     SquarePen,
-    CircleX
+    CircleX,
+    CirclePlus
   },
  
   setup(){
     const useBook =useBooks();
 
+    const showReStock = ref(false);
+
+    
+
     const listBooks = computed(()=>{
-        return useBook.books;
+      return useBook.books;
     })
+
+    const search = ref('');
+    const filterSearchBooks = computed(()=>{
+      if (!search.value) return listBooks.value;
+      return listBooks.value.filter((book) => {
+      const title = book.title ? book.title.toLowerCase() : '';
+      const id = book.id ? String(book.id) : '';
+      return (
+        title.includes(search.value.toLowerCase()) ||
+        id.includes(search.value)
+      );
+      });
+    });
 
      function formatTimestampToLocal(isoString) {
       const date = new Date(isoString);
@@ -73,13 +107,32 @@ export default {
       });
     }
 
+    const loading = ref("Add");
+
+    const useAdminBook = useAdminBooks();
+    const quantity = ref(0);
+    const handleAddStock = async (id) =>{
+      loading.value = "Adding..."
+       await useAdminBook.reStock(quantity.value,id);
+       loading.value = "Add"
+      
+        // console.log("Re Stock: ", id)
+       await useBook.fetchBooks();
+    }
+
     onMounted(()=>{
       useBook.fetchBooks();
     })
 
     return {
       listBooks,
-      formatTimestampToLocal
+      formatTimestampToLocal,
+      showReStock,
+      handleAddStock,
+      quantity,
+      loading,
+      filterSearchBooks,
+      search,
     }
   },
   data() {
@@ -272,4 +325,51 @@ table{
   background-color: red !important;
   color: rgb(255, 255, 255) !important;
 }
+
+.wrap_reStock{
+   display: flex;
+   gap: 3px;
+}
+
+.wrap_reStock input {
+  width: 4rem;
+  padding: 4px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.wrap_reStock button {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.wrap_reStock button:hover {
+  background-color: #388e3c;
+}
+
+.all_products{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.filterForm{
+  height: 3rem;
+  width: 100%;
+  
+}
+.filterForm input{
+  padding-left: 10px;
+  height: 90%;
+  width: 40%;
+  border-radius: 6px;
+  border: none;
+}
+
 </style>

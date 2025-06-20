@@ -11,7 +11,7 @@
         </button>
       </div>
     </div>
-    <div class="search-section">
+    <!-- <div class="search-section">
       <div class="search_form">
         <input
           type="text"
@@ -70,9 +70,10 @@
           <label for="in-stock-low-product">Most Popular</label>
         </div>
       </div>
-    </div>
+    </div> -->
+   
     <div class="main-content">
-      <Admin_AllProducts_component/>
+      <Admin_AllProducts_component />
     </div>
   </div>
 </template>
@@ -97,6 +98,7 @@ export default {
       
     };
   },
+ 
   data() {
     return {
       textSearch: "",
@@ -131,5 +133,6 @@ export default {
   display: flex;
   padding: 20px;
 }
+
 
 </style>
