@@ -40,25 +40,55 @@ export default {
 
 
     const useBook = useBooks();
+     const processing = ref(new Set());
     // mark for books that already in favorite
-    const isInWishlist = (bookId) => {
-      return useBook.wishlist.some((item) => item.book_id === bookId);
-    };
+    const isInWishlist = (bookId) => useBook.wishlistSet.has(bookId);
+
 
     const handleAddWishlist = async (bookId) => {
-      await useBook.addWishList(bookId);
-      await useBook.fetchWishList();
+      if (processing.value.has(bookId)) return;
+          processing.value.add(bookId);
+      useBook.wishlist.push({book_id : bookId});
+
+      try{
+         await useBook.addWishList(bookId);
+      }
+      catch(e){
+        useBook.wishlist = useBook.wishlist.filter(b => b.book_id !== bookId);
+
+      }
+      finally{
+        processing.value.delete(bookId);
+      }
+     
+      // await useBook.fetchWishList();
     };
 
     const handleRemoveWishList = async (bookId) => {
-      const wishlistEntry = useBook.wishlist.find(
-        (item) => item.book_id === bookId
-      );
-      if (wishlistEntry) {
-        useBook.removeWishList(wishlistEntry.id);
-      } else {
-        console.log("Wishlist entry not found to remove");
+      if (processing.value.has(bookId)) return;
+        processing.value.add(bookId);
+      const index = useBook.wishlist.findIndex(item => item.book_id === bookId);
+       if (index === -1) {
+        
+        return;
       }
+      const removed = useBook.wishlist[index];
+      useBook.wishlist.splice(index,1)
+
+      try{
+        useBook.removeWishlistLocallyByBookId(bookId);
+        await useBook.removeWishList(removed.id);
+
+      }
+      catch(e){
+         // Rollback if API failed
+        useBook.wishlist.splice(index, 0, removed);
+
+      }
+      finally{
+        processing.value.delete(bookId);
+      }
+
     };
 
     const checkFavorite = (BookId) => {
@@ -137,7 +167,8 @@ export default {
       handleAddWishlist,
       groupBook,
       fetchGroupBooks,
-      useCategories
+      useCategories,
+      processing
     };
   },
   methods: {
@@ -167,6 +198,7 @@ export default {
         :HaveDiscount="Books.discount"
         :AfterDiscount="Books.price * (1 - Books.discount / 100)"
         :idBook="Books.id"
+        :class="{ disabled: processing.has(Books.id) }"
         @addFavorite="handleAddWishlist(Books.id)"
         :isFavorite="isInWishlist(Books.id)"
         @removeFavorite="handleRemoveWishList(Books.id)"
@@ -201,6 +233,7 @@ export default {
         :HaveDiscount="book.discount"
         :AfterDiscount="book.price * (1 - book.discount / 100)"
         :idBook="book.id"
+        :class="{ disabled: processing.has(book.id) }"
         @addFavorite="handleAddWishlist(book.id)"
         :isFavorite="isInWishlist(book.id)"
         @removeFavorite="handleRemoveWishList(book.id)"
@@ -298,5 +331,9 @@ export default {
   flex-wrap: wrap;
 }
 
+/* .disabled {
+  pointer-events: none;
+  opacity: 0.5;
+} */
 
 </style>

@@ -70,6 +70,7 @@ const markAsRead = async (id)=>{
         >
           <div class="notification_header">
             <p class="title">{{ noti.data.title }}</p>
+            
           
             <div class="actions">
               <button @click="markAsRead(noti.id)">Mark as Read</button>

@@ -3,7 +3,6 @@ import { computed, devtools, onMounted, ref } from 'vue';
 import { useUserStore } from '@/stores/userBookStore';
 import { useBookStore } from '@/stores';
 import useCarts from '@/stores/carts';
-
 import { CirclePlus } from 'lucide-vue-next';
 import { CircleMinus } from 'lucide-vue-next';
 import { useRouter } from 'vue-router';
@@ -12,6 +11,7 @@ import useOrder from '@/stores/order';
 
 const cartStore = useCarts();
 
+const isLoading = ref(true);
 const listCarts = computed(()=>{
   return cartStore.carts;
 })
@@ -32,12 +32,22 @@ const clearCart =async () => {
 
 
 
-const isLoading = ref(true);
+const calculate = ref();
 
-
-const handleUpdateQuantity =  (id, qualities) => {
+const handleUpdateQuantity = async (id, qualities) => {
+  calculate.value = 'calculate...'
   if (qualities < 1) return;
-  cartStore.updateQuantity(id, qualities);
+  try {
+  await cartStore.updateQuantity(id, qualities);
+  }
+  catch {
+
+  }
+  finally{
+    calculate.value = ''
+
+  }
+
 
 }
 
@@ -71,24 +81,33 @@ const handleCheckout = async ()=>{
 }
 
 
-onMounted(()=>{
-  cartStore.fetchCarts();
-  useOrders.fetchOrder();
-  isLoading.value = false
-})
+onMounted(async () => {
+  try {
+    await Promise.all([cartStore.fetchCarts(), useOrders.fetchOrder()]);
+  } catch (e) {
+    console.error('Error fetching data:', e);
+  } finally {
+    isLoading.value = false;
+  }
+});
 </script>
 
 <template scope>
 
     <div class="Card">
        
-        <div v-if="isLoading">
-           <h3>Loading...</h3>
+      <div v-if="isLoading" class="book-list skeleton">
+      <div v-for="i in 3" :key="i" class="each_cart skeleton-item">
+        <div class="book-image skeleton-image"></div>
+        <div class="book-content">
+          <div class="skeleton-text"></div>
+          <div class="skeleton-text short"></div>
         </div>
- 
+      </div>
+    </div>
         <div v-else class="book-list">
       
-          <div v-if="listCarts.cart_books && listCarts.cart_books.length > 0">
+          <div v-if="listCarts.cart_books && listCarts.cart_books.length > 0 && !hasPendingOrder">
             <div v-for="Carted in listCarts.cart_books" :key="Carted.book.id">
               <hr>
               <div class="each_cart">
@@ -108,10 +127,10 @@ onMounted(()=>{
                     <div class="quantity-container">
 
                       <div class="quantity-controls">
-                        <button @click="handleUpdateQuantity(Carted.id, Carted.quantity-1)"><CircleMinus class="btn"/></button>
+                        <!-- <button @click="handleUpdateQuantity(Carted.id, Carted.quantity-1)"><CircleMinus class="btn"/></button> -->
                         <input v-model="Carted.quantity" @input="handleUpdateQuantity(Carted.id, Carted.quantity)"
                           type="number" id="quantity" min="1" max="99" value="1" />
-                        <button @click="handleUpdateQuantity(Carted.id, Carted.quantity+1)"><CirclePlus class="btn"/></button>
+                        <!-- <button @click="handleUpdateQuantity(Carted.id, Carted.quantity+1)"><CirclePlus class="btn"/></button> -->
                       </div>
 
                       <div class="remove-button">
@@ -122,8 +141,10 @@ onMounted(()=>{
 
 
               </div>
-              <h3 class="sub_totals">
+              <h3 v-if="calculate!==''">{{ calculate }}</h3>
+              <h3 v-else class="sub_totals">
                 SubTotal: $ {{ Carted.sub_total }}
+             
               </h3>
              
 
@@ -139,7 +160,9 @@ onMounted(()=>{
         </div>
         
         <div class="grand_total">
-          <h3>$ {{ listCarts.grand_total }}</h3>
+          <h3 v-if="calculate!==''">{{ calculate }}</h3>
+          <h3 v-else>$ {{ listCarts.grand_total }}</h3>
+          
         </div>
         
 
@@ -549,7 +572,7 @@ hr{
 
 
 .quantity-controls input {
-  width: 40px;
+  width: 6rem;
   text-align: center;
   border: none;
   font-size: 15px;
@@ -612,5 +635,39 @@ hr{
   font-size: 20px;
   color: #141414b2;
   font-weight: bold;
+}
+.skeleton-item {
+  display: flex;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.skeleton-image {
+  width: 100px;
+  height: 150px;
+  background: #e0e0e0;
+  animation: shimmer 1.5s infinite;
+}
+.skeleton-text {
+  width: 70%;
+  height: 1.2rem;
+  background: #e0e0e0;
+  margin: 0.5rem 0;
+  animation: shimmer 1.5s infinite;
+}
+.skeleton-text.short {
+  width: 40%;
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}
+.skeleton-image,
+.skeleton-text {
+  background: linear-gradient(to right, #e0e0e0 8%, #f5f5f5 18%, #e0e0e0 33%);
+  background-size: 200px 100%;
 }
 </style>

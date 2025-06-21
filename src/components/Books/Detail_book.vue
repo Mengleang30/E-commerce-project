@@ -101,23 +101,56 @@ export default {
 
     const numberOrder = ref(1);
     const useBook = useBooks();
-    const isInWishlist = computed(() =>
-      useBook.wishlist.some(item => item.book_id === bookId.value)
-    );
+    
+    const processing = ref(new Set());
+    // mark for books that already in favorite
+    const isInWishlist = (bookId) => useBook.wishlistSet.has(bookId);
 
-    const handleAddWishlist = async () => {
-      await useBook.addWishList(bookId.value);
-      await useBook.fetchWishList();
-    };
 
-    const handleRemoveWishList = async () => {
-      const wishlistEntry = useBook.wishlist.find(item => item.book_id === bookId.value);
-      if (wishlistEntry) {
-        await useBook.removeWishList(wishlistEntry.id);
-      } else {
-        console.log("Wishlist entry not found to remove");
+    const handleAddWishlist = async (bookId) => {
+       if (processing.value.has(bookId)) return; // prevent re-click
+          processing.value.add(bookId);
+      useBook.wishlist.push({book_id : bookId});
+
+      try{
+         await useBook.addWishList(bookId);
       }
+      catch(e){
+        useBook.wishlist = useBook.wishlist.filter(b => b.book_id !== bookId);
+
+      }
+      finally{
+        processing.value.delete(bookId);
+      }
+     
+      // await useBook.fetchWishList();
     };
+
+    const handleRemoveWishList = async (bookId) => {
+      const index = useBook.wishlist.findIndex(item => item.book_id === bookId);
+       if (index === -1) {
+        
+        return;
+      }
+      const removed = useBook.wishlist[index];
+      useBook.wishlist.splice(index,1)
+
+      try{
+
+        await useBook.removeWishList(removed.id);
+
+      }
+      catch(e){
+         // Rollback if API failed
+        useBook.wishlist.splice(index, 0, removed);
+
+      }
+      finally{
+        processing.value.delete(bookId);
+      }
+
+    };
+
 
     const CartStore = useCarts();
     const addingStatus = ref("Add To Cart");
@@ -163,6 +196,7 @@ export default {
       TextShow,
       NotLogin,
       loading, // Expose loading state
+      processing
     };
   },
   methods: {
@@ -254,17 +288,20 @@ export default {
             <h4>Favorite</h4>
             <div class="wrapping_fav">
               <Fovite_icons
-                v-if="!isInWishlist"
-                @click="handleAddWishlist"
+                v-if="!isInWishlist(found_book.id)"
+                @click="handleAddWishlist(found_book.id)"
                 :Clicked_favorite="false"
+                :class="{ disabled: processing.has(found_book.id) }"
                 class="Favorite_btn"
               />
               <Fovite_icons
                 v-else
-                @click="handleRemoveWishList"
+                @click="handleRemoveWishList(found_book.id)"
                 :Clicked_favorite="true"
+                :class="{ disabled: processing.has(found_book.id) }"
                 class="Favorite_btn"
               />
+
             </div>
           </div>
           <div class="box_inform">
@@ -419,6 +456,11 @@ export default {
   color:rgb(0, 138, 53);
   font-weight:500;
 }
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 
 .book_description {
   width: 100%;
