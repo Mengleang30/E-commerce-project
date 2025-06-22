@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-import axios from "axios";
+
+import api from "@/axios";
 
 
 export const useAdminNotification = defineStore("AdminNotificationStore", {
@@ -14,12 +15,7 @@ export const useAdminNotification = defineStore("AdminNotificationStore", {
           return;
         }
         try {
-        const res =  await axios.get("https://projectip2-book-store-api.up.railway.app/api/admin/notifications", {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
+        const res =  await api.get("/api/admin/notifications");
         this.notifications = res.data.notifications;
         console.log("Notifications from backend:", this.notifications);
         // console.log("Notifications from backend:", this.notifications);
@@ -32,15 +28,9 @@ export const useAdminNotification = defineStore("AdminNotificationStore", {
 
     async markNotificationAsRead() {
       try {
-        const res = await axios.patch(
-          `https://projectip2-book-store-api.up.railway.app/api/admin/notifications/mark_all_as_read`,
+        const res = await api.patch(
+          `/api/admin/notifications/mark_all_as_read`,
           {},
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
         );
         // console.log("Notification marked as read:", res.data);
         await this.fetchNotifications(); // Refresh notifications after marking one as read
@@ -50,15 +40,9 @@ export const useAdminNotification = defineStore("AdminNotificationStore", {
     },
      async markNotificationAsReadById(Id) {
       try {
-        const res = await axios.patch(
-          `https://projectip2-book-store-api.up.railway.app/api/admin/notifications/mark_as_read/${Id}`,
-          {},
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
+        const res = await api.patch(
+          `/api/admin/notifications/mark_as_read/${Id}`,
+          {}
         );
         // console.log("Notification marked as read:", res.data);
         await this.fetchNotifications(); // Refresh notifications after marking one as read

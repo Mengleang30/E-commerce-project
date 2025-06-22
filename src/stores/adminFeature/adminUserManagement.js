@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import api from "@/axios";
 
 
 export const useUseManagement = defineStore("UserManagement", {
@@ -13,12 +14,7 @@ export const useUseManagement = defineStore("UserManagement", {
   actions: {
     async fetchUser() {
         try {
-          const response = await axios.get(`${this.backendUrl}/api/admin/users_management`, {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          });
+          const response = await api.get(`/api/admin/users_management`);
           this.users = response.data;
         //   console.log("Users fetched:", this.users);
         }
@@ -30,12 +26,7 @@ export const useUseManagement = defineStore("UserManagement", {
 
     async fetchUserById(userId) {
       try {
-        const response = await axios.get(`${this.backendUrl}/api/admin/users_management/${userId}`, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        });
+        const response = await api.get(`/api/admin/users_management/${userId}`);
         this.detailUser = response.data;
         // console.log("User details fetched:", this.detailUser);
       } catch (e) {

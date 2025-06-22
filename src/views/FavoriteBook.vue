@@ -1,16 +1,17 @@
 <script setup>
 
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';//home page
 
 import useBooks from '@/stores/books';
 import useCarts from '@/stores/carts';
+import useAuthentication from '@/stores/authentication';
 
-
+const Auth = useAuthentication();
 
 
 const useWishlist = useBooks();
-
+const isLoading = ref(true);
 
 const listItems = computed(() => {
     return useWishlist.wishlist;
@@ -22,7 +23,17 @@ const handleRemoveWishlist = async (bookId) => {
 }
 
 onMounted(async () => {
-    await useWishlist.fetchWishList();
+    try
+    {
+        await useWishlist.fetchWishList();
+    }
+    catch{
+
+    }
+    finally{
+        isLoading.value = false
+    }
+   
 });
 
 const cartStore = useCarts();
@@ -37,8 +48,15 @@ const addCart = async (id) => {
 
 <template>
     <article>
+    <div v-if="!Auth.isAuthenticated" class="login-box">
+  <h3>Please Login First</h3>
+  <RouterLink to="/login"><button>Login</button></RouterLink>
+  </div>
+        <div v-else class="favorites">
+             <div v-if="isLoading" class="loading-overlay">
+            <div class="spinner"></div>
+            </div>
 
-        <div class="favorites">
 
             <h2>
                 <hr>
@@ -293,4 +311,59 @@ button {
 .social-icons img {
     margin: 5px;
 }
+
+.login-box {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 30px;
+  text-align: center;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+.login-box h3 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+.login-box button {
+  padding: 10px 20px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.login-box button:hover {
+  background: #1e40af;
+}
+
+/* Loading Spinner Styles */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #e66a00;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 </style>

@@ -6,21 +6,14 @@ import { useUserStore } from "@/stores/userBookStore";
 import useBooks from "@/stores/books";
 import { useCategory } from "@/stores/category";
 import axios from "axios";
+import api from "@/axios";
+import useAuthentication from "@/stores/authentication";
 
 export default {
   name: "Category_landing",
   data() {
     return {
-      Category_showing: [
-        // "Motivational",
-        // "Classic",
-        // "Romance",
-        "Novel",
-        // "Philosophy",
-        // "Adventure",
-        // "History",
-        // "Education",
-      ],
+
     };
   },
   components: {
@@ -45,11 +38,16 @@ export default {
     const isInWishlist = (bookId) => useBook.wishlistSet.has(bookId);
 
 
+    const auth = useAuthentication();
     const handleAddWishlist = async (bookId) => {
+      if(!auth.isAuthenticated){
+        alert("Please login to find your favorite books");
+        return;
+      }
       if (processing.value.has(bookId)) return;
           processing.value.add(bookId);
       useBook.wishlist.push({book_id : bookId});
-
+     
       try{
          await useBook.addWishList(bookId);
       }
@@ -65,6 +63,10 @@ export default {
     };
 
     const handleRemoveWishList = async (bookId) => {
+       if(!auth.isAuthenticated){
+        alert("Please login to find your favorite books");
+        return;
+      }
       if (processing.value.has(bookId)) return;
         processing.value.add(bookId);
       const index = useBook.wishlist.findIndex(item => item.book_id === bookId);
@@ -134,7 +136,7 @@ export default {
     const groupBook = ref([]);
 
     const fetchGroupBooks = async () => {
-      const res = await axios.get(`https://projectip2-book-store-api.up.railway.app/api/books/list_category_name`);
+      const res = await api.get(`/api/books/list_category_name`);
       groupBook.value = res.data
       
     }

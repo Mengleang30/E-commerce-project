@@ -1,22 +1,17 @@
+import api from "@/axios";
 import { defineStore } from "pinia";
-import axios from "axios";
+
 
 export const useCarts = defineStore("CartStore", {
   state: () => ({
      carts: [],
      token: localStorage.getItem("token") || null,
-     backendUrl: "https://projectip2-book-store-api.up.railway.app"
   }),
 
   actions: {
     async fetchCarts(){
        try {
-        const res = await axios.get(`${this.backendUrl}/api/customer/carts`,{
-          withCredentials: true,
-          headers:{
-            Authorization: `Bearer ${this.token}`,
-          }
-        });
+        const res = await api.get(`/api/customer/carts`);
         this.carts= res.data;
         // console.log("carts ", this.carts) 
 
@@ -37,17 +32,12 @@ export const useCarts = defineStore("CartStore", {
 
     async addCarts(bookId, quantities) {
         try {
-        await axios.post(`${this.backendUrl}/api/customer/carts/add`,
+        await api.post(`/api/customer/carts/add`,
            {
             book_id: bookId,
             quantity: quantities
            }
-          ,{
-          withCredentials: true,
-          headers:{
-            Authorization: `Bearer ${this.token}`,
-          }
-        });
+          );
 
         await this.fetchCarts();
         console.log("carts added") 
@@ -58,13 +48,8 @@ export const useCarts = defineStore("CartStore", {
 
     async deleteCart(id){
       try {
-        await axios.delete(`${this.backendUrl}/api/customer/carts/delete/${id}`
-          ,{
-          withCredentials: true,
-          headers:{
-            Authorization: `Bearer ${this.token}`,
-          }
-        });
+        await api.delete(`/api/customer/carts/delete/${id}`
+          );
         console.log("carts deleted") 
 
       }
@@ -72,13 +57,7 @@ export const useCarts = defineStore("CartStore", {
     },
     async clearCart(){
       try {
-        await axios.delete(`${this.backendUrl}/api/customer/carts/clear`
-          ,{
-          withCredentials: true,
-          headers:{
-            Authorization: `Bearer ${this.token}`,
-          }
-        });
+        await api.delete(`/api/customer/carts/clear`);
         this.carts = [];
         await this.fetchCarts();
 
@@ -87,16 +66,11 @@ export const useCarts = defineStore("CartStore", {
     },
     async updateQuantity(id, quantities){
       try {
-        await axios.patch(`${this.backendUrl}/api/customer/carts/update/${id}`
+        await api.patch(`/api/customer/carts/update/${id}`
           ,{
             quantity:quantities
 
-           } ,{
-          withCredentials: true,
-          headers:{
-            Authorization: `Bearer ${this.token}`,
-          }
-        });
+           });
         await this.fetchCarts();
         console.log("Updated")
       
@@ -107,13 +81,8 @@ export const useCarts = defineStore("CartStore", {
 
     async checkout(){
        try {
-        await axios.post(`${this.backendUrl}/api/customer/carts/checkout`
-          ,{},{
-          withCredentials: true,
-          headers:{
-            Authorization: `Bearer ${this.token}`,
-          }
-        });
+        await api.post(`/api/customer/carts/checkout`
+          ,{});
         await this.fetchCarts();
         this.carts=[];
         console.log("Checkout")

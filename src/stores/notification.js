@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-import axios from "axios";
+
+import api from "@/axios";
 
 
 export const useNotification = defineStore("NotificationStore", {
@@ -14,12 +15,7 @@ export const useNotification = defineStore("NotificationStore", {
           return;
         }
         try {
-        const res =  await axios.get("https://projectip2-book-store-api.up.railway.app/api/customer/notifications", {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
+        const res =  await api.get("/api/customer/notifications")
         this.notifications = res.data.notifications ?? [];
         // console.log("Notifications from backend:", this.notifications);
         }
@@ -31,16 +27,9 @@ export const useNotification = defineStore("NotificationStore", {
 
     async markNotificationAsRead() {
       try {
-        const res = await axios.patch(
-          `https://projectip2-book-store-api.up.railway.app/api/customer/notifications/mark_all_as_read`,
-          {},
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        );
+        const res = await api.patch(
+          `/api/customer/notifications/mark_all_as_read`,
+          {});
         // console.log("Notification marked as read:", res.data);
         await this.fetchNotifications(); // Refresh notifications after marking one as read
       } catch (e) {
@@ -49,15 +38,9 @@ export const useNotification = defineStore("NotificationStore", {
     },
      async markNotificationAsReadById(Id) {
       try {
-        const res = await axios.patch(
-          `https://projectip2-book-store-api.up.railway.app/api/customer/notifications/mark_as_read/${Id}`,
-          {},
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
+        const res = await api.patch(
+          `/api/customer/notifications/mark_as_read/${Id}`,
+          {}
         );
         // console.log("Notification marked as read:", res.data);
         await this.fetchNotifications(); // Refresh notifications after marking one as read

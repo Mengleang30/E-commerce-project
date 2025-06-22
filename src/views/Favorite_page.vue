@@ -21,7 +21,7 @@ export default{
 <template>
 
     <h2>Favorite page</h2>
-
+    
     <FavoriteBook/>
 
     

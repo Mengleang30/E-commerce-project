@@ -3,7 +3,7 @@
   <div class="container">
     <!-- <img src="./assets/images/store.svg" alt=""> -->
     <div class="left">
-      <img src="../assets/IP-Store.png" alt="" />
+      <img src="https://bucket-production-853a.up.railway.app/storage/logo/register.jpg" alt="" />
     </div>
     <form class="right" @submit.prevent="handleCreateAccount">
       <h3>Create Account</h3>
@@ -121,18 +121,21 @@ export default {
   justify-content: center;
   text-align: center;
   display: flex;
+  gap: 5%;
   background-color: #f4f4f4;
   position: relative;
   border-radius: 4px;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  line-height: 3rem;
 }
 
 .left {
   padding: 10px;
-  background-color: #a7a682;
+  /* background-color: #a7a682; */
   text-align: center;
-  width: 350px;
+  width: 420px;
+  opacity: 70%;
 }
 
 .right {
@@ -145,7 +148,7 @@ h2 {
 }
 
 img {
-  max-width: 106%;
+  max-width: 100%;
   height: 100%;
 }
 
@@ -200,7 +203,7 @@ p {
 }
 .help .help_top {
   display: flex;
-  padding: 0px 6px;
+  padding: 0px 3px;
   position: relative;
   justify-content: center;
   color: rgb(4, 66, 235);

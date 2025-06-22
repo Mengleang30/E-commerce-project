@@ -113,7 +113,7 @@ const loginWithGoogle = () => {
   <!-- <h2>Login page</h2> -->
   <div class="sign_in_page">
   
-    <img class="img_shop" src="../assets/IP-Store.png" alt="IP Store" />
+    <img class="img_shop" src="https://bucket-production-853a.up.railway.app/storage/logo/logo.jpg" alt="IP Store" />
     <div class="login_page">
       <div class="button_home">
         <RouterLink to="/">
@@ -231,6 +231,7 @@ const loginWithGoogle = () => {
   position: relative;
   display: flex;
   background-color: rgb(255, 255, 255);
+  min-height: 80vh;
   margin: 2px;
   border-radius: 0.5rem;
   box-shadow: 3px 3px 4px rgba(70, 69, 69, 0.8);
@@ -300,6 +301,7 @@ const loginWithGoogle = () => {
 }
 .sign_in_page img {
   width: 35%;
+  margin-left: 10%;
 }
 .login_page {
   display: flex;

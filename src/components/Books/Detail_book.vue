@@ -1,7 +1,7 @@
 <script>
 import { useBookStore } from "@/stores";
 import { computed, onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import BackButton from "./Btn_Elements/BackButton.vue";
 import Fovite_icons from "./Fovite_icons.vue";
 import Star from "./Btn_Elements/Star.vue";
@@ -12,6 +12,7 @@ import axios from "axios";
 import useAuthentication from "@/stores/authentication";
 import useBooks from "@/stores/books";
 import useCarts from "@/stores/carts";
+import api from "@/axios";
 
 export default {
   name: "Detail_book",
@@ -30,12 +31,11 @@ export default {
     const userStore = useUserStore();
     const bookId = ref(parseInt(route.params.id));
     const found_book = ref(null);
-    const backendUrl = "https://projectip2-book-store-api.up.railway.app";
     const loading = ref(true); // Add loading state
 
     const fetchBookDetails = async (bookId) => {
       try {
-        const res = await axios.get(`${backendUrl}/api/books/id/${bookId}`);
+        const res = await api.get(`/api/books/id/${bookId}`);
         found_book.value = res.data;
       } catch (e) {
         console.log("Error fetching book details:", e);
@@ -44,7 +44,7 @@ export default {
 
     const fetchComments = async (bookId) => {
       try {
-        const res = await axios.get(`${backendUrl}/api/books/get_comments/${bookId}`);
+        const res = await api.get(`/api/books/get_comments/${bookId}`);
         comments.value = res.data;
       } catch (e) {
         console.log("Error fetching comments:", e);
@@ -70,6 +70,14 @@ export default {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
     const handleAddComment = async () => {
+      if (!auth.isAuthenticated) {
+      const proceed = confirm("please login. Do you want to login now?");
+      if (proceed) {
+        router.push('/login');
+      }
+      return;
+    }
+
       try {
         if (!Auth.isAuthenticated) {
           NotLogin.value = "You must be logged in to add a comment.";
@@ -82,13 +90,9 @@ export default {
         }
         TextShow.value = "Adding comment...";
         NotLogin.value = "";
-        await axios.post(
-          `${backendUrl}/api/customer/comments/${bookId.value}`,
-          { comment: commentText.value },
-          {
-            withCredentials: true,
-            headers: { Authorization: `Bearer ${token}` },
-          }
+        await api.post(
+          `/api/customer/comments/${bookId.value}`,
+          { comment: commentText.value }
         );
         await fetchComments(bookId.value);
         TextShow.value = "Comment added successfully! ✅";
@@ -105,9 +109,17 @@ export default {
     const processing = ref(new Set());
     // mark for books that already in favorite
     const isInWishlist = (bookId) => useBook.wishlistSet.has(bookId);
-
+    const auth = useAuthentication();
 
     const handleAddWishlist = async (bookId) => {
+       if (!auth.isAuthenticated) {
+        const proceed = confirm("Please login to find your favorite books. Do you want to login now?");
+        if (proceed) {
+          router.push('/login');
+        }
+        return;
+      }
+
        if (processing.value.has(bookId)) return; // prevent re-click
           processing.value.add(bookId);
       useBook.wishlist.push({book_id : bookId});
@@ -127,6 +139,14 @@ export default {
     };
 
     const handleRemoveWishList = async (bookId) => {
+     if (!auth.isAuthenticated) {
+  const proceed = confirm("Please login to find your favorite books. Do you want to login now?");
+  if (proceed) {
+    router.push('/login');
+  }
+  return;
+}
+
       const index = useBook.wishlist.findIndex(item => item.book_id === bookId);
        if (index === -1) {
         
@@ -154,7 +174,16 @@ export default {
 
     const CartStore = useCarts();
     const addingStatus = ref("Add To Cart");
+    const router = useRouter();
     const handleAddToCarts = async (bookId) => {
+          if (!auth.isAuthenticated) {
+        const proceed = confirm("Please login or register account !. Do you want to login now?");
+        if (proceed) {
+          router.push('/login');
+        }
+        return;
+      }
+
       addingStatus.value = "Adding...";
       await CartStore.addCarts(bookId, numberOrder.value);
       addingStatus.value = "Add To Cart";

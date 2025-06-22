@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import api from "@/axios";
 
 
 export const useAuthentication = defineStore("AuthStore", {
   state: () => ({
     user: null,
     loggedInUser: JSON.parse(localStorage.getItem("user")) || null,
-    backendUrl: "https://projectip2-book-store-api.up.railway.app",
     token: localStorage.getItem("token") || null,
   }),
 
@@ -27,15 +27,9 @@ export const useAuthentication = defineStore("AuthStore", {
       formData.append("picture", picture); // picture is File
 
       try {
-        await axios.post(
-          `${this.backendUrl}/api/customer/upload_picture`,
+        await api.post(
+          `/api/customer/upload_picture`,
           formData,
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-              // DO NOT manually set 'Content-Type'
-            },
-          }
         );
         console.log("Profile picture uploaded successfully");
       } catch (e) {
@@ -44,13 +38,8 @@ export const useAuthentication = defineStore("AuthStore", {
     },
     async fetchLoggedUser() {
       try {
-        const token = this.token;
-        const response = await axios.get(`${this.backendUrl}/api/logged_user`, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await api.get(`/api/logged_user`
+          );
         this.loggedInUser = response.data;
         // console.log("Fetched user:", this.loggedInUser);
       } catch (error) {
@@ -63,7 +52,7 @@ export const useAuthentication = defineStore("AuthStore", {
     },
     async SignUp(name, email, password, password_confirmation, phone) {
       try {
-        const response = await axios.post(`${this.backendUrl}/api/register`, {
+        const response = await api.post(`/api/register`, {
           name,
           email,
           password,
@@ -88,11 +77,9 @@ export const useAuthentication = defineStore("AuthStore", {
 
     async login(email, password) {
       try {
-        await axios.get(`${this.backendUrl}/sanctum/csrf-cookie`, {
-          withCredentials: true,
-        });
+        await api.get(`/sanctum/csrf-cookie`);
         console.log("CSRF cookie fetched");
-        const res = await axios.post(`${this.backendUrl}/api/login`, {
+        const res = await api.post(`/api/login`, {
           email,
           password,
         });
@@ -170,8 +157,8 @@ export const useAuthentication = defineStore("AuthStore", {
 
     async sendCode(email) {
       try {
-        const response = await axios.post(
-          `${this.backendUrl}/api/password/forgot`,
+        const response = await api.post(
+          `/api/password/forgot`,
           {
             email,
           }
@@ -195,8 +182,8 @@ export const useAuthentication = defineStore("AuthStore", {
     },
     async resetPassword(email, code, new_password, new_password_confirmation) {
       try {
-        const response = await axios.post(
-          `${this.backendUrl}/api/password/reset`,
+        const response = await api.post(
+          `/api/password/reset`,
           {
             email,
             code,
@@ -220,13 +207,8 @@ export const useAuthentication = defineStore("AuthStore", {
 
     async updateInformation (name, phone, description, address){
       try{
-         await axios.patch(`${this.backendUrl}/api/customer/update_inform`,{
+         await api.patch(`/api/customer/update_inform`,{
           name, phone, description, address
-         },{
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
          });
 
       }

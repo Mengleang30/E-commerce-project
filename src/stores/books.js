@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
-import axios from "axios";
+
+import api from "@/axios";
 
 export const useBooks = defineStore("BookStore", {
   state: () => ({
     books: [],
     wishlist: [],
-    backendUrl: "https://projectip2-book-store-api.up.railway.app",
     resultSearched: null,
 
     Search: "",
@@ -15,7 +15,7 @@ export const useBooks = defineStore("BookStore", {
   actions: {
     async fetchBooks() {
       try {
-        const res = await axios.get(`${this.backendUrl}/api/books`);
+        const res = await api.get(`/api/books`);
         // console.log("Books from backend:", res.data);
 
         this.books = res.data;
@@ -27,14 +27,8 @@ export const useBooks = defineStore("BookStore", {
 
     async fetchWishList() {
       try {
-        const res = await axios.get(
-          `${this.backendUrl}/api/customer/wishlist`,
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
+        const res = await api.get(
+          `/api/customer/wishlist`,
         );
         this.wishlist = res.data;
         // console.log("wishlist",this.wishlist)
@@ -44,15 +38,9 @@ export const useBooks = defineStore("BookStore", {
     
     async addWishList(bookId) {
       try {
-        const res = await axios.post(
-          `${this.backendUrl}/api/customer/wishlist`,
+        const res = await api.post(
+          `/api/customer/wishlist`,
           { book_id: bookId },
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
         );
         this.wishlist.push(res.data);
         console.log("Add", res.data);
@@ -62,14 +50,8 @@ export const useBooks = defineStore("BookStore", {
     },
     async removeWishList(wishlistId) {
       try {
-        await axios.delete(
-          `${this.backendUrl}/api/customer/wishlist/remove/${wishlistId}`,
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
+        await api.delete(
+          `/api/customer/wishlist/remove/${wishlistId}`,
         );
         this.wishlist = this.wishlist.filter((item) => item.id !== wishlistId);
       } catch (e) {
@@ -89,7 +71,7 @@ export const useBooks = defineStore("BookStore", {
         return;
       }
       try {
-        const res = await axios.get(`${this.backendUrl}/api/books/search`, {
+        const res = await api.get(`/api/books/search`, {
           params: { query },
         });
         this.resultSearched = res.data;

@@ -1,22 +1,17 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import api from "@/axios";
 
 export const useAdminOrder = defineStore("AdminOrderStore", {
   state: () => ({
      order_list: [],
      token: localStorage.getItem("token") || null,
-     backendUrl: "https://projectip2-book-store-api.up.railway.app"
   }),
 
   actions: {
     async fetchOrderList() {
         try {
-          const response = await axios.get(`${this.backendUrl}/api/admin/orders`, {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          });
+          const response = await api.get(`/api/admin/orders`);
           this.order_list = response.data.orders;
         }
         catch (e) {

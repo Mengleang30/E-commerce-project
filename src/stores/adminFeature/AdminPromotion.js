@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import api from "@/axios";
 
 export const useAdminPromotion = defineStore("AdminPromotionStore", {
   state: () => ({
@@ -35,14 +36,9 @@ export const useAdminPromotion = defineStore("AdminPromotionStore", {
             usage_limit: usageLimit,
             is_active: true
           }
-          await axios.post(`${this.backendUrl}/api/admin/coupons/add`,
+          await api.post(`/api/admin/coupons/add`,
              newCoupon
-            , {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          });
+           );
           await this.fetchCoupons();
           // this.coupons.push(response.data);
         //   console.log("Coupons fetched:", this.coupons);
@@ -54,13 +50,8 @@ export const useAdminPromotion = defineStore("AdminPromotionStore", {
      async actionCoupon(coupon_id, Is_active) {
         try {
          
-          await axios.patch(`${this.backendUrl}/api/admin/coupons/action/${coupon_id}`,
-            {is_active: Is_active}, {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          });
+          await api.patch(`/api/admin/coupons/action/${coupon_id}`,
+            {is_active: Is_active});
           await this.fetchCoupons();
           // this.coupons.push(response.data);
         //   console.log("Coupons fetched:", this.coupons);
@@ -74,13 +65,8 @@ export const useAdminPromotion = defineStore("AdminPromotionStore", {
      async deleteCoupon(coupon_id) {
         try {
          
-          await axios.delete(`${this.backendUrl}/api/admin/coupons/delete/${coupon_id}`,
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          });
+          await api.delete(`/api/admin/coupons/delete/${coupon_id}`,
+          );
           await this.fetchCoupons();
           // this.coupons.push(response.data);
         //   console.log("Coupons fetched:", this.coupons);

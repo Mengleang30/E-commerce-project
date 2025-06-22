@@ -8,7 +8,8 @@
   
   
     <div class="text-block">
-      <div class="title-info">
+      <RouterLink :to="info.link" class="link">
+        <div class="title-info">
         <span class="number-big">{{ info.amount }}</span>
         <span>{{ info.unit }}</span>
       </div>
@@ -16,6 +17,8 @@
         <span>{{ info.amount_status1 }} {{ info.status1 }}</span>
         <span>{{ info.amount_status2 }} {{ info.status2 }}</span>
       </div>
+      </RouterLink>
+      
     </div>
     <img :src="info.img_block" alt="" width="100px" />
   </div>
@@ -58,13 +61,19 @@ export default {
 
 
    
-    const listProducts = computed(()=>{
+    const listProducts = computed(() => {
       return booksStore.books.length;
-    })
+    });
+
+    // Count total quantity of all books
+    const countAllQuantity = computed(() => {
+      return booksStore.books.reduce((total, book) => total + book.quantity, 0);
+    });
 
     const showBookLowStock = computed(() => {
       return booksStore.books.filter(book => book.quantity < 5);
     });
+
    
 
     // console.log("List of products:", useOrders.countOrders);
@@ -118,10 +127,11 @@ export default {
           unit: "Products",
           amount_status1: AllQuantity.value,
           status1: "In Stock",
-          amount_status2: 5,
+          amount_status2: "",
           status2: "Out of Stock",
           img_block: products,
           bgColor_info: "#BAD8B6",
+          link: "admin/all-products"
         },
         {
           amount: countOrder.value,
@@ -129,10 +139,11 @@ export default {
           amount_status1: countOrderCompleted.value,
           status1: "Completed",
           amount_status2: countOrderPending.value,
-          // status2: amount_status2(),
+          status2: 1,
           status2: "Pending",
           img_block: orders,
           bgColor_info: "#FFF2C2",
+           link: "admin/Order-products"
         },
         {
           amount: allUser.value,
@@ -143,13 +154,14 @@ export default {
           status2: "Inactive",
           img_block: users,
           bgColor_info: "#DBFFCB",
+           link: "admin/all-users"
         },
         {
           amount: 5,
           unit: "Feedbacks",
           amount_status1: 2,
           status1: "Comment",
-          // amount_status2: amount_status2(),
+          amount_status2: 2,
           status2: "Rating",
           img_block: feedbacks,
           bgColor_info: "#81E7AF",
@@ -163,13 +175,14 @@ export default {
           status2: "Expired",
           img_block: coupons,
           bgColor_info: "#99BC85",
+          link: "admin/promotion"
         },
         {
           amount: 1,
           unit: "Online Users",
           amount_status1: 1,
           status1: "Admin",
-          // amount_status2: amount_status2(),
+          amount_status2: 2,
           status2: "Customer",
           img_block: online_users,
           bgColor_info: "#FFE893",
@@ -197,6 +210,7 @@ export default {
       countOrderPending,
       useOrders,
       countCoupons,
+      countAllQuantity
       
     
      };
@@ -315,6 +329,9 @@ export default {
   align-items: center;
   font-size: 1rem;
   color: #555;
+}
+.link{
+  text-decoration: none;
 }
 
 /* Responsive Tweaks */
