@@ -5,7 +5,7 @@ import { computed, onMounted, ref } from "vue";
 import { useUserStore } from "@/stores/userBookStore";
 import useBooks from "@/stores/books";
 import { useCategory } from "@/stores/category";
-import axios from "axios";
+
 import api from "@/axios";
 import useAuthentication from "@/stores/authentication";
 
@@ -136,7 +136,7 @@ export default {
     const groupBook = ref([]);
 
     const fetchGroupBooks = async () => {
-      const res = await api.get(`/api/books/list_category_name`);
+      const res = await api.get(`api/books/list_category_name`);
       groupBook.value = res.data
       
     }
@@ -181,6 +181,7 @@ export default {
 </script>
 
 <template>
+  
   <div class="category_landing">
     <div class="wraping">
       <h4 class="tittle_discount">Discount Books 15% off</h4>
@@ -209,8 +210,7 @@ export default {
   </div>
   <div
     class="category_landing"
-    v-for="category in this.Category_showing"
-    :key="category"
+   
   >
   <!-- <button v-for="category in useCategories.categories"  @click="fetchGroupBooks(category.id)">
   {{ category.name }}
@@ -218,7 +218,7 @@ export default {
 
   <div class="wraping"  v-for="ListBook in computedGroupBooks" :key="ListBook.category_id">
     <div class="listByCategory" >
-       <!-- {{ computedGroupBooks }} -->
+      
     <h4>Best {{ ListBook.category_name	}}</h4>
     <div class="wrap_book">
     <Book_landing
@@ -247,13 +247,7 @@ export default {
   </div>
     <div class="contianer_book"></div>
   </div>
-  <!-- <div class="category_landing_5star">
-        <div class="wraping" >
-            <h3 > 5 Stars Books ⭐⭐⭐⭐⭐
-            </h3>         
-        </div>
-       
-    </div> -->
+ 
 </template>
 
 <style scoped>
