@@ -57,31 +57,83 @@ function formatTime(dateStr) {
   });
   return `${formattedDate} `;
 }
-const image = ref();
-// File input handler
+
+// const image = ref();
+// // File input handler
 function onFileChange(event) {
-  image.value = event.target.files[0];
-  console.log("Selected file:", image.value);
-  console.log("Type:", image.value.type); // Should be image/jpeg, image/png, etc.
+  const file = event.target.files[0];
+  if (file) {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (!allowedTypes.includes(file.type)) {
+      alert('Please select a valid image file (JPEG, PNG, or GIF)');
+      image.value = null;
+      fileInput.value.value = '';
+      return;
+    }
+    if (file.size > maxSize) {
+      alert('File size exceeds 5MB limit');
+      image.value = null;
+      fileInput.value.value = '';
+      return;
+    }
+    image.value = file;
+    // console.log('Selected file:', image.value);
+    // console.log('Type:', image.value.type);
+  } else {
+    image.value = null;
+    fileInput.value.value = '';
+  }
 }
 
 
+// const Text = ref("Update");
+// // Submit handler
+// const handleUpload = async () => {
+//   if (!image.value) return;
 
-const Text = ref("Update");
-// Submit handler
+//   const formData = new FormData();
+//   formData.append("picture", image.value);
+//   Text.value = "Updating...";
+//   try {
+//     await auth.uploadPicture(image.value);
+//     await auth.fetchLoggedUser(); // Refresh user data
+//     Text.value = "Update";
+//   } catch (error) {
+//     alert("Failed to upload image");
+//     console.error(error);
+//     alert('Failed updated picture !')
+//   }
+// };
+
+const fileInput = ref(null);
+const image = ref(null);
+const Text = ref('Update');
+
 const handleUpload = async () => {
-  if (!image.value) return;
+  if (!image.value) {
+    alert('Please select an image to upload');
+    return;
+  }
 
   const formData = new FormData();
-  formData.append("picture", image.value);
-  Text.value = "Updating...";
+  formData.append('picture', image.value);
+  // console.log('FormData contents:');
+  for (let [key, value] of formData.entries()) {
+    // console.log(`${key}: ${value.name || value}`);
+  }
+  Text.value = 'Updating...';
   try {
-    await auth.uploadPicture(image.value);
-    await auth.fetchLoggedUser(); // Refresh user data
-    Text.value = "Update";
+   
+    await auth.uploadPicture(formData); // Pass formData
+    await auth.fetchLoggedUser();
+    Text.value = 'Update';
+    image.value = null;
+    fileInput.value.value = '';
   } catch (error) {
-    alert("Failed to upload image");
-    console.error(error);
+    alert('Failed to upload image');
+    console.error('Upload error:', error.response?.data || error.message);
+    Text.value = 'Update';
   }
 };
 </script>
@@ -126,16 +178,20 @@ const handleUpload = async () => {
             name="picture"
             class="form"
             enctype="multipart/form-data"
+            ref="fileInput"
+
           >
             <input
               @change="onFileChange"
+               ref="fileInput"
               id="file-upload"
+              
               type="file"
               name="picture"
               accept="image/*"
               required
             />
-            <button type="submit">📷 {{ Text }}</button>
+            <button type="submit" :disabled="!image || Text === 'Updating...'">📷 {{ Text }}</button>
           </form>
         </div>
         <div class="profile-details">

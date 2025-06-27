@@ -27,9 +27,14 @@ export const useAuthentication = defineStore("AuthStore", {
       formData.append("picture", picture); // picture is File
 
       try {
-        await api.post(
-          `/api/customer/upload_picture`,
-          formData,
+        await axios.post(
+          `https://projectip2-book-store-api.up.railway.app/api/customer/upload_picture`,
+          picture, {
+            withCredentials : true,
+            headers: {
+              Authorization: `Bearer ${this.token}`
+            }
+          },
         );
         console.log("Profile picture uploaded successfully");
       } catch (e) {
